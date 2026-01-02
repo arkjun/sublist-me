@@ -7,11 +7,17 @@
     "dev:web": "pnpm --filter @magami/web dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
+    "test": "pnpm --filter @magami/api test",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "db:generate": "pnpm --filter @magami/db generate",
     "db:migrate": "pnpm --filter @magami/api db:migrate"
   },
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "@playwright/test": "^1.57.0",
+    "@vitest/coverage-v8": "^3.2.0",
+    "typescript": "^5.7.2",
+    "vitest": "^3.2.0"
   },
   "packageManager": "pnpm@9.15.2",
   "engines": {

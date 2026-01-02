@@ -6,5 +6,15 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "magami-db"
-database_id = "YOUR_DATABASE_ID"
-migrations_dir = "../db/migrations"
+database_id = "2a6c7ce2-4535-41b9-a52a-c7b33f61a205"
+migrations_dir = "migrations"
+
+# 환경 변수 - 프로덕션에서 실제 값으로 설정 필요
+# wrangler secret put GOOGLE_CLIENT_ID
+# wrangler secret put GOOGLE_CLIENT_SECRET
+[vars]
+GOOGLE_REDIRECT_URI = "http://localhost:8787/auth/callback/google"
+
+# 프로덕션 환경
+# [env.production.vars]
+# GOOGLE_REDIRECT_URI = "https://your-api.workers.dev/auth/callback/google"

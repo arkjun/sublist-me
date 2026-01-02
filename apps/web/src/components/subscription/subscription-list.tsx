@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { Plus } from 'lucide-react'
 import type { Subscription, NewSubscription } from '@magami/db/types'
 import { Button } from '@/components/ui/button'
-import { SubscriptionCard } from './subscription-card'
+import { DataTable } from '@/components/ui/data-table'
+import { getColumns } from './columns'
 import { SubscriptionForm } from './subscription-form'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:51332'
@@ -76,6 +77,11 @@ export function SubscriptionList() {
     }
   }
 
+  const columns = useMemo(
+    () => getColumns({ onEdit: handleEdit, onDelete: handleDelete }),
+    []
+  )
+
   // 통계 계산
   const monthlyTotal = subscriptions
     .filter((s) => s.isActive)
@@ -122,25 +128,12 @@ export function SubscriptionList() {
           </Button>
         </div>
 
-        {subscriptions.length === 0 ? (
-          <div className="rounded-lg border border-dashed p-12 text-center">
-            <p className="text-muted-foreground">아직 등록된 구독이 없습니다</p>
-            <p className="text-sm text-muted-foreground">
-              첫 번째 구독을 추가해보세요
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {subscriptions.map((subscription) => (
-              <SubscriptionCard
-                key={subscription.id}
-                subscription={subscription}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-            ))}
-          </div>
-        )}
+        <DataTable
+          columns={columns}
+          data={subscriptions}
+          searchKey="name"
+          searchPlaceholder="구독명으로 검색..."
+        />
       </section>
 
       <SubscriptionForm

@@ -7,11 +7,37 @@ export type BillingCycle = 'monthly' | 'yearly' | 'weekly' | 'quarterly'
 // 통화
 export type Currency = 'KRW' | 'USD' | 'JPY' | 'EUR'
 
+// 사용자 테이블
+export const users = sqliteTable('users', {
+  id: text('id').primaryKey(),
+  googleId: text('google_id').notNull().unique(),
+  email: text('email').notNull().unique(),
+  name: text('name'),
+  picture: text('picture'),
+  createdAt: text('created_at')
+    .notNull()
+    .default(sql`(datetime('now'))`),
+})
+
+// 세션 테이블
+export const sessions = sqliteTable('sessions', {
+  id: text('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  expiresAt: integer('expires_at').notNull(),
+})
+
 // 구독 테이블
 export const subscriptions = sqliteTable('subscriptions', {
   id: text('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
+
+  // 사용자 연결
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
 
   // 기본 정보
   name: text('name').notNull(), // 구독명 (예: 유튜브 프리미엄)
@@ -56,25 +82,4 @@ export const categories = sqliteTable('categories', {
   createdAt: text('created_at')
     .notNull()
     .default(sql`(datetime('now'))`),
-})
-
-// 사용자 테이블
-export const users = sqliteTable('users', {
-  id: text('id').primaryKey(),
-  googleId: text('google_id').notNull().unique(),
-  email: text('email').notNull().unique(),
-  name: text('name'),
-  picture: text('picture'),
-  createdAt: text('created_at')
-    .notNull()
-    .default(sql`(datetime('now'))`),
-})
-
-// 세션 테이블
-export const sessions = sqliteTable('sessions', {
-  id: text('id').primaryKey(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  expiresAt: integer('expires_at').notNull(),
 })

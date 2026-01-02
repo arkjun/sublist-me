@@ -1,25 +1,45 @@
 import { Hono } from 'hono'
 import { drizzle } from 'drizzle-orm/d1'
 import { subscriptions as subscriptionsTable } from '@magami/db/schema'
-import { eq } from 'drizzle-orm'
+import { eq, and } from 'drizzle-orm'
 import type { Env } from '../index'
+import { requireAuth } from '../middleware/auth'
+import type { User, Session } from 'lucia'
 
-export const subscriptions = new Hono<{ Bindings: Env }>()
-  // 구독 목록 조회
+type Variables = {
+  user: User | null
+  session: Session | null
+}
+
+export const subscriptions = new Hono<{ Bindings: Env; Variables: Variables }>()
+  // 모든 구독 라우트에 인증 필수
+  .use('/*', requireAuth)
+
+  // 구독 목록 조회 (사용자별)
   .get('/', async (c) => {
+    const user = c.get('user')!
     const db = drizzle(c.env.DB)
-    const result = await db.select().from(subscriptionsTable)
+    const result = await db
+      .select()
+      .from(subscriptionsTable)
+      .where(eq(subscriptionsTable.userId, user.id))
     return c.json(result)
   })
 
-  // 구독 상세 조회
+  // 구독 상세 조회 (사용자별)
   .get('/:id', async (c) => {
+    const user = c.get('user')!
     const db = drizzle(c.env.DB)
     const id = c.req.param('id')
     const result = await db
       .select()
       .from(subscriptionsTable)
-      .where(eq(subscriptionsTable.id, id))
+      .where(
+        and(
+          eq(subscriptionsTable.id, id),
+          eq(subscriptionsTable.userId, user.id)
+        )
+      )
 
     if (result.length === 0) {
       return c.json({ error: 'Not found' }, 404)
@@ -27,26 +47,33 @@ export const subscriptions = new Hono<{ Bindings: Env }>()
     return c.json(result[0])
   })
 
-  // 구독 생성
+  // 구독 생성 (사용자 ID 자동 추가)
   .post('/', async (c) => {
+    const user = c.get('user')!
     const db = drizzle(c.env.DB)
     const body = await c.req.json()
     const result = await db
       .insert(subscriptionsTable)
-      .values(body)
+      .values({ ...body, userId: user.id })
       .returning()
     return c.json(result[0], 201)
   })
 
-  // 구독 수정
+  // 구독 수정 (사용자별)
   .put('/:id', async (c) => {
+    const user = c.get('user')!
     const db = drizzle(c.env.DB)
     const id = c.req.param('id')
     const body = await c.req.json()
     const result = await db
       .update(subscriptionsTable)
       .set(body)
-      .where(eq(subscriptionsTable.id, id))
+      .where(
+        and(
+          eq(subscriptionsTable.id, id),
+          eq(subscriptionsTable.userId, user.id)
+        )
+      )
       .returning()
 
     if (result.length === 0) {
@@ -55,13 +82,19 @@ export const subscriptions = new Hono<{ Bindings: Env }>()
     return c.json(result[0])
   })
 
-  // 구독 삭제
+  // 구독 삭제 (사용자별)
   .delete('/:id', async (c) => {
+    const user = c.get('user')!
     const db = drizzle(c.env.DB)
     const id = c.req.param('id')
     const result = await db
       .delete(subscriptionsTable)
-      .where(eq(subscriptionsTable.id, id))
+      .where(
+        and(
+          eq(subscriptionsTable.id, id),
+          eq(subscriptionsTable.userId, user.id)
+        )
+      )
       .returning()
 
     if (result.length === 0) {

@@ -9,6 +9,7 @@ type Env = {
   GOOGLE_CLIENT_ID: string
   GOOGLE_CLIENT_SECRET: string
   GOOGLE_REDIRECT_URI: string
+  FRONTEND_URL: string
 }
 
 export const auth = new Hono<{ Bindings: Env }>()
@@ -109,7 +110,8 @@ auth.get('/callback/google', async (c) => {
     })
 
     // 프론트엔드로 리다이렉트
-    return c.redirect('/')
+    const frontendUrl = c.env.FRONTEND_URL || 'http://localhost:3000'
+    return c.redirect(frontendUrl)
   } catch (error) {
     console.error('OAuth error:', error)
     return c.json({ error: 'Authentication failed' }, 500)

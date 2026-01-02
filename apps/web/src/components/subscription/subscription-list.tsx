@@ -1,41 +1,58 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { Plus } from 'lucide-react'
-import type { Subscription, NewSubscription } from '@magami/db/types'
+import { Plus, LogIn } from 'lucide-react'
+import type { Subscription, SubscriptionInput } from '@magami/db/types'
 import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/ui/data-table'
 import { getColumns } from './columns'
 import { SubscriptionForm } from './subscription-form'
+import { useAuth } from '@/components/auth/auth-provider'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787'
 
 export function SubscriptionList() {
+  const { user, loading: authLoading, login } = useAuth()
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [loading, setLoading] = useState(true)
   const [formOpen, setFormOpen] = useState(false)
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null)
 
   const fetchSubscriptions = useCallback(async () => {
+    if (!user) {
+      setSubscriptions([])
+      setLoading(false)
+      return
+    }
     try {
-      const res = await fetch(`${API_URL}/subscriptions`)
-      const data = await res.json()
-      setSubscriptions(data)
+      const res = await fetch(`${API_URL}/subscriptions`, {
+        credentials: 'include',
+      })
+      if (res.ok) {
+        const data: Subscription[] = await res.json()
+        setSubscriptions(data)
+      } else {
+        setSubscriptions([])
+      }
     } catch (error) {
       console.error('Failed to fetch subscriptions:', error)
+      setSubscriptions([])
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [user])
 
   useEffect(() => {
-    fetchSubscriptions()
-  }, [fetchSubscriptions])
+    if (!authLoading) {
+      fetchSubscriptions()
+    }
+  }, [fetchSubscriptions, authLoading])
 
-  const handleCreate = async (data: NewSubscription) => {
+  const handleCreate = async (data: SubscriptionInput) => {
     const res = await fetch(`${API_URL}/subscriptions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(data),
     })
     if (res.ok) {
@@ -43,11 +60,12 @@ export function SubscriptionList() {
     }
   }
 
-  const handleUpdate = async (data: NewSubscription) => {
+  const handleUpdate = async (data: SubscriptionInput) => {
     if (!editingSubscription) return
     const res = await fetch(`${API_URL}/subscriptions/${editingSubscription.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(data),
     })
     if (res.ok) {
@@ -59,6 +77,7 @@ export function SubscriptionList() {
     if (!confirm('정말 삭제하시겠습니까?')) return
     const res = await fetch(`${API_URL}/subscriptions/${id}`, {
       method: 'DELETE',
+      credentials: 'include',
     })
     if (res.ok) {
       await fetchSubscriptions()
@@ -96,8 +115,26 @@ export function SubscriptionList() {
   const yearlyTotal = monthlyTotal * 12
   const activeCount = subscriptions.filter((s) => s.isActive).length
 
-  if (loading) {
+  if (authLoading || loading) {
     return <div className="text-center text-muted-foreground">로딩 중...</div>
+  }
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="mb-6 rounded-full bg-muted p-6">
+          <LogIn className="h-12 w-12 text-muted-foreground" />
+        </div>
+        <h2 className="mb-2 text-2xl font-semibold">로그인이 필요합니다</h2>
+        <p className="mb-6 text-muted-foreground">
+          구독 서비스를 관리하려면 먼저 로그인해주세요.
+        </p>
+        <Button size="lg" onClick={login}>
+          <LogIn className="mr-2 h-5 w-5" />
+          Google 로그인
+        </Button>
+      </div>
+    )
   }
 
   return (

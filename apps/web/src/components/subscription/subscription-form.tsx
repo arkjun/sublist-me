@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import type { Subscription, NewSubscription, BillingCycle, Currency } from '@magami/db/types'
+import type { Subscription, SubscriptionInput, BillingCycle, Currency } from '@magami/db/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -17,7 +17,7 @@ interface SubscriptionFormProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   subscription?: Subscription | null
-  onSubmit: (data: NewSubscription) => Promise<void>
+  onSubmit: (data: SubscriptionInput) => Promise<void>
 }
 
 const billingCycles: { value: BillingCycle; label: string }[] = [
@@ -34,7 +34,7 @@ const currencies: { value: Currency; label: string }[] = [
   { value: 'EUR', label: '유로 (EUR)' },
 ]
 
-const defaultFormData: NewSubscription = {
+const defaultFormData: SubscriptionInput = {
   name: '',
   price: 0,
   originalPrice: undefined,
@@ -52,7 +52,7 @@ export function SubscriptionForm({
   subscription,
   onSubmit,
 }: SubscriptionFormProps) {
-  const [formData, setFormData] = useState<NewSubscription>(defaultFormData)
+  const [formData, setFormData] = useState<SubscriptionInput>(defaultFormData)
   const [loading, setLoading] = useState(false)
 
   const isEdit = !!subscription

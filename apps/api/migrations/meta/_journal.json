@@ -8,6 +8,13 @@
       "when": 1767332716324,
       "tag": "0000_bumpy_azazel",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1735776000000,
+      "tag": "0001_add_auth_tables",
+      "breakpoints": true
     }
   ]
 }

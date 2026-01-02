@@ -6,7 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "next build && wrangler pages deploy out --project-name=magami"
   },
   "dependencies": {
     "@magami/api": "workspace:*",

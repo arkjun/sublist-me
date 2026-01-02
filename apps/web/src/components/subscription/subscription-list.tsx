@@ -8,7 +8,7 @@ import { DataTable } from '@/components/ui/data-table'
 import { getColumns } from './columns'
 import { SubscriptionForm } from './subscription-form'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:51332'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787'
 
 export function SubscriptionList() {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])

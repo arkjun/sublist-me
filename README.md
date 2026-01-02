@@ -8,6 +8,7 @@
 - 월별/연간 지출 현황 확인
 - 정가 대비 할인율 비교
 - 다음 결제일 알림
+- 라이트/다크 테마 지원
 
 ## 기술 스택
 
@@ -77,27 +78,49 @@ pnpm dev:web   # http://localhost:3000
 
 ## 배포
 
-### API (Cloudflare Workers)
+### 1. API 배포 (Cloudflare Workers)
 
 ```bash
 cd apps/api
+
+# 프로덕션 DB 마이그레이션
+wrangler d1 migrations apply magami-db
+
+# Workers 배포
 wrangler deploy
 ```
 
-### Web (Cloudflare Pages)
+배포 후 API URL 확인: `https://magami-api.YOUR_SUBDOMAIN.workers.dev`
+
+### 2. Web 배포 (Cloudflare Pages)
 
 ```bash
 cd apps/web
-pnpm build
-# Cloudflare Pages에 out/ 폴더 연결
+
+# 환경 변수와 함께 빌드 & 배포
+NEXT_PUBLIC_API_URL=https://magami-api.YOUR_SUBDOMAIN.workers.dev pnpm deploy
 ```
+
+또는 Cloudflare Pages 대시보드에서 환경 변수 설정 후 Git 연동으로 자동 배포.
 
 ## 환경 변수
 
-### apps/web/.env.local
+| 변수 | 설명 | 예시 |
+|------|------|------|
+| `NEXT_PUBLIC_API_URL` | API 서버 URL | `http://localhost:8787` (개발) |
+
+### apps/web/.env.local (개발용)
 
 ```
 NEXT_PUBLIC_API_URL=http://localhost:8787
+```
+
+### Cloudflare Pages 환경 변수 (프로덕션)
+
+Cloudflare 대시보드 > Pages > 프로젝트 설정 > Environment variables:
+
+```
+NEXT_PUBLIC_API_URL=https://magami-api.YOUR_SUBDOMAIN.workers.dev
 ```
 
 ## 라이센스

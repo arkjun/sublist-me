@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { Plus, LogIn } from 'lucide-react'
 import type { Subscription, SubscriptionInput } from '@magami/db/types'
 import { Button } from '@/components/ui/button'
@@ -12,7 +13,8 @@ import { useAuth } from '@/components/auth/auth-provider'
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787'
 
 export function SubscriptionList() {
-  const { user, loading: authLoading, login } = useAuth()
+  const router = useRouter()
+  const { user, loading: authLoading } = useAuth()
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [loading, setLoading] = useState(true)
   const [formOpen, setFormOpen] = useState(false)
@@ -129,9 +131,9 @@ export function SubscriptionList() {
         <p className="mb-6 text-muted-foreground">
           구독 서비스를 관리하려면 먼저 로그인해주세요.
         </p>
-        <Button size="lg" onClick={login}>
+        <Button size="lg" onClick={() => router.push('/login')}>
           <LogIn className="mr-2 h-5 w-5" />
-          Google 로그인
+          로그인
         </Button>
       </div>
     )

@@ -79,19 +79,26 @@ auth.get('/callback/google', async (c) => {
 
     const lucia = createLucia(c.env.DB)
 
-    // 기존 사용자 확인
-    const existingUser = await c.env.DB.prepare(
+    // 기존 사용자 확인 (google_id 또는 email로)
+    let existingUser = await c.env.DB.prepare(
       'SELECT * FROM users WHERE google_id = ?'
-    ).bind(googleUser.id).first<{ id: string }>()
+    ).bind(googleUser.id).first<{ id: string; google_id: string | null }>()
+
+    // google_id로 찾지 못한 경우 email로 확인
+    if (!existingUser) {
+      existingUser = await c.env.DB.prepare(
+        'SELECT * FROM users WHERE email = ?'
+      ).bind(googleUser.email).first<{ id: string; google_id: string | null }>()
+    }
 
     let userId: string
 
     if (existingUser) {
       userId = existingUser.id
-      // 사용자 정보 업데이트
+      // 사용자 정보 업데이트 (google_id 연결 포함)
       await c.env.DB.prepare(
-        'UPDATE users SET name = ?, picture = ?, email = ? WHERE id = ?'
-      ).bind(googleUser.name, googleUser.picture, googleUser.email, userId).run()
+        'UPDATE users SET google_id = ?, name = ?, picture = ? WHERE id = ?'
+      ).bind(googleUser.id, googleUser.name, googleUser.picture, userId).run()
     } else {
       // 새 사용자 생성
       userId = generateIdFromEntropySize(10)

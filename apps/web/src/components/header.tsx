@@ -4,6 +4,7 @@ import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { useAuth } from '@/components/auth/auth-provider'
 import { Button } from '@/components/ui/button'
 import { LogIn, LogOut } from 'lucide-react'
+import Link from 'next/link'
 
 export function Header() {
   const { user, loading, login, logout } = useAuth()
@@ -35,10 +36,12 @@ export function Header() {
                 </Button>
               </div>
             ) : (
-              <Button onClick={login}>
-                <LogIn className="mr-2 h-4 w-4" />
-                Google 로그인
-              </Button>
+              <Link href="/login">
+                <Button>
+                  <LogIn className="mr-2 h-4 w-4" />
+                  로그인
+                </Button>
+              </Link>
             )}
           </>
         )}

@@ -1,6 +1,9 @@
 import { Lucia } from 'lucia'
 import { D1Adapter } from '@lucia-auth/adapter-sqlite'
 import { Google } from 'arctic'
+import { Scrypt } from 'lucia'
+
+export const scrypt = new Scrypt()
 
 export function createLucia(db: D1Database) {
   const adapter = new D1Adapter(db, {
@@ -35,7 +38,7 @@ declare module 'lucia' {
   interface Register {
     Lucia: ReturnType<typeof createLucia>
     DatabaseUserAttributes: {
-      google_id: string
+      google_id: string | null
       email: string
       name: string | null
       picture: string | null

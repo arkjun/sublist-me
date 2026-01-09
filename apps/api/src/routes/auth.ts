@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { getCookie, setCookie } from 'hono/cookie'
 import { generateState, generateCodeVerifier } from 'arctic'
 import { generateIdFromEntropySize } from 'lucia'
-import { createLucia, createGoogleAuth } from '../lib/auth'
+import { createLucia, createGoogleAuth, scrypt } from '../lib/auth'
 
 type Env = {
   DB: D1Database
@@ -132,6 +132,69 @@ auth.post('/logout', async (c) => {
     ...sessionCookie.attributes,
     sameSite: 'Lax',
   })
+
+  return c.json({ success: true })
+})
+
+// Email 회원가입
+auth.post('/signup/email', async (c) => {
+  const { email, password, name } = await c.req.json()
+
+  if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
+     return c.json({ error: 'Invalid input' }, 400)
+  }
+
+  const hashedPassword = await scrypt.hash(password)
+  const userId = generateIdFromEntropySize(10)
+
+  try {
+     await c.env.DB.prepare(
+       'INSERT INTO users (id, email, password_hash, name) VALUES (?, ?, ?, ?)'
+     ).bind(userId, email, hashedPassword, name).run()
+
+     const lucia = createLucia(c.env.DB)
+     const session = await lucia.createSession(userId, {})
+     const sessionCookie = lucia.createSessionCookie(session.id)
+
+     setCookie(c, sessionCookie.name, sessionCookie.value, {
+       ...sessionCookie.attributes,
+       sameSite: 'Lax',
+     })
+
+     return c.json({ success: true, userId })
+  } catch (e) {
+      return c.json({ error: 'Email already exists or invalid' }, 400)
+  }
+})
+
+// Email 로그인
+auth.post('/login/email', async (c) => {
+  const { email, password } = await c.req.json()
+
+  if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
+      return c.json({ error: 'Invalid input' }, 400)
+  }
+
+  const user = await c.env.DB.prepare('SELECT * FROM users WHERE email = ?').bind(email).first<{ id: string, password_hash: string }>()
+
+  if (!user || !user.password_hash) {
+      return c.json({ error: 'Invalid email or password' }, 400)
+  }
+
+  const validPassword = await scrypt.verify(user.password_hash, password)
+
+  if (!validPassword) {
+      return c.json({ error: 'Invalid email or password' }, 400)
+  }
+
+  const lucia = createLucia(c.env.DB)
+  const session = await lucia.createSession(user.id, {})
+  const sessionCookie = lucia.createSessionCookie(session.id)
+
+  setCookie(c, sessionCookie.name, sessionCookie.value, {
+       ...sessionCookie.attributes,
+       sameSite: 'Lax',
+     })
 
   return c.json({ success: true })
 })

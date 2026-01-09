@@ -16,6 +16,8 @@ type AuthContextType = {
   user: User | null
   loading: boolean
   login: () => void
+  loginWithEmail: (email: string, password: string) => Promise<void>
+  signupWithEmail: (email: string, password: string, name: string) => Promise<void>
   logout: () => Promise<void>
   refreshUser: () => Promise<void>
 }
@@ -45,8 +47,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     fetchUser()
   }, [fetchUser])
 
+  /* Existing logic */
   const login = () => {
     window.location.href = `${API_URL}/auth/login/google`
+  }
+
+  const loginWithEmail = async (email: string, password: string) => {
+    const res = await fetch(`${API_URL}/auth/login/email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+      credentials: 'include',
+    })
+
+    if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error || 'Login failed')
+    }
+    await fetchUser()
+  }
+
+  const signupWithEmail = async (email: string, password: string, name: string) => {
+    const res = await fetch(`${API_URL}/auth/signup/email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, name }),
+      credentials: 'include',
+    })
+
+    if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error || 'Signup failed')
+    }
+    await fetchUser()
   }
 
   const logout = async () => {
@@ -62,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, refreshUser: fetchUser }}>
+    <AuthContext.Provider value={{ user, loading, login, loginWithEmail, signupWithEmail, logout, refreshUser: fetchUser }}>
       {children}
     </AuthContext.Provider>
   )

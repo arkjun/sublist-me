@@ -8,7 +8,8 @@
 - 월별/연간 지출 현황 확인
 - 정가 대비 할인율 비교
 - 다음 결제일 알림
-- 라이트/다크 테마 지원
+- 라이트/다크/시스템 테마 지원
+- 다양한 로그인 방식 (이메일/비밀번호, Google OAuth)
 
 ## 기술 스택
 
@@ -18,7 +19,7 @@
 | API | Hono (Cloudflare Workers) |
 | Database | Cloudflare D1 (SQLite) |
 | ORM | Drizzle |
-| 인증 | Lucia + Arctic (Google OAuth) |
+| 인증 | Lucia + Arctic (Google OAuth, Email/Password) |
 | 타입 공유 | Hono RPC |
 
 ## 프로젝트 구조

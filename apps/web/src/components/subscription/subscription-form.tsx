@@ -49,6 +49,7 @@ const defaultFormData: SubscriptionInput = {
   category: '',
   country: 'KR',
   url: '',
+  logoUrl: '',
   memo: '',
   nextBillingDate: undefined,
 }
@@ -119,6 +120,7 @@ export function SubscriptionForm({
         category: subscription.category ?? '',
         country: subscription.country ?? 'KR',
         url: subscription.url ?? '',
+        logoUrl: subscription.logoUrl ?? '',
         memo: subscription.memo ?? '',
         nextBillingDate: subscription.nextBillingDate ?? '',
       })
@@ -187,10 +189,15 @@ export function SubscriptionForm({
         ...prev,
         name: matched.label,
         url: matched.provider.url ?? prev.url,
+        logoUrl: matched.provider.logoUrl ?? prev.logoUrl,
         category: matched.category || prev.category,
       }))
     }
   }
+
+  const selectedProvider = providerOptions.find(
+    (option) => option.label === formData.name || option.provider.slug === formData.name
+  )
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -201,13 +208,28 @@ export function SubscriptionForm({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="provider">서비스 선택</Label>
-            <Input
-              id="provider"
-              list="service-providers"
-              value={providerQuery}
-              onChange={(e) => handleProviderQueryChange(e.target.value)}
-              placeholder="서비스를 검색해 선택하세요"
-            />
+            <div className="flex items-center gap-3">
+              {(formData.logoUrl || selectedProvider?.provider.logoUrl) && (
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-white">
+                  <img
+                    src={formData.logoUrl || selectedProvider?.provider.logoUrl}
+                    alt=""
+                    className="h-8 w-8 object-contain"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none'
+                    }}
+                  />
+                </div>
+              )}
+              <Input
+                id="provider"
+                list="service-providers"
+                value={providerQuery}
+                onChange={(e) => handleProviderQueryChange(e.target.value)}
+                placeholder="서비스를 검색해 선택하세요"
+                className="flex-1"
+              />
+            </div>
             <datalist id="service-providers">
               {providerOptions.map((option) => (
                 <option key={option.provider.id} value={option.label} />

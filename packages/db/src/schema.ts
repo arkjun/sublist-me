@@ -78,6 +78,7 @@ export const subscriptions = sqliteTable('subscriptions', {
   country: text('country').default('KR'), // 국가 코드
   category: text('category'), // 카테고리 (예: 엔터테인먼트, 생산성)
   url: text('url'), // 서비스 URL
+  logoUrl: text('logo_url'), // 서비스 로고 URL
   memo: text('memo'), // 메모
 
   // 상태

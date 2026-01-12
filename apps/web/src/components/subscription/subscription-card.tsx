@@ -43,26 +43,40 @@ export function SubscriptionCard({
   return (
     <Card className="group">
       <CardContent className="flex items-center justify-between p-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h3 className="font-semibold">{subscription.name}</h3>
-            {subscription.category && (
-              <span className="rounded-full bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">
-                {subscription.category}
-              </span>
-            )}
+        <div className="flex items-center gap-3 flex-1">
+          {subscription.logoUrl && (
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-white">
+              <img
+                src={subscription.logoUrl}
+                alt=""
+                className="h-8 w-8 object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none'
+                }}
+              />
+            </div>
+          )}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold truncate">{subscription.name}</h3>
+              {subscription.category && (
+                <span className="rounded-full bg-secondary px-2 py-0.5 text-xs text-secondary-foreground shrink-0">
+                  {subscription.category}
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {formatPrice(subscription.price, subscription.currency)} / {cycleLabel}
+              {subscription.originalPrice && subscription.originalPrice > subscription.price && (
+                <span className="ml-2 text-green-600">
+                  ({Math.round((1 - subscription.price / subscription.originalPrice) * 100)}% 할인)
+                </span>
+              )}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              다음 결제일: {subscription.nextBillingDate || '-'}
+            </p>
           </div>
-          <p className="text-sm text-muted-foreground">
-            {formatPrice(subscription.price, subscription.currency)} / {cycleLabel}
-            {subscription.originalPrice && subscription.originalPrice > subscription.price && (
-              <span className="ml-2 text-green-600">
-                ({Math.round((1 - subscription.price / subscription.originalPrice) * 100)}% 할인)
-              </span>
-            )}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            다음 결제일: {subscription.nextBillingDate || '-'}
-          </p>
         </div>
         <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
           <Button

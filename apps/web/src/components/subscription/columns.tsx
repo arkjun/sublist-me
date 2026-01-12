@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import { ArrowUpDown, Pencil, Trash2 } from 'lucide-react'
 import type { Subscription } from '@magami/db/types'
 import { Button } from '@/components/ui/button'
 
@@ -48,7 +48,24 @@ export function getColumns({ onEdit, onDelete }: ColumnOptions): ColumnDef<Subsc
         )
       },
       cell: ({ row }) => {
-        return <div className="font-medium">{row.getValue('name')}</div>
+        const logoUrl = row.original.logoUrl
+        return (
+          <div className="flex items-center gap-2">
+            {logoUrl && (
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded border bg-white">
+                <img
+                  src={logoUrl}
+                  alt=""
+                  className="h-6 w-6 object-contain"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none'
+                  }}
+                />
+              </div>
+            )}
+            <span className="font-medium">{row.getValue('name')}</span>
+          </div>
+        )
       },
     },
     {

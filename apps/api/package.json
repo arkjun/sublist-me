@@ -14,7 +14,9 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "db:migrate": "wrangler d1 migrations apply magami-db --local",
-    "db:migrate:prod": "wrangler d1 migrations apply magami-db"
+    "db:migrate:prod": "wrangler d1 migrations apply magami-db",
+    "db:seed": "tsx scripts/seed.ts > scripts/seed.sql && wrangler d1 execute magami-db --local --file=scripts/seed.sql",
+    "db:seed:prod": "tsx scripts/seed.ts > scripts/seed.sql && wrangler d1 execute magami-db --file=scripts/seed.sql"
   },
   "dependencies": {
     "@lucia-auth/adapter-sqlite": "^3.0.2",
@@ -30,6 +32,7 @@
     "@cloudflare/workers-types": "^4.20241230.0",
     "@vitest/runner": "^2.1.0",
     "@vitest/snapshot": "^2.1.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vitest": "^2.1.0",
     "wrangler": "^3.99.0"

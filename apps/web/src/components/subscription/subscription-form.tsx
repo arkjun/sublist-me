@@ -1,7 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import type { Subscription, SubscriptionInput, BillingCycle, Currency } from '@magami/db/types'
+import { useState, useEffect, useMemo } from 'react'
+import type {
+  Subscription,
+  SubscriptionInput,
+  BillingCycle,
+  Currency,
+  ServiceProvider,
+} from '@magami/db/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -44,7 +50,10 @@ const defaultFormData: SubscriptionInput = {
   country: 'KR',
   url: '',
   memo: '',
+  nextBillingDate: undefined,
 }
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787'
 
 export function SubscriptionForm({
   open,
@@ -54,8 +63,50 @@ export function SubscriptionForm({
 }: SubscriptionFormProps) {
   const [formData, setFormData] = useState<SubscriptionInput>(defaultFormData)
   const [loading, setLoading] = useState(false)
+  const [providers, setProviders] = useState<ServiceProvider[]>([])
+  const [providersLoading, setProvidersLoading] = useState(false)
+  const [providersError, setProvidersError] = useState(false)
+  const [providerQuery, setProviderQuery] = useState('')
 
   const isEdit = !!subscription
+
+  const providerOptions = useMemo(() => {
+    return providers.map((provider) => {
+      const names = provider.names
+      let parsedNames: Record<string, string> = {}
+      if (typeof names === 'string') {
+        try {
+          parsedNames = JSON.parse(names) as Record<string, string>
+        } catch {
+          parsedNames = {}
+        }
+      } else if (typeof names === 'object' && names) {
+        parsedNames = names as Record<string, string>
+      }
+
+      const label =
+        parsedNames.ko || parsedNames.en || parsedNames.ja || provider.slug
+
+      let category = ''
+      const categories = provider.categories
+      if (Array.isArray(categories)) {
+        category = categories[0] || ''
+      } else if (typeof categories === 'string') {
+        try {
+          const parsed = JSON.parse(categories) as string[]
+          category = parsed[0] || ''
+        } catch {
+          category = ''
+        }
+      }
+
+      return {
+        provider,
+        label,
+        category,
+      }
+    })
+  }, [providers])
 
   useEffect(() => {
     if (subscription) {
@@ -69,11 +120,51 @@ export function SubscriptionForm({
         country: subscription.country ?? 'KR',
         url: subscription.url ?? '',
         memo: subscription.memo ?? '',
+        nextBillingDate: subscription.nextBillingDate ?? '',
       })
+      setProviderQuery(subscription.name)
     } else {
       setFormData(defaultFormData)
+      setProviderQuery('')
     }
   }, [subscription, open])
+
+  useEffect(() => {
+    if (!open) return
+    let ignore = false
+
+    const fetchProviders = async () => {
+      setProvidersLoading(true)
+      setProvidersError(false)
+      try {
+        const res = await fetch(`${API_URL}/service-providers`, {
+          credentials: 'include',
+        })
+        if (!res.ok) {
+          throw new Error('Failed to fetch providers')
+        }
+        const data: ServiceProvider[] = await res.json()
+        if (!ignore) {
+          setProviders(data)
+        }
+      } catch {
+        if (!ignore) {
+          setProviders([])
+          setProvidersError(true)
+        }
+      } finally {
+        if (!ignore) {
+          setProvidersLoading(false)
+        }
+      }
+    }
+
+    fetchProviders()
+
+    return () => {
+      ignore = true
+    }
+  }, [open])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -86,6 +177,21 @@ export function SubscriptionForm({
     }
   }
 
+  const handleProviderQueryChange = (value: string) => {
+    setProviderQuery(value)
+    const matched = providerOptions.find(
+      (option) => option.label === value || option.provider.slug === value
+    )
+    if (matched) {
+      setFormData((prev) => ({
+        ...prev,
+        name: matched.label,
+        url: matched.provider.url ?? prev.url,
+        category: matched.category || prev.category,
+      }))
+    }
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto">
@@ -93,6 +199,30 @@ export function SubscriptionForm({
           <DialogTitle>{isEdit ? '구독 수정' : '새 구독 추가'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="provider">서비스 선택</Label>
+            <Input
+              id="provider"
+              list="service-providers"
+              value={providerQuery}
+              onChange={(e) => handleProviderQueryChange(e.target.value)}
+              placeholder="서비스를 검색해 선택하세요"
+            />
+            <datalist id="service-providers">
+              {providerOptions.map((option) => (
+                <option key={option.provider.id} value={option.label} />
+              ))}
+            </datalist>
+            {providersLoading && (
+              <p className="text-xs text-muted-foreground">서비스 목록 불러오는 중...</p>
+            )}
+            {providersError && (
+              <p className="text-xs text-destructive">
+                서비스 목록을 불러오지 못했습니다.
+              </p>
+            )}
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="name">구독명 *</Label>
             <Input
@@ -171,6 +301,22 @@ export function SubscriptionForm({
                 ))}
               </Select>
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="nextBillingDate">다음 결제일</Label>
+            <Input
+              id="nextBillingDate"
+              type="date"
+              value={formData.nextBillingDate || ''}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  nextBillingDate: e.target.value || undefined,
+                })
+              }
+              placeholder="YYYY-MM-DD"
+            />
           </div>
 
           <div className="space-y-2">

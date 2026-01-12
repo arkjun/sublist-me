@@ -113,6 +113,17 @@ export function getColumns({ onEdit, onDelete }: ColumnOptions): ColumnDef<Subsc
       },
     },
     {
+      accessorKey: 'nextBillingDate',
+      header: '다음 결제일',
+      cell: ({ row }) => {
+        const nextBillingDate = row.getValue('nextBillingDate') as string | null
+        if (!nextBillingDate) {
+          return <span className="text-muted-foreground">-</span>
+        }
+        return nextBillingDate
+      },
+    },
+    {
       accessorKey: 'isActive',
       header: '상태',
       cell: ({ row }) => {

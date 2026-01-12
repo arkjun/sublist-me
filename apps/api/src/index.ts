@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { subscriptions } from './routes/subscriptions'
+import { serviceProviders } from './routes/service-providers'
 import { auth } from './routes/auth'
 import { sessionMiddleware } from './middleware/auth'
 import type { User, Session } from 'lucia'
@@ -30,6 +31,7 @@ app.use('/*', sessionMiddleware)
 // Routes
 app.route('/auth', auth)
 app.route('/subscriptions', subscriptions)
+app.route('/service-providers', serviceProviders)
 
 // Health check
 app.get('/', (c) => c.json({ message: 'Magami API', status: 'ok' }))

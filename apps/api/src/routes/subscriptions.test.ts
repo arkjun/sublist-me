@@ -5,6 +5,7 @@ import {
 } from 'cloudflare:test'
 import { describe, it, expect, beforeAll } from 'vitest'
 import app from '../index'
+import { createLucia } from '../lib/auth'
 
 declare module 'cloudflare:test' {
   interface ProvidedEnv {
@@ -18,12 +19,36 @@ interface Subscription {
   price: number
 }
 
+let sessionCookieName = ''
+let sessionCookieValue = ''
+
 describe('Subscriptions API', () => {
   // DB 초기화
   beforeAll(async () => {
     await env.DB.prepare(`
+      CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY,
+        google_id TEXT UNIQUE,
+        email TEXT NOT NULL UNIQUE,
+        name TEXT,
+        picture TEXT,
+        password_hash TEXT,
+        created_at TEXT NOT NULL DEFAULT (datetime('now'))
+      )
+    `).run()
+
+    await env.DB.prepare(`
+      CREATE TABLE IF NOT EXISTS sessions (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        expires_at INTEGER NOT NULL
+      )
+    `).run()
+
+    await env.DB.prepare(`
       CREATE TABLE IF NOT EXISTS subscriptions (
         id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
         name TEXT NOT NULL,
         description TEXT,
         price REAL NOT NULL,
@@ -41,13 +66,30 @@ describe('Subscriptions API', () => {
         updated_at TEXT DEFAULT (datetime('now'))
       )
     `).run()
+
+    const userId = 'user-1'
+    await env.DB.prepare(
+      'INSERT INTO users (id, google_id, email, name, picture, password_hash) VALUES (?, ?, ?, ?, ?, ?)'
+    )
+      .bind(userId, 'google-1', 'test@example.com', 'Test User', null, null)
+      .run()
+
+    const lucia = createLucia(env.DB)
+    const session = await lucia.createSession(userId, {})
+    const sessionCookie = lucia.createSessionCookie(session.id)
+    sessionCookieName = sessionCookie.name
+    sessionCookieValue = sessionCookie.value
   })
 
   describe('GET /subscriptions', () => {
     it('should return empty array initially', async () => {
       const ctx = createExecutionContext()
       const res = await app.fetch(
-        new Request('http://localhost/subscriptions'),
+        new Request('http://localhost/subscriptions', {
+          headers: {
+            Cookie: `${sessionCookieName}=${sessionCookieValue}`,
+          },
+        }),
         env,
         ctx
       )
@@ -65,7 +107,10 @@ describe('Subscriptions API', () => {
       const res = await app.fetch(
         new Request('http://localhost/subscriptions', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Cookie: `${sessionCookieName}=${sessionCookieValue}`,
+          },
           body: JSON.stringify({
             name: '유튜브 프리미엄',
             price: 14900,
@@ -90,7 +135,11 @@ describe('Subscriptions API', () => {
     it('should return 404 for non-existent subscription', async () => {
       const ctx = createExecutionContext()
       const res = await app.fetch(
-        new Request('http://localhost/subscriptions/non-existent-id'),
+        new Request('http://localhost/subscriptions/non-existent-id', {
+          headers: {
+            Cookie: `${sessionCookieName}=${sessionCookieValue}`,
+          },
+        }),
         env,
         ctx
       )
@@ -105,7 +154,10 @@ describe('Subscriptions API', () => {
       const createRes = await app.fetch(
         new Request('http://localhost/subscriptions', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Cookie: `${sessionCookieName}=${sessionCookieValue}`,
+          },
           body: JSON.stringify({
             name: 'Netflix',
             price: 17000,
@@ -120,7 +172,11 @@ describe('Subscriptions API', () => {
       // 조회
       const getCtx = createExecutionContext()
       const res = await app.fetch(
-        new Request(`http://localhost/subscriptions/${created.id}`),
+        new Request(`http://localhost/subscriptions/${created.id}`, {
+          headers: {
+            Cookie: `${sessionCookieName}=${sessionCookieValue}`,
+          },
+        }),
         env,
         getCtx
       )
@@ -139,7 +195,10 @@ describe('Subscriptions API', () => {
       const createRes = await app.fetch(
         new Request('http://localhost/subscriptions', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Cookie: `${sessionCookieName}=${sessionCookieValue}`,
+          },
           body: JSON.stringify({
             name: 'Spotify',
             price: 10900,
@@ -156,7 +215,10 @@ describe('Subscriptions API', () => {
       const res = await app.fetch(
         new Request(`http://localhost/subscriptions/${created.id}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Cookie: `${sessionCookieName}=${sessionCookieValue}`,
+          },
           body: JSON.stringify({
             price: 11900,
           }),
@@ -176,7 +238,10 @@ describe('Subscriptions API', () => {
       const res = await app.fetch(
         new Request('http://localhost/subscriptions/non-existent-id', {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Cookie: `${sessionCookieName}=${sessionCookieValue}`,
+          },
           body: JSON.stringify({ name: 'Test' }),
         }),
         env,
@@ -195,7 +260,10 @@ describe('Subscriptions API', () => {
       const createRes = await app.fetch(
         new Request('http://localhost/subscriptions', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Cookie: `${sessionCookieName}=${sessionCookieValue}`,
+          },
           body: JSON.stringify({
             name: 'To Delete',
             price: 5000,
@@ -212,6 +280,9 @@ describe('Subscriptions API', () => {
       const res = await app.fetch(
         new Request(`http://localhost/subscriptions/${created.id}`, {
           method: 'DELETE',
+          headers: {
+            Cookie: `${sessionCookieName}=${sessionCookieValue}`,
+          },
         }),
         env,
         deleteCtx
@@ -225,7 +296,11 @@ describe('Subscriptions API', () => {
       // 삭제 확인
       const getCtx = createExecutionContext()
       const getRes = await app.fetch(
-        new Request(`http://localhost/subscriptions/${created.id}`),
+        new Request(`http://localhost/subscriptions/${created.id}`, {
+          headers: {
+            Cookie: `${sessionCookieName}=${sessionCookieValue}`,
+          },
+        }),
         env,
         getCtx
       )
@@ -238,6 +313,9 @@ describe('Subscriptions API', () => {
       const res = await app.fetch(
         new Request('http://localhost/subscriptions/non-existent-id', {
           method: 'DELETE',
+          headers: {
+            Cookie: `${sessionCookieName}=${sessionCookieValue}`,
+          },
         }),
         env,
         ctx

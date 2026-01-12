@@ -60,6 +60,9 @@ export function SubscriptionCard({
               </span>
             )}
           </p>
+          <p className="text-xs text-muted-foreground">
+            다음 결제일: {subscription.nextBillingDate || '-'}
+          </p>
         </div>
         <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
           <Button

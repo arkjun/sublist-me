@@ -7,6 +7,7 @@ import type { Subscription, SubscriptionInput } from '@magami/db/types'
 import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/ui/data-table'
 import { getColumns } from './columns'
+import { SubscriptionCard } from './subscription-card'
 import { SubscriptionForm } from './subscription-form'
 import { useAuth } from '@/components/auth/auth-provider'
 
@@ -19,6 +20,7 @@ export function SubscriptionList() {
   const [loading, setLoading] = useState(true)
   const [formOpen, setFormOpen] = useState(false)
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null)
+  const [viewMode, setViewMode] = useState<'list' | 'card'>('list')
 
   const fetchSubscriptions = useCallback(async () => {
     if (!user) {
@@ -100,7 +102,7 @@ export function SubscriptionList() {
 
   const columns = useMemo(
     () => getColumns({ onEdit: handleEdit, onDelete: handleDelete }),
-    []
+    [handleEdit, handleDelete]
   )
 
   // 통계 계산
@@ -159,20 +161,55 @@ export function SubscriptionList() {
 
       {/* 구독 목록 */}
       <section>
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-xl font-semibold">내 구독</h2>
-          <Button onClick={() => setFormOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            구독 추가
-          </Button>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <Button
+                size="sm"
+                variant={viewMode === 'list' ? 'default' : 'outline'}
+                onClick={() => setViewMode('list')}
+              >
+                리스트
+              </Button>
+              <Button
+                size="sm"
+                variant={viewMode === 'card' ? 'default' : 'outline'}
+                onClick={() => setViewMode('card')}
+              >
+                카드
+              </Button>
+            </div>
+            <Button onClick={() => setFormOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              구독 추가
+            </Button>
+          </div>
         </div>
 
-        <DataTable
-          columns={columns}
-          data={subscriptions}
-          searchKey="name"
-          searchPlaceholder="구독명으로 검색..."
-        />
+        {viewMode === 'list' ? (
+          <DataTable
+            columns={columns}
+            data={subscriptions}
+            searchKey="name"
+            searchPlaceholder="구독명으로 검색..."
+          />
+        ) : subscriptions.length ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {subscriptions.map((subscription) => (
+              <SubscriptionCard
+                key={subscription.id}
+                subscription={subscription}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-md border p-6 text-center text-muted-foreground">
+            데이터가 없습니다.
+          </div>
+        )}
       </section>
 
       <SubscriptionForm

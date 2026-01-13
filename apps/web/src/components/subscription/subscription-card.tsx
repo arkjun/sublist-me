@@ -1,7 +1,7 @@
 'use client'
 
 import { Pencil, Trash2 } from 'lucide-react'
-import type { Subscription } from '@magami/db/types'
+import type { Subscription } from '@sublistme/db/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 

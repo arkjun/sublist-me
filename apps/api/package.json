@@ -1,5 +1,5 @@
 {
-  "name": "@magami/api",
+  "name": "@sublistme/api",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -13,14 +13,14 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "db:migrate": "wrangler d1 migrations apply magami-db --local",
-    "db:migrate:prod": "wrangler d1 migrations apply magami-db",
-    "db:seed": "tsx scripts/seed.ts > scripts/seed.sql && wrangler d1 execute magami-db --local --file=scripts/seed.sql",
-    "db:seed:prod": "tsx scripts/seed.ts > scripts/seed.sql && wrangler d1 execute magami-db --file=scripts/seed.sql"
+    "db:migrate": "wrangler d1 migrations apply sublistme-db --local",
+    "db:migrate:prod": "wrangler d1 migrations apply sublistme-db",
+    "db:seed": "tsx scripts/seed.ts > scripts/seed.sql && wrangler d1 execute sublistme-db --local --file=scripts/seed.sql",
+    "db:seed:prod": "tsx scripts/seed.ts > scripts/seed.sql && wrangler d1 execute sublistme-db --file=scripts/seed.sql"
   },
   "dependencies": {
     "@lucia-auth/adapter-sqlite": "^3.0.2",
-    "@magami/db": "workspace:*",
+    "@sublistme/db": "workspace:*",
     "arctic": "^3.7.0",
     "drizzle-orm": "^0.38.3",
     "hono": "^4.6.14",

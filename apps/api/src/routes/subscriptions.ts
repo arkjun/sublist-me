@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { drizzle } from 'drizzle-orm/d1'
-import { subscriptions as subscriptionsTable } from '@magami/db/schema'
+import { subscriptions as subscriptionsTable } from '@sublistme/db/schema'
 import { eq, and } from 'drizzle-orm'
 import type { Env } from '../index'
 import { requireAuth } from '../middleware/auth'

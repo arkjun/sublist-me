@@ -57,7 +57,7 @@ export default function LoginPage() {
       </div>
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Magami 로그인</CardTitle>
+          <CardTitle className="text-2xl text-center">SubList Me 로그인</CardTitle>
           <CardDescription className="text-center">서비스를 이용하려면 로그인해주세요</CardDescription>
         </CardHeader>
         <CardContent>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, LogIn } from 'lucide-react'
-import type { Subscription, SubscriptionInput } from '@magami/db/types'
+import type { Subscription, SubscriptionInput } from '@sublistme/db/types'
 import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/ui/data-table'
 import { getColumns } from './columns'

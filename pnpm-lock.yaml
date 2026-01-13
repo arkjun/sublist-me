@@ -26,7 +26,7 @@ importers:
       '@lucia-auth/adapter-sqlite':
         specifier: ^3.0.2
         version: 3.0.2(lucia@3.2.2)
-      '@magami/db':
+      '@sublistme/db':
         specifier: workspace:*
         version: link:../../packages/db
       arctic:
@@ -72,10 +72,10 @@ importers:
 
   apps/web:
     dependencies:
-      '@magami/api':
+      '@sublistme/api':
         specifier: workspace:*
         version: link:../api
-      '@magami/db':
+      '@sublistme/db':
         specifier: workspace:*
         version: link:../../packages/db
       '@radix-ui/react-label':

@@ -1,5 +1,5 @@
 import { hc } from 'hono/client'
-import type { AppType } from '@magami/api'
+import type { AppType } from '@sublistme/api'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787'
 

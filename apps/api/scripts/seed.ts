@@ -6,7 +6,7 @@
  *   pnpm run seed:remote  # seed to remote D1 (production)
  */
 
-import { serviceProviderSeeds } from '@magami/db/seeds'
+import { serviceProviderSeeds } from '@sublistme/db/seeds'
 
 // Generate SQL INSERT statements
 function generateSeedSQL(): string {

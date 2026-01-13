@@ -1,8 +1,8 @@
-# Magami Project Guide for AI Agents
+# SubList Me Project Guide for AI Agents
 
 ## Overview
 
-Magami는 구독 서비스 관리 앱입니다. 사용자가 구독 중인 서비스들을 등록하고 월별/연간 지출을 추적할 수 있습니다.
+서브리스트미는 구독 서비스 관리 앱입니다. 사용자가 구독 중인 서비스들을 등록하고 월별/연간 지출을 추적할 수 있습니다.
 
 ## Tech Stack
 
@@ -16,7 +16,7 @@ Magami는 구독 서비스 관리 앱입니다. 사용자가 구독 중인 서�
 ## Project Structure
 
 ```
-magami/
+sublistme/
 ├── apps/
 │   ├── api/                    # Hono API (Cloudflare Workers)
 │   │   ├── src/

@@ -4,7 +4,7 @@ import { ThemeProvider } from '@/components/theme/theme-provider'
 import { AuthProvider } from '@/components/auth/auth-provider'
 
 export const metadata: Metadata = {
-  title: 'Magami - 구독 관리',
+  title: 'SubList Me - 구독 관리',
   description: '내 구독 서비스를 한눈에 관리하세요',
 }
 

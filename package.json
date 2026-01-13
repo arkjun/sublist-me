@@ -1,17 +1,17 @@
 {
-  "name": "magami",
+  "name": "sublistme",
   "private": true,
   "scripts": {
     "dev": "pnpm -r --parallel dev",
-    "dev:api": "pnpm --filter @magami/api dev",
-    "dev:web": "pnpm --filter @magami/web dev",
+    "dev:api": "pnpm --filter @sublistme/api dev",
+    "dev:web": "pnpm --filter @sublistme/web dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
-    "test": "pnpm --filter @magami/api test",
+    "test": "pnpm --filter @sublistme/api test",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "db:generate": "pnpm --filter @magami/db generate",
-    "db:migrate": "pnpm --filter @magami/api db:migrate"
+    "db:generate": "pnpm --filter @sublistme/db generate",
+    "db:migrate": "pnpm --filter @sublistme/api db:migrate"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

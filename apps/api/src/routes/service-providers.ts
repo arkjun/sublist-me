@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { drizzle } from 'drizzle-orm/d1'
 import { asc } from 'drizzle-orm'
-import { serviceProviders as serviceProvidersTable } from '@magami/db/schema'
+import { serviceProviders as serviceProvidersTable } from '@sublistme/db/schema'
 import type { Env } from '../index'
 import { requireAuth } from '../middleware/auth'
 import type { User, Session } from 'lucia'

@@ -34,7 +34,7 @@ app.route('/subscriptions', subscriptions)
 app.route('/service-providers', serviceProviders)
 
 // Health check
-app.get('/', (c) => c.json({ message: 'Magami API', status: 'ok' }))
+app.get('/', (c) => c.json({ message: 'SubList Me API', status: 'ok' }))
 
 export default app
 

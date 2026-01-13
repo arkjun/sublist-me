@@ -1,11 +1,11 @@
-name = "magami-api"
+name = "sublistme-api"
 main = "src/index.ts"
 compatibility_date = "2024-12-30"
 compatibility_flags = ["nodejs_compat"]
 
 [[d1_databases]]
 binding = "DB"
-database_name = "magami-db"
+database_name = "sublistme-db"
 database_id = "2a6c7ce2-4535-41b9-a52a-c7b33f61a205"
 migrations_dir = "migrations"
 

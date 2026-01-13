@@ -1,14 +1,14 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Magami App', () => {
+test.describe('SubList Me App', () => {
   test('should load homepage', async ({ page }) => {
     await page.goto('/')
 
     // 페이지 타이틀 확인
-    await expect(page).toHaveTitle(/Magami/)
+    await expect(page).toHaveTitle(/SubList Me/)
 
     // 헤더 확인
-    await expect(page.locator('h1')).toContainText('Magami')
+    await expect(page.locator('h1')).toContainText('SubList Me')
   })
 
   test('should toggle theme', async ({ page }) => {
@@ -25,7 +25,8 @@ test.describe('Magami App', () => {
 
       // html에 dark 클래스가 토글되는지 확인
       const html = page.locator('html')
-      const hasDark = await html.evaluate((el) => el.classList.contains('dark'))
+      const className = await html.getAttribute('class')
+      const hasDark = className?.split(' ').includes('dark') ?? false
       expect(typeof hasDark).toBe('boolean')
     }
   })
@@ -38,7 +39,7 @@ test.describe('API Health', () => {
     expect(response.ok()).toBeTruthy()
     const data = await response.json()
     expect(data.status).toBe('ok')
-    expect(data.message).toBe('Magami API')
+    expect(data.message).toBe('SubList Me API')
   })
 })
 

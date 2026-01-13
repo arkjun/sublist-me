@@ -2,7 +2,7 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Pencil, Trash2 } from 'lucide-react'
-import type { Subscription } from '@magami/db/types'
+import type { Subscription } from '@sublistme/db/types'
 import { Button } from '@/components/ui/button'
 
 const billingCycleLabels: Record<string, string> = {

@@ -12,7 +12,7 @@ export function Header() {
   return (
     <header className="mb-8 flex items-center justify-between">
       <div>
-        <h1 className="text-3xl font-bold">Magami</h1>
+        <h1 className="text-3xl font-bold">SubList Me</h1>
         <p className="text-muted-foreground">내 구독을 한눈에 관리하세요</p>
       </div>
       <div className="flex items-center gap-3">

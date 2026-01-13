@@ -7,7 +7,7 @@ import type {
   BillingCycle,
   Currency,
   ServiceProvider,
-} from '@magami/db/types'
+} from '@sublistme/db/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -198,6 +198,8 @@ export function SubscriptionForm({
   const selectedProvider = providerOptions.find(
     (option) => option.label === formData.name || option.provider.slug === formData.name
   )
+  const resolvedLogoUrl: string =
+    formData.logoUrl ?? selectedProvider?.provider.logoUrl ?? ''
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -209,10 +211,10 @@ export function SubscriptionForm({
           <div className="space-y-2">
             <Label htmlFor="provider">서비스 선택</Label>
             <div className="flex items-center gap-3">
-              {(formData.logoUrl || selectedProvider?.provider.logoUrl) && (
+              {resolvedLogoUrl && (
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-white">
                   <img
-                    src={formData.logoUrl || selectedProvider?.provider.logoUrl}
+                    src={resolvedLogoUrl}
                     alt=""
                     className="h-8 w-8 object-contain"
                     onError={(e) => {

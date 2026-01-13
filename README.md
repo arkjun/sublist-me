@@ -1,4 +1,4 @@
-# Magami (마감이)
+# SubList Me (서브리스트미)
 
 구독 서비스를 한눈에 관리하는 앱
 
@@ -25,7 +25,7 @@
 ## 프로젝트 구조
 
 ```
-magami/
+sublistme/
 ├── apps/
 │   ├── api/          # Hono API (Cloudflare Workers)
 │   └── web/          # Next.js 웹앱 (Cloudflare Pages)
@@ -45,7 +45,7 @@ pnpm install
 
 ```bash
 cd apps/api
-wrangler d1 create magami-db
+wrangler d1 create sublistme-db
 ```
 
 출력된 `database_id`를 `apps/api/wrangler.toml`에 복사:
@@ -53,7 +53,7 @@ wrangler d1 create magami-db
 ```toml
 [[d1_databases]]
 binding = "DB"
-database_name = "magami-db"
+database_name = "sublistme-db"
 database_id = "YOUR_DATABASE_ID"  # 여기에 붙여넣기
 ```
 
@@ -86,13 +86,13 @@ pnpm dev:web   # http://localhost:3000
 cd apps/api
 
 # 프로덕션 DB 마이그레이션
-wrangler d1 migrations apply magami-db
+wrangler d1 migrations apply sublistme-db
 
 # Workers 배포
 wrangler deploy
 ```
 
-배포 후 API URL 확인: `https://magami-api.YOUR_SUBDOMAIN.workers.dev`
+배포 후 API URL 확인: `https://sublistme-api.YOUR_SUBDOMAIN.workers.dev`
 
 ### 2. Web 배포 (Cloudflare Pages)
 
@@ -100,7 +100,7 @@ wrangler deploy
 cd apps/web
 
 # 환경 변수와 함께 빌드 & 배포
-NEXT_PUBLIC_API_URL=https://magami-api.YOUR_SUBDOMAIN.workers.dev pnpm deploy
+NEXT_PUBLIC_API_URL=https://sublistme-api.YOUR_SUBDOMAIN.workers.dev pnpm deploy
 ```
 
 또는 Cloudflare Pages 대시보드에서 환경 변수 설정 후 Git 연동으로 자동 배포.
@@ -132,7 +132,7 @@ GOOGLE_CLIENT_SECRET=your-client-secret
 Cloudflare 대시보드 > Pages > 프로젝트 설정 > Environment variables:
 
 ```
-NEXT_PUBLIC_API_URL=https://magami-api.YOUR_SUBDOMAIN.workers.dev
+NEXT_PUBLIC_API_URL=https://sublistme-api.YOUR_SUBDOMAIN.workers.dev
 ```
 
 ### Cloudflare Workers Secrets (프로덕션)
@@ -150,7 +150,7 @@ wrangler secret put GOOGLE_CLIENT_SECRET
 3. Application type: Web application
 4. Authorized redirect URIs 추가:
    - 개발: `http://localhost:8787/auth/callback/google`
-   - 프로덕션: `https://magami-api.YOUR_SUBDOMAIN.workers.dev/auth/callback/google`
+   - 프로덕션: `https://sublistme-api.YOUR_SUBDOMAIN.workers.dev/auth/callback/google`
 5. Client ID와 Client Secret을 환경 변수에 설정
 
 ## 라이센스

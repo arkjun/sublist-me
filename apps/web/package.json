@@ -1,5 +1,5 @@
 {
-  "name": "@magami/web",
+  "name": "@sublistme/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,11 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "next build && wrangler pages deploy out --project-name=magami"
+    "deploy": "next build && wrangler pages deploy out --project-name=sublistme"
   },
   "dependencies": {
-    "@magami/api": "workspace:*",
-    "@magami/db": "workspace:*",
+    "@sublistme/api": "workspace:*",
+    "@sublistme/db": "workspace:*",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-tabs": "^1.1.13",
     "@tanstack/react-table": "^8.21.2",

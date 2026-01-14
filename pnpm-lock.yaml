@@ -36,8 +36,8 @@ importers:
         specifier: ^0.38.3
         version: 0.38.4(@cloudflare/workers-types@4.20260101.0)(@types/react@19.2.7)(react@19.2.3)
       hono:
-        specifier: ^4.6.14
-        version: 4.11.3
+        specifier: ^4.11.4
+        version: 4.11.4
       lucia:
         specifier: ^3.2.2
         version: 3.2.2
@@ -94,8 +94,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       hono:
-        specifier: ^4.6.14
-        version: 4.11.3
+        specifier: ^4.11.4
+        version: 4.11.4
       lucide-react:
         specifier: ^0.469.0
         version: 0.469.0(react@19.2.3)
@@ -2369,8 +2369,8 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
-  hono@4.11.3:
-    resolution: {integrity: sha512-PmQi306+M/ct/m5s66Hrg+adPnkD5jiO6IjA7WhWw0gSBSo1EcRegwuI1deZ+wd5pzCGynCcn2DprnE4/yEV4w==}
+  hono@4.11.4:
+    resolution: {integrity: sha512-U7tt8JsyrxSRKspfhtLET79pU8K+tInj5QZXs1jSugO1Vq5dFj3kmZsRldo29mTBfcjDRVRXrEZ6LS63Cog9ZA==}
     engines: {node: '>=16.9.0'}
 
   html-escaper@2.0.2:
@@ -4755,7 +4755,7 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  hono@4.11.3: {}
+  hono@4.11.4: {}
 
   html-escaper@2.0.2: {}
 

@@ -16,4 +16,4 @@ export type ServiceProvider = InferSelectModel<typeof serviceProviders>
 export type NewServiceProvider = InferInsertModel<typeof serviceProviders>
 
 // Re-export schema types
-export type { BillingCycle, Currency } from './schema'
+export type { BillingCycle, Currency, Locale } from './schema'

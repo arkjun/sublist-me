@@ -10,6 +10,8 @@ type User = {
   email: string
   name: string | null
   picture: string | null
+  locale: 'ko' | 'en' | 'ja'
+  currency: 'KRW' | 'USD' | 'JPY' | 'EUR'
 }
 
 type AuthContextType = {
@@ -61,8 +63,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     if (!res.ok) {
-        const error = await res.json()
-        throw new Error(error.error || 'Login failed')
+      const error = (await res.json()) as { error?: string }
+      throw new Error(error.error || 'Login failed')
     }
     await fetchUser()
   }
@@ -76,8 +78,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     if (!res.ok) {
-        const error = await res.json()
-        throw new Error(error.error || 'Signup failed')
+      const error = (await res.json()) as { error?: string }
+      throw new Error(error.error || 'Signup failed')
     }
     await fetchUser()
   }

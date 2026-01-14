@@ -24,6 +24,8 @@ export function createLucia(db: D1Database) {
         email: attributes.email,
         name: attributes.name,
         picture: attributes.picture,
+        locale: attributes.locale,
+        currency: attributes.currency,
       }
     },
   })
@@ -42,6 +44,8 @@ declare module 'lucia' {
       email: string
       name: string | null
       picture: string | null
+      locale: string
+      currency: string
     }
   }
 }

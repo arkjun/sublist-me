@@ -1,6 +1,10 @@
 import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core'
 import { sql } from 'drizzle-orm'
 
+declare const crypto: {
+  randomUUID: () => string
+}
+
 // 납부 주기
 export type BillingCycle = 'monthly' | 'yearly' | 'weekly' | 'quarterly'
 
@@ -35,6 +39,8 @@ export const users = sqliteTable('users', {
   email: text('email').notNull().unique(),
   name: text('name'),
   picture: text('picture'),
+  locale: text('locale').$type<Locale>().notNull().default('ko'),
+  currency: text('currency').$type<Currency>().notNull().default('KRW'),
   createdAt: text('created_at')
     .notNull()
     .default(sql`(datetime('now'))`),

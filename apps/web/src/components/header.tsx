@@ -13,7 +13,7 @@ export function Header() {
     <header className="mb-8 flex items-center justify-between">
       <div>
         <h1 className="text-3xl font-bold">SubList Me</h1>
-        <p className="text-muted-foreground">내 구독을 한눈에 관리하세요</p>
+        <p className="text-muted-foreground">私、何をサブスクしてたっけ？</p>
       </div>
       <div className="flex items-center gap-3">
         {!loading && (
@@ -30,6 +30,9 @@ export function Header() {
                 <span className="text-sm text-muted-foreground hidden sm:inline">
                   {user.name || user.email}
                 </span>
+                <Link href="/my">
+                  <Button variant="outline" size="sm">마이페이지</Button>
+                </Link>
                 <Button variant="outline" size="sm" onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   로그아웃

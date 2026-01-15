@@ -16,7 +16,7 @@
 ## Project Structure
 
 ```
-sublistme/
+sublist-me/
 ├── apps/
 │   ├── api/                    # Hono API (Cloudflare Workers)
 │   │   ├── src/

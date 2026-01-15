@@ -28,7 +28,7 @@
 ## プロジェクト構造
 
 ```
-sublistme/
+sublist-me/
 ├── apps/
 │   ├── api/          # Hono API (Cloudflare Workers)
 │   └── web/          # Next.js Webアプリ (Cloudflare Pages)

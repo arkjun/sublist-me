@@ -28,7 +28,7 @@ A subscription management app to track all your subscriptions in one place.
 ## Project Structure
 
 ```
-sublistme/
+sublist-me/
 ├── apps/
 │   ├── api/          # Hono API (Cloudflare Workers)
 │   └── web/          # Next.js web app (Cloudflare Pages)

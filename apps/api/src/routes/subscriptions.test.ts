@@ -60,6 +60,7 @@ describe('Subscriptions API', () => {
         country TEXT DEFAULT 'KR',
         category TEXT,
         url TEXT,
+        logo_url TEXT,
         memo TEXT,
         is_active INTEGER DEFAULT 1,
         created_at TEXT DEFAULT (datetime('now')),

@@ -167,6 +167,11 @@ pnpm test             # Run tests
 - **Run tests**: `pnpm test`
 - **Coverage**: `coverage/` directory
 
+### Coverage Requirements
+- **최소 커버리지**: 70% 이상 유지 필수
+- 새 기능 추가 시 해당 코드에 대한 테스트 필수 작성
+- PR 머지 전 `pnpm test` 통과 필수
+
 ### Test Policy
 
 | Test Type | Required | When to Write |

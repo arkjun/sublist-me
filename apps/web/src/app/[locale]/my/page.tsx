@@ -17,6 +17,7 @@ import {
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { fetchUserPreferences, updateUserPreferences } from '@/lib/api';
+import { Footer } from '@/components/footer';
 
 const localeOptions: { value: Locale; label: string }[] = [
   { value: 'ko', label: '한국어' },
@@ -91,15 +92,19 @@ export default function MyPage() {
 
   if (authLoading || loading) {
     return (
-      <main className="container mx-auto max-w-5xl px-4 py-8">
-        <p className="text-muted-foreground">{tCommon('loading')}</p>
-      </main>
+      <div className="flex min-h-screen flex-col">
+        <main className="container mx-auto max-w-5xl flex-1 px-4 py-8">
+          <p className="text-muted-foreground">{tCommon('loading')}</p>
+        </main>
+        <Footer />
+      </div>
     );
   }
 
   return (
-    <main className="container mx-auto max-w-5xl px-4 py-8">
-      <Card className="max-w-xl">
+    <div className="flex min-h-screen flex-col">
+      <main className="container mx-auto max-w-5xl flex-1 px-4 py-8">
+        <Card className="max-w-xl">
         <CardHeader>
           <CardTitle>{t('title')}</CardTitle>
           <CardDescription>{t('description')}</CardDescription>
@@ -142,6 +147,8 @@ export default function MyPage() {
           </Button>
         </CardFooter>
       </Card>
-    </main>
+      </main>
+      <Footer />
+    </div>
   );
 }

@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
+import { Footer } from '@/components/footer';
 
 const STORAGE_KEY = 'sublistme_pending_services';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
@@ -136,9 +137,12 @@ export default function OnboardingPage() {
 
   if (authLoading) {
     return (
-      <main className="container mx-auto flex min-h-screen max-w-3xl items-center justify-center px-4">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </main>
+      <div className="flex min-h-screen flex-col">
+        <main className="container mx-auto flex flex-1 max-w-3xl items-center justify-center px-4">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </main>
+        <Footer />
+      </div>
     );
   }
 
@@ -148,25 +152,29 @@ export default function OnboardingPage() {
 
   if (services.length === 0) {
     return (
-      <main className="container mx-auto max-w-3xl px-4 py-8">
-        <div className="text-center">
-          <h1 className="mb-4 text-2xl font-bold">{t('noServices')}</h1>
-          <p className="mb-8 text-muted-foreground">
-            {t('noServicesDesc')}
-          </p>
-          <Link href="/">
-            <Button>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              {t('goSelect')}
-            </Button>
-          </Link>
-        </div>
-      </main>
+      <div className="flex min-h-screen flex-col">
+        <main className="container mx-auto max-w-3xl flex-1 px-4 py-8">
+          <div className="text-center">
+            <h1 className="mb-4 text-2xl font-bold">{t('noServices')}</h1>
+            <p className="mb-8 text-muted-foreground">
+              {t('noServicesDesc')}
+            </p>
+            <Link href="/">
+              <Button>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                {t('goSelect')}
+              </Button>
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
     );
   }
 
   return (
-    <main className="container mx-auto max-w-3xl px-4 py-8">
+    <div className="flex min-h-screen flex-col">
+      <main className="container mx-auto max-w-3xl flex-1 px-4 py-8">
       <div className="mb-8">
         <Link
           href="/"
@@ -300,6 +308,8 @@ export default function OnboardingPage() {
           )}
         </Button>
       </div>
-    </main>
+      </main>
+      <Footer />
+    </div>
   );
 }

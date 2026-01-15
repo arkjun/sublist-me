@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Footer } from '@/components/footer';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -59,11 +60,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
-      <Card className="w-full max-w-md">
+    <div className="flex min-h-screen flex-col">
+      <div className="flex flex-1 items-center justify-center p-4">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+        <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl text-center">
             {t('title')}
@@ -165,6 +167,8 @@ export default function LoginPage() {
           </Button>
         </CardContent>
       </Card>
+      </div>
+      <Footer />
     </div>
   );
 }

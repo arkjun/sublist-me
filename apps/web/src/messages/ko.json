@@ -38,6 +38,7 @@
     "signingUp": "가입 중...",
     "loginFailed": "로그인에 실패했습니다",
     "signupFailed": "회원가입에 실패했습니다",
+    "passwordMinLength": "비밀번호는 8자 이상이어야 합니다",
     "continueWithGoogle": "Google로 계속하기",
     "orContinueWith": "Or continue with"
   },

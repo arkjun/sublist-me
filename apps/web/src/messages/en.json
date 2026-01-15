@@ -38,6 +38,7 @@
     "signingUp": "Signing up...",
     "loginFailed": "Login failed",
     "signupFailed": "Sign up failed",
+    "passwordMinLength": "Password must be at least 8 characters",
     "continueWithGoogle": "Continue with Google",
     "orContinueWith": "Or continue with"
   },

@@ -47,6 +47,12 @@ export default function LoginPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (password.length < 8) {
+      setError(t('passwordMinLength'));
+      return;
+    }
+
     setLoading(true);
 
     try {

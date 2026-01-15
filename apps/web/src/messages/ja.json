@@ -38,6 +38,7 @@
     "signingUp": "登録中...",
     "loginFailed": "ログインに失敗しました",
     "signupFailed": "登録に失敗しました",
+    "passwordMinLength": "パスワードは8文字以上必要です",
     "continueWithGoogle": "Googleで続ける",
     "orContinueWith": "または"
   },

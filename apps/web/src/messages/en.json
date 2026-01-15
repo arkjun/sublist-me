@@ -20,8 +20,11 @@
     "tagline": "Select and manage your subscription services",
     "selectCount": "{count} selected",
     "instruction": "Select your subscription services and log in to add them all at once.",
+    "instructionLoggedIn": "Select new subscription services and save. Already registered services are shown as checked.",
     "clear": "Clear",
-    "continue": "Continue"
+    "continue": "Continue",
+    "save": "Save",
+    "mySubscriptions": "My Subscriptions"
   },
   "Login": {
     "title": "Login to SubList Me",

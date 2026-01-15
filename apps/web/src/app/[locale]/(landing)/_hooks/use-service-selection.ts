@@ -1,11 +1,28 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const STORAGE_KEY = 'sublistme_pending_services';
 
 export function useServiceSelection() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // 컴포넌트 마운트 시 localStorage에서 자동 로드
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setSelectedServices(parsed);
+        }
+      }
+    } catch {
+      // ignore parse error
+    }
+    setIsInitialized(true);
+  }, []);
 
   const toggleService = useCallback((slug: string) => {
     setSelectedServices((prev) =>
@@ -55,16 +72,26 @@ export function useServiceSelection() {
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
+  // 특정 서비스 목록만 localStorage에 저장 (기존 구독 제외용)
+  const saveSpecificToStorage = useCallback((slugs: string[]) => {
+    if (slugs.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(slugs));
+    }
+  }, []);
+
   return {
     selectedServices,
+    setSelectedServices,
     toggleService,
     selectAll,
     deselectAll,
     clearAll,
     isSelected,
     saveToStorage,
+    saveSpecificToStorage,
     loadFromStorage,
     clearStorage,
     count: selectedServices.length,
+    isInitialized,
   };
 }

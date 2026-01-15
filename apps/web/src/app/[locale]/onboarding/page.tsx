@@ -127,7 +127,7 @@ export default function OnboardingPage() {
       }
 
       localStorage.removeItem(STORAGE_KEY);
-      router.push('/');
+      router.push('/subscriptions');
     } catch (err) {
       setError(err instanceof Error ? err.message : t('error'));
     } finally {

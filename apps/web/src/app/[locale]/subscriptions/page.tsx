@@ -1,11 +1,21 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Footer } from '@/components/footer';
-import { ServiceCatalogue } from './(landing)/_components/service-catalogue';
+import { Header } from '@/components/header';
+import { SubscriptionList } from '@/components/subscription/subscription-list';
 
-export default function Home() {
-  const { loading } = useAuth();
+export default function SubscriptionsPage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login?redirect=/subscriptions');
+    }
+  }, [user, loading, router]);
 
   if (loading) {
     return (
@@ -18,10 +28,15 @@ export default function Home() {
     );
   }
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <main className="container mx-auto max-w-5xl flex-1 px-4 py-8">
-        <ServiceCatalogue />
+        <Header />
+        <SubscriptionList />
       </main>
       <Footer />
     </div>

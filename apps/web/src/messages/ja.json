@@ -20,8 +20,11 @@
     "tagline": "サブスクサービスを選択して管理しましょう",
     "selectCount": "{count}件選択中",
     "instruction": "利用中のサブスクサービスを選択してログインすると、選択したサービスを一括で追加できます。",
+    "instructionLoggedIn": "新しいサブスクサービスを選択して保存してください。すでに登録済みのサービスはチェック状態で表示されます。",
     "clear": "クリア",
-    "continue": "続ける"
+    "continue": "続ける",
+    "save": "保存する",
+    "mySubscriptions": "マイサブスク"
   },
   "Login": {
     "title": "SubList Me ログイン",

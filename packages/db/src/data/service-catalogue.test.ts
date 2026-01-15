@@ -5,6 +5,7 @@ import {
   getCategoriesWithServices,
   getServiceBySlug,
   getServicesByCategory,
+  getSlugByLogoUrl,
   SERVICE_CATALOGUE,
   type ServiceCatalogueItem,
 } from './service-catalogue';
@@ -235,6 +236,58 @@ describe('Service Catalogue', () => {
       } else {
         expect(hasOther).toBe(true);
       }
+    });
+  });
+
+  describe('getSlugByLogoUrl', () => {
+    it('should return slug for valid Netflix logoUrl', () => {
+      const netflixLogoUrl =
+        'https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png';
+      expect(getSlugByLogoUrl(netflixLogoUrl)).toBe('netflix');
+    });
+
+    it('should return slug for valid Spotify logoUrl', () => {
+      const spotifyLogoUrl =
+        'https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Green.png';
+      expect(getSlugByLogoUrl(spotifyLogoUrl)).toBe('spotify');
+    });
+
+    it('should return undefined for invalid logoUrl', () => {
+      expect(getSlugByLogoUrl('https://invalid.com/logo.png')).toBeUndefined();
+    });
+
+    it('should return undefined for empty string', () => {
+      expect(getSlugByLogoUrl('')).toBeUndefined();
+    });
+
+    it('should return correct slugs for various services', () => {
+      const testCases = [
+        {
+          logoUrl: 'https://cdn.simpleicons.org/youtube',
+          expectedSlug: 'youtube-premium',
+        },
+        {
+          logoUrl: 'https://www.notion.so/images/favicon.ico',
+          expectedSlug: 'notion',
+        },
+        {
+          logoUrl:
+            'https://image7.coupangcdn.com/image/coupang/favicon/v2/favicon.ico',
+          expectedSlug: 'coupang-rocket-wow',
+        },
+      ];
+
+      testCases.forEach(({ logoUrl, expectedSlug }) => {
+        expect(getSlugByLogoUrl(logoUrl)).toBe(expectedSlug);
+      });
+    });
+
+    it('should handle all services with logoUrl', () => {
+      const servicesWithLogo = SERVICE_CATALOGUE.filter((s) => s.logoUrl);
+      servicesWithLogo.forEach((service) => {
+        const result = getSlugByLogoUrl(service.logoUrl!);
+        expect(result).toBe(service.slug);
+      });
     });
   });
 });

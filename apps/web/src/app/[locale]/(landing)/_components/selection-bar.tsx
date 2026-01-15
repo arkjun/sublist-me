@@ -1,29 +1,51 @@
 'use client';
 
 import { getServiceBySlug } from '@sublistme/db/data/service-catalogue';
-import { ArrowRight, X } from 'lucide-react';
+import { ArrowRight, Check, X } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
+import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 
 interface SelectionBarProps {
   selectedServices: string[];
+  existingSubscriptionSlugs: string[];
   onClear: () => void;
   onSaveToStorage: () => void;
+  onSaveSpecificToStorage: (slugs: string[]) => void;
 }
 
 export function SelectionBar({
   selectedServices,
+  existingSubscriptionSlugs,
   onClear,
   onSaveToStorage,
+  onSaveSpecificToStorage,
 }: SelectionBarProps) {
+  const { user } = useAuth();
   const router = useRouter();
   const locale = useLocale() as 'ko' | 'en' | 'ja';
   const t = useTranslations('Landing');
 
-  const handleContinue = () => {
-    onSaveToStorage();
-    router.push('/login?redirect=/onboarding');
+  // 새로 추가할 구독 (기존 구독 제외)
+  const newSubscriptions = selectedServices.filter(
+    (slug) => !existingSubscriptionSlugs.includes(slug)
+  );
+
+  const handleAction = () => {
+    if (user) {
+      // 로그인 상태: 새 구독만 저장하고 onboarding으로 이동
+      if (newSubscriptions.length === 0) {
+        // 새 구독이 없으면 아무것도 하지 않음
+        return;
+      }
+      onSaveSpecificToStorage(newSubscriptions);
+      router.push('/onboarding');
+    } else {
+      // 비로그인 상태: 전체 저장하고 로그인으로 이동
+      onSaveToStorage();
+      router.push('/login?redirect=/onboarding');
+    }
   };
 
   if (selectedServices.length === 0) {
@@ -79,9 +101,24 @@ export function SelectionBar({
               <X className="mr-1 h-4 w-4" />
               {t('clear')}
             </Button>
-            <Button onClick={handleContinue}>
-              {t('continue')}
-              <ArrowRight className="ml-2 h-4 w-4" />
+            <Button
+              onClick={handleAction}
+              disabled={user ? newSubscriptions.length === 0 : false}
+            >
+              {user ? (
+                <>
+                  {t('save')}
+                  {newSubscriptions.length > 0 && (
+                    <span className="ml-1">({newSubscriptions.length})</span>
+                  )}
+                  <Check className="ml-2 h-4 w-4" />
+                </>
+              ) : (
+                <>
+                  {t('continue')}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </>
+              )}
             </Button>
           </div>
         </div>

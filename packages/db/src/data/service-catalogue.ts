@@ -605,3 +605,12 @@ export function getCategoriesWithServices(): CategoryInfo[] {
   const categoriesWithServices = new Set(SERVICE_CATALOGUE.map((s) => s.category));
   return getAllCategories().filter((c) => categoriesWithServices.has(c.id));
 }
+
+// 유틸리티 함수: logoUrl로 서비스 slug 찾기
+const SERVICE_BY_LOGO_URL = new Map(
+  SERVICE_CATALOGUE.filter((s) => s.logoUrl).map((s) => [s.logoUrl, s.slug])
+);
+
+export function getSlugByLogoUrl(logoUrl: string): string | undefined {
+  return SERVICE_BY_LOGO_URL.get(logoUrl);
+}

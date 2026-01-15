@@ -4,7 +4,6 @@ import { hc } from 'hono/client';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 
-// @ts-expect-error Hono client type compatibility issue
 export const api = hc<AppType>(API_URL);
 
 export type UserPreferences = {

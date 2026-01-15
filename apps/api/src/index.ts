@@ -25,7 +25,11 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 app.use(
   '/*',
   cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'https://app.sublistme.com',
+    ],
     credentials: true,
   }),
 );

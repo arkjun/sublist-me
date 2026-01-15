@@ -15,6 +15,7 @@ export function createLucia(db: D1Database) {
       attributes: {
         secure: true,
         sameSite: 'lax',
+        domain: '.sublistme.com',
       },
     },
     getUserAttributes: (attributes) => {

@@ -17,5 +17,12 @@ GOOGLE_REDIRECT_URI = "http://localhost:8787/auth/callback/google"
 FRONTEND_URL = "http://localhost:3000"
 
 # 프로덕션 환경
-# [env.production.vars]
-# GOOGLE_REDIRECT_URI = "https://your-api.workers.dev/auth/callback/google"
+[env.production.vars]
+GOOGLE_REDIRECT_URI = "https://api.sublistme.com/auth/callback/google"
+FRONTEND_URL = "https://app.sublistme.com"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "sublistme-db"
+database_id = "2a6c7ce2-4535-41b9-a52a-c7b33f61a205"
+migrations_dir = "migrations"

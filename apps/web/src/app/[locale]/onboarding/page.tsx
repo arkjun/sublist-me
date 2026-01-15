@@ -3,9 +3,9 @@
 import type { BillingCycle, Currency, SubscriptionInput } from '@sublistme/db/types';
 import { getServiceBySlug, type ServiceCatalogueItem } from '@sublistme/db/data/service-catalogue';
 import { ArrowLeft, Check, Loader2, Trash2 } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,13 +23,6 @@ interface ServiceFormData {
   billingCycle: BillingCycle;
 }
 
-const billingCycles: { value: BillingCycle; label: string }[] = [
-  { value: 'monthly', label: '월간' },
-  { value: 'yearly', label: '연간' },
-  { value: 'weekly', label: '주간' },
-  { value: 'quarterly', label: '분기' },
-];
-
 const currencies: { value: Currency; label: string }[] = [
   { value: 'KRW', label: 'KRW' },
   { value: 'USD', label: 'USD' },
@@ -40,11 +33,21 @@ const currencies: { value: Currency; label: string }[] = [
 export default function OnboardingPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const locale = useLocale() as 'ko' | 'en' | 'ja';
+  const t = useTranslations('Onboarding');
+  const tCommon = useTranslations('Common');
+  const tSub = useTranslations('Subscription');
   const [services, setServices] = useState<ServiceFormData[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // localStorage에서 선택된 서비스 로드
+  const billingCycles: { value: BillingCycle; label: string }[] = [
+    { value: 'monthly', label: tSub('billingCycle.monthly') },
+    { value: 'yearly', label: tSub('billingCycle.yearly') },
+    { value: 'weekly', label: tSub('billingCycle.weekly') },
+    { value: 'quarterly', label: tSub('billingCycle.quarterly') },
+  ];
+
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -70,7 +73,6 @@ export default function OnboardingPage() {
     }
   }, []);
 
-  // 로그인 안 되어있으면 로그인 페이지로
   useEffect(() => {
     if (!authLoading && !user) {
       router.push('/login?redirect=/onboarding');
@@ -91,11 +93,10 @@ export default function OnboardingPage() {
   }, []);
 
   const handleSubmit = async () => {
-    // 가격이 0인 서비스 필터링 (또는 모두 허용)
     const validServices = services.filter((s) => s.price > 0);
 
     if (validServices.length === 0) {
-      setError('최소 1개 이상의 서비스에 가격을 입력해주세요.');
+      setError(t('priceError'));
       return;
     }
 
@@ -104,7 +105,7 @@ export default function OnboardingPage() {
 
     try {
       const subscriptions: SubscriptionInput[] = validServices.map((s) => ({
-        name: s.service.names.ko || s.service.names.en || s.slug,
+        name: s.service.names[locale] || s.service.names.en || s.slug,
         price: s.price,
         currency: s.currency,
         billingCycle: s.billingCycle,
@@ -121,14 +122,13 @@ export default function OnboardingPage() {
       });
 
       if (!res.ok) {
-        throw new Error('구독 추가에 실패했습니다.');
+        throw new Error(t('submitError'));
       }
 
-      // 성공하면 localStorage 클리어하고 메인으로 이동
       localStorage.removeItem(STORAGE_KEY);
       router.push('/');
     } catch (err) {
-      setError(err instanceof Error ? err.message : '오류가 발생했습니다.');
+      setError(err instanceof Error ? err.message : t('error'));
     } finally {
       setSubmitting(false);
     }
@@ -150,14 +150,14 @@ export default function OnboardingPage() {
     return (
       <main className="container mx-auto max-w-3xl px-4 py-8">
         <div className="text-center">
-          <h1 className="mb-4 text-2xl font-bold">선택된 서비스가 없습니다</h1>
+          <h1 className="mb-4 text-2xl font-bold">{t('noServices')}</h1>
           <p className="mb-8 text-muted-foreground">
-            먼저 구독 서비스를 선택해주세요.
+            {t('noServicesDesc')}
           </p>
           <Link href="/">
             <Button>
               <ArrowLeft className="mr-2 h-4 w-4" />
-              서비스 선택하러 가기
+              {t('goSelect')}
             </Button>
           </Link>
         </div>
@@ -167,22 +167,20 @@ export default function OnboardingPage() {
 
   return (
     <main className="container mx-auto max-w-3xl px-4 py-8">
-      {/* 헤더 */}
       <div className="mb-8">
         <Link
           href="/"
           className="mb-4 inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="mr-1 h-4 w-4" />
-          돌아가기
+          {tCommon('goBack')}
         </Link>
-        <h1 className="text-2xl font-bold">구독 정보 입력</h1>
+        <h1 className="text-2xl font-bold">{t('title')}</h1>
         <p className="text-muted-foreground">
-          선택한 {services.length}개 서비스의 구독 정보를 입력해주세요.
+          {t('description', { count: services.length })}
         </p>
       </div>
 
-      {/* 서비스 목록 */}
       <div className="space-y-4">
         {services.map((s) => (
           <div
@@ -202,7 +200,7 @@ export default function OnboardingPage() {
                 )}
                 <div>
                   <h3 className="font-medium">
-                    {s.service.names.ko || s.service.names.en}
+                    {s.service.names[locale] || s.service.names.en}
                   </h3>
                   <p className="text-xs text-muted-foreground">
                     {s.service.category}
@@ -221,7 +219,7 @@ export default function OnboardingPage() {
             <div className="grid grid-cols-3 gap-3">
               <div className="space-y-1">
                 <Label htmlFor={`price-${s.slug}`} className="text-xs">
-                  가격 *
+                  {t('price')} *
                 </Label>
                 <Input
                   id={`price-${s.slug}`}
@@ -235,7 +233,7 @@ export default function OnboardingPage() {
               </div>
               <div className="space-y-1">
                 <Label htmlFor={`currency-${s.slug}`} className="text-xs">
-                  통화
+                  {t('currency')}
                 </Label>
                 <Select
                   id={`currency-${s.slug}`}
@@ -255,7 +253,7 @@ export default function OnboardingPage() {
               </div>
               <div className="space-y-1">
                 <Label htmlFor={`cycle-${s.slug}`} className="text-xs">
-                  주기
+                  {t('cycle')}
                 </Label>
                 <Select
                   id={`cycle-${s.slug}`}
@@ -278,28 +276,26 @@ export default function OnboardingPage() {
         ))}
       </div>
 
-      {/* 에러 메시지 */}
       {error && (
         <div className="mt-4 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
           {error}
         </div>
       )}
 
-      {/* 제출 버튼 */}
       <div className="mt-8 flex justify-end gap-3">
         <Link href="/">
-          <Button variant="outline">취소</Button>
+          <Button variant="outline">{tCommon('cancel')}</Button>
         </Link>
         <Button onClick={handleSubmit} disabled={submitting}>
           {submitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              추가 중...
+              {t('adding')}
             </>
           ) : (
             <>
               <Check className="mr-2 h-4 w-4" />
-              {services.length}개 구독 추가
+              {t('addingCount', { count: services.length })}
             </>
           )}
         </Button>

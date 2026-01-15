@@ -1,0 +1,117 @@
+{
+  "Metadata": {
+    "title": "SubList Me - 구독 관리",
+    "description": "내 구독 서비스를 한눈에 관리하세요"
+  },
+  "Common": {
+    "login": "로그인",
+    "logout": "로그아웃",
+    "mypage": "마이페이지",
+    "save": "저장",
+    "cancel": "취소",
+    "loading": "로딩 중...",
+    "profile": "프로필",
+    "goBack": "돌아가기",
+    "add": "추가",
+    "delete": "삭제",
+    "edit": "수정"
+  },
+  "Landing": {
+    "tagline": "구독 서비스를 선택하고 관리하세요",
+    "selectCount": "{count}개 선택됨",
+    "instruction": "사용 중인 구독 서비스를 선택한 후 로그인하면, 선택한 서비스들을 한번에 추가할 수 있습니다.",
+    "clear": "초기화",
+    "continue": "계속하기"
+  },
+  "Login": {
+    "title": "SubList Me 로그인",
+    "subtitle": "서비스를 이용하려면 로그인해주세요",
+    "tabLogin": "로그인",
+    "tabSignup": "회원가입",
+    "email": "이메일",
+    "password": "비밀번호",
+    "name": "이름",
+    "namePlaceholder": "홍길동",
+    "loginButton": "로그인",
+    "signupButton": "회원가입",
+    "loggingIn": "로그인 중...",
+    "signingUp": "가입 중...",
+    "loginFailed": "로그인에 실패했습니다",
+    "signupFailed": "회원가입에 실패했습니다",
+    "continueWithGoogle": "Google로 계속하기",
+    "orContinueWith": "Or continue with"
+  },
+  "MyPage": {
+    "title": "마이페이지",
+    "description": "언어와 통화 설정을 관리하세요.",
+    "language": "언어",
+    "currency": "통화",
+    "saving": "저장 중...",
+    "saved": "환경 설정이 저장되었습니다.",
+    "loadError": "환경 설정을 불러오지 못했습니다.",
+    "saveError": "저장에 실패했습니다."
+  },
+  "Onboarding": {
+    "title": "구독 정보 입력",
+    "description": "선택한 {count}개 서비스의 구독 정보를 입력해주세요.",
+    "noServices": "선택된 서비스가 없습니다",
+    "noServicesDesc": "먼저 구독 서비스를 선택해주세요.",
+    "goSelect": "서비스 선택하러 가기",
+    "price": "가격",
+    "currency": "통화",
+    "cycle": "주기",
+    "priceError": "최소 1개 이상의 서비스에 가격을 입력해주세요.",
+    "submitError": "구독 추가에 실패했습니다.",
+    "addingCount": "{count}개 구독 추가",
+    "adding": "추가 중...",
+    "error": "오류가 발생했습니다."
+  },
+  "Subscription": {
+    "title": "내 구독",
+    "thisMonth": "이번 달 지출",
+    "activeCount": "활성 구독",
+    "yearly": "연간 예상",
+    "add": "구독 추가",
+    "listView": "리스트",
+    "cardView": "카드",
+    "searchPlaceholder": "구독명으로 검색...",
+    "noData": "데이터가 없습니다.",
+    "loginRequired": "로그인이 필요합니다",
+    "loginRequiredDesc": "구독 서비스를 관리하려면 먼저 로그인해주세요.",
+    "confirmDelete": "정말 삭제하시겠습니까?",
+    "count": "{count}개",
+    "columns": {
+      "name": "구독명",
+      "category": "카테고리",
+      "price": "가격",
+      "discount": "할인율",
+      "cycle": "주기",
+      "nextBilling": "다음 결제일",
+      "status": "상태"
+    },
+    "status": {
+      "active": "활성",
+      "inactive": "비활성"
+    },
+    "billingCycle": {
+      "monthly": "월간",
+      "yearly": "연간",
+      "weekly": "주간",
+      "quarterly": "분기"
+    },
+    "billingCycleShort": {
+      "monthly": "월",
+      "yearly": "년",
+      "weekly": "주",
+      "quarterly": "분기"
+    }
+  },
+  "Header": {
+    "tagline": "私、何をサブスクしてたっけ？"
+  },
+  "LocaleSwitcher": {
+    "ko": "한국어",
+    "en": "English",
+    "ja": "日本語"
+  }
+}

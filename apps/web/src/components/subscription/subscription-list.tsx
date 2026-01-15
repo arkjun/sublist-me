@@ -2,8 +2,9 @@
 
 import type { Subscription, SubscriptionInput } from '@sublistme/db/types';
 import { LogIn, Plus } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
@@ -16,6 +17,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 export function SubscriptionList() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
+  const t = useTranslations('Subscription');
+  const tCommon = useTranslations('Common');
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
@@ -82,7 +85,7 @@ export function SubscriptionList() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('정말 삭제하시겠습니까?')) return;
+    if (!confirm(t('confirmDelete'))) return;
     const res = await fetch(`${API_URL}/subscriptions/${id}`, {
       method: 'DELETE',
       credentials: 'include',
@@ -104,12 +107,29 @@ export function SubscriptionList() {
     }
   };
 
+  const columnLabels = {
+    name: t('columns.name'),
+    category: t('columns.category'),
+    price: t('columns.price'),
+    discount: t('columns.discount'),
+    cycle: t('columns.cycle'),
+    nextBilling: t('columns.nextBilling'),
+    status: t('columns.status'),
+    active: t('status.active'),
+    inactive: t('status.inactive'),
+    billingCycleShort: {
+      monthly: t('billingCycleShort.monthly'),
+      yearly: t('billingCycleShort.yearly'),
+      weekly: t('billingCycleShort.weekly'),
+      quarterly: t('billingCycleShort.quarterly'),
+    },
+  };
+
   const columns = useMemo(
-    () => getColumns({ onEdit: handleEdit, onDelete: handleDelete }),
-    [handleEdit, handleDelete],
+    () => getColumns({ onEdit: handleEdit, onDelete: handleDelete, labels: columnLabels }),
+    [handleEdit, handleDelete, columnLabels],
   );
 
-  // 통계 계산
   const monthlyTotal = subscriptions
     .filter((s) => s.isActive)
     .reduce((sum, s) => {
@@ -124,7 +144,7 @@ export function SubscriptionList() {
   const activeCount = subscriptions.filter((s) => s.isActive).length;
 
   if (authLoading || loading) {
-    return <div className="text-center text-muted-foreground">로딩 중...</div>;
+    return <div className="text-center text-muted-foreground">{tCommon('loading')}</div>;
   }
 
   if (!user) {
@@ -133,13 +153,13 @@ export function SubscriptionList() {
         <div className="mb-6 rounded-full bg-muted p-6">
           <LogIn className="h-12 w-12 text-muted-foreground" />
         </div>
-        <h2 className="mb-2 text-2xl font-semibold">로그인이 필요합니다</h2>
+        <h2 className="mb-2 text-2xl font-semibold">{t('loginRequired')}</h2>
         <p className="mb-6 text-muted-foreground">
-          구독 서비스를 관리하려면 먼저 로그인해주세요.
+          {t('loginRequiredDesc')}
         </p>
         <Button size="lg" onClick={() => router.push('/login')}>
           <LogIn className="mr-2 h-5 w-5" />
-          로그인
+          {tCommon('login')}
         </Button>
       </div>
     );
@@ -147,30 +167,28 @@ export function SubscriptionList() {
 
   return (
     <div>
-      {/* 요약 카드 */}
       <div className="mb-8 grid gap-4 md:grid-cols-3">
         <div className="rounded-lg border bg-card p-6">
-          <p className="text-sm text-muted-foreground">이번 달 지출</p>
+          <p className="text-sm text-muted-foreground">{t('thisMonth')}</p>
           <p className="text-2xl font-bold">
             ₩{Math.round(monthlyTotal).toLocaleString()}
           </p>
         </div>
         <div className="rounded-lg border bg-card p-6">
-          <p className="text-sm text-muted-foreground">활성 구독</p>
-          <p className="text-2xl font-bold">{activeCount}개</p>
+          <p className="text-sm text-muted-foreground">{t('activeCount')}</p>
+          <p className="text-2xl font-bold">{t('count', { count: activeCount })}</p>
         </div>
         <div className="rounded-lg border bg-card p-6">
-          <p className="text-sm text-muted-foreground">연간 예상</p>
+          <p className="text-sm text-muted-foreground">{t('yearly')}</p>
           <p className="text-2xl font-bold">
             ₩{Math.round(yearlyTotal).toLocaleString()}
           </p>
         </div>
       </div>
 
-      {/* 구독 목록 */}
       <section>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-xl font-semibold">내 구독</h2>
+          <h2 className="text-xl font-semibold">{t('title')}</h2>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
               <Button
@@ -178,19 +196,19 @@ export function SubscriptionList() {
                 variant={viewMode === 'list' ? 'default' : 'outline'}
                 onClick={() => setViewMode('list')}
               >
-                리스트
+                {t('listView')}
               </Button>
               <Button
                 size="sm"
                 variant={viewMode === 'card' ? 'default' : 'outline'}
                 onClick={() => setViewMode('card')}
               >
-                카드
+                {t('cardView')}
               </Button>
             </div>
             <Button onClick={() => setFormOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              구독 추가
+              {t('add')}
             </Button>
           </div>
         </div>
@@ -200,7 +218,7 @@ export function SubscriptionList() {
             columns={columns}
             data={subscriptions}
             searchKey="name"
-            searchPlaceholder="구독명으로 검색..."
+            searchPlaceholder={t('searchPlaceholder')}
           />
         ) : subscriptions.length ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -215,7 +233,7 @@ export function SubscriptionList() {
           </div>
         ) : (
           <div className="rounded-md border p-6 text-center text-muted-foreground">
-            데이터가 없습니다.
+            {t('noData')}
           </div>
         )}
       </section>

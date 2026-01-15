@@ -2,26 +2,26 @@
 
 import { getServiceBySlug } from '@sublistme/db/data/service-catalogue';
 import { ArrowRight, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 
 interface SelectionBarProps {
   selectedServices: string[];
   onClear: () => void;
   onSaveToStorage: () => void;
-  locale?: 'ko' | 'en' | 'ja';
 }
 
 export function SelectionBar({
   selectedServices,
   onClear,
   onSaveToStorage,
-  locale = 'ko',
 }: SelectionBarProps) {
   const router = useRouter();
+  const locale = useLocale() as 'ko' | 'en' | 'ja';
+  const t = useTranslations('Landing');
 
   const handleContinue = () => {
-    // localStorage에 선택 저장 후 로그인으로 이동
     onSaveToStorage();
     router.push('/login?redirect=/onboarding');
   };
@@ -30,7 +30,6 @@ export function SelectionBar({
     return null;
   }
 
-  // 선택된 서비스 정보 가져오기 (최대 5개만 표시)
   const selectedServiceInfo = selectedServices
     .slice(0, 5)
     .map((slug) => getServiceBySlug(slug))
@@ -42,7 +41,6 @@ export function SelectionBar({
     <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto max-w-5xl px-4 py-4">
         <div className="flex items-center justify-between gap-4">
-          {/* 선택된 서비스 미리보기 */}
           <div className="flex flex-1 items-center gap-2 overflow-hidden">
             <div className="flex -space-x-2">
               {selectedServiceInfo.map((service) =>
@@ -69,21 +67,20 @@ export function SelectionBar({
               )}
             </div>
             <span className="text-sm font-medium">
-              {selectedServices.length}개 선택됨
+              {t('selectCount', { count: selectedServices.length })}
               {remainingCount > 0 && (
                 <span className="text-muted-foreground"> (+{remainingCount})</span>
               )}
             </span>
           </div>
 
-          {/* 버튼 */}
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={onClear}>
               <X className="mr-1 h-4 w-4" />
-              초기화
+              {t('clear')}
             </Button>
             <Button onClick={handleContinue}>
-              계속하기
+              {t('continue')}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>

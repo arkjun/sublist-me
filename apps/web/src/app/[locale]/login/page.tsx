@@ -1,7 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/components/auth/auth-provider';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -19,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function LoginPage() {
   const router = useRouter();
+  const t = useTranslations('Login');
   const { login, loginWithEmail, signupWithEmail } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -36,7 +37,7 @@ export default function LoginPage() {
       await loginWithEmail(email, password);
       router.push('/');
     } catch (err: any) {
-      setError(err.message || '로그인에 실패했습니다');
+      setError(err.message || t('loginFailed'));
     } finally {
       setLoading(false);
     }
@@ -51,7 +52,7 @@ export default function LoginPage() {
       await signupWithEmail(email, password, name);
       router.push('/');
     } catch (err: any) {
-      setError(err.message || '회원가입에 실패했습니다');
+      setError(err.message || t('signupFailed'));
     } finally {
       setLoading(false);
     }
@@ -65,23 +66,23 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl text-center">
-            SubList Me 로그인
+            {t('title')}
           </CardTitle>
           <CardDescription className="text-center">
-            서비스를 이용하려면 로그인해주세요
+            {t('subtitle')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">로그인</TabsTrigger>
-              <TabsTrigger value="signup">회원가입</TabsTrigger>
+              <TabsTrigger value="login">{t('tabLogin')}</TabsTrigger>
+              <TabsTrigger value="signup">{t('tabSignup')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
               <form onSubmit={handleEmailLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">이메일</Label>
+                  <Label htmlFor="email">{t('email')}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -92,7 +93,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">비밀번호</Label>
+                  <Label htmlFor="password">{t('password')}</Label>
                   <Input
                     id="password"
                     type="password"
@@ -103,7 +104,7 @@ export default function LoginPage() {
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? '로그인 중...' : '로그인'}
+                  {loading ? t('loggingIn') : t('loginButton')}
                 </Button>
               </form>
             </TabsContent>
@@ -111,16 +112,16 @@ export default function LoginPage() {
             <TabsContent value="signup">
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-name">이름</Label>
+                  <Label htmlFor="signup-name">{t('name')}</Label>
                   <Input
                     id="signup-name"
-                    placeholder="홍길동"
+                    placeholder={t('namePlaceholder')}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email">이메일</Label>
+                  <Label htmlFor="signup-email">{t('email')}</Label>
                   <Input
                     id="signup-email"
                     type="email"
@@ -131,7 +132,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password">비밀번호</Label>
+                  <Label htmlFor="signup-password">{t('password')}</Label>
                   <Input
                     id="signup-password"
                     type="password"
@@ -142,7 +143,7 @@ export default function LoginPage() {
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? '가입 중...' : '회원가입'}
+                  {loading ? t('signingUp') : t('signupButton')}
                 </Button>
               </form>
             </TabsContent>
@@ -154,13 +155,13 @@ export default function LoginPage() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
+                {t('orContinueWith')}
               </span>
             </div>
           </div>
 
           <Button variant="outline" className="w-full" onClick={login}>
-            Google로 계속하기
+            {t('continueWithGoogle')}
           </Button>
         </CardContent>
       </Card>

@@ -1,8 +1,9 @@
 'use client';
 
 import type { Currency, Locale } from '@sublistme/db/types';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,6 +33,8 @@ const currencyOptions: { value: Currency; label: string }[] = [
 
 export default function MyPage() {
   const router = useRouter();
+  const t = useTranslations('MyPage');
+  const tCommon = useTranslations('Common');
   const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -58,7 +61,7 @@ export default function MyPage() {
         const message =
           err instanceof Error
             ? err.message
-            : '환경 설정을 불러오지 못했습니다.';
+            : t('loadError');
         setError(message);
       } finally {
         setLoading(false);
@@ -66,7 +69,7 @@ export default function MyPage() {
     };
 
     void load();
-  }, [authLoading, user, router]);
+  }, [authLoading, user, router, t]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -76,10 +79,10 @@ export default function MyPage() {
       const prefs = await updateUserPreferences({ locale, currency });
       setLocale(prefs.locale);
       setCurrency(prefs.currency);
-      setSuccess('환경 설정이 저장되었습니다.');
+      setSuccess(t('saved'));
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : '저장에 실패했습니다.';
+        err instanceof Error ? err.message : t('saveError');
       setError(message);
     } finally {
       setSaving(false);
@@ -89,7 +92,7 @@ export default function MyPage() {
   if (authLoading || loading) {
     return (
       <main className="container mx-auto max-w-5xl px-4 py-8">
-        <p className="text-muted-foreground">로딩 중...</p>
+        <p className="text-muted-foreground">{tCommon('loading')}</p>
       </main>
     );
   }
@@ -98,12 +101,12 @@ export default function MyPage() {
     <main className="container mx-auto max-w-5xl px-4 py-8">
       <Card className="max-w-xl">
         <CardHeader>
-          <CardTitle>마이페이지</CardTitle>
-          <CardDescription>언어와 통화 설정을 관리하세요.</CardDescription>
+          <CardTitle>{t('title')}</CardTitle>
+          <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="locale">언어</Label>
+            <Label htmlFor="locale">{t('language')}</Label>
             <Select
               id="locale"
               value={locale}
@@ -117,7 +120,7 @@ export default function MyPage() {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="currency">통화</Label>
+            <Label htmlFor="currency">{t('currency')}</Label>
             <Select
               id="currency"
               value={currency}
@@ -135,7 +138,7 @@ export default function MyPage() {
         </CardContent>
         <CardFooter>
           <Button onClick={handleSave} disabled={saving}>
-            {saving ? '저장 중...' : '저장'}
+            {saving ? t('saving') : tCommon('save')}
           </Button>
         </CardFooter>
       </Card>

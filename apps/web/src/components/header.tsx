@@ -1,19 +1,23 @@
 'use client';
 
 import { LogIn, LogOut } from 'lucide-react';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { useAuth } from '@/components/auth/auth-provider';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { Button } from '@/components/ui/button';
+import { LocaleSwitcher } from '@/components/locale-switcher';
 
 export function Header() {
   const { user, loading, login, logout } = useAuth();
+  const t = useTranslations('Header');
+  const tCommon = useTranslations('Common');
 
   return (
     <header className="mb-8 flex items-center justify-between">
       <div>
         <h1 className="text-3xl font-bold">SubList Me</h1>
-        <p className="text-muted-foreground">私、何をサブスクしてたっけ？</p>
+        <p className="text-muted-foreground">{t('tagline')}</p>
       </div>
       <div className="flex items-center gap-3">
         {!loading && (
@@ -23,7 +27,7 @@ export function Header() {
                 {user.picture && (
                   <img
                     src={user.picture}
-                    alt={user.name || '프로필'}
+                    alt={user.name || tCommon('profile')}
                     className="h-8 w-8 rounded-full"
                   />
                 )}
@@ -32,24 +36,25 @@ export function Header() {
                 </span>
                 <Link href="/my">
                   <Button variant="outline" size="sm">
-                    마이페이지
+                    {tCommon('mypage')}
                   </Button>
                 </Link>
                 <Button variant="outline" size="sm" onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
-                  로그아웃
+                  {tCommon('logout')}
                 </Button>
               </div>
             ) : (
               <Link href="/login">
                 <Button>
                   <LogIn className="mr-2 h-4 w-4" />
-                  로그인
+                  {tCommon('login')}
                 </Button>
               </Link>
             )}
           </>
         )}
+        <LocaleSwitcher />
         <ThemeToggle />
       </div>
     </header>

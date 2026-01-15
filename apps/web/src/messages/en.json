@@ -1,0 +1,117 @@
+{
+  "Metadata": {
+    "title": "SubList Me - Subscription Manager",
+    "description": "Manage all your subscriptions in one place"
+  },
+  "Common": {
+    "login": "Login",
+    "logout": "Logout",
+    "mypage": "My Page",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "profile": "Profile",
+    "goBack": "Go back",
+    "add": "Add",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "Landing": {
+    "tagline": "Select and manage your subscription services",
+    "selectCount": "{count} selected",
+    "instruction": "Select your subscription services and log in to add them all at once.",
+    "clear": "Clear",
+    "continue": "Continue"
+  },
+  "Login": {
+    "title": "Login to SubList Me",
+    "subtitle": "Please log in to use the service",
+    "tabLogin": "Login",
+    "tabSignup": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "namePlaceholder": "John Doe",
+    "loginButton": "Login",
+    "signupButton": "Sign Up",
+    "loggingIn": "Logging in...",
+    "signingUp": "Signing up...",
+    "loginFailed": "Login failed",
+    "signupFailed": "Sign up failed",
+    "continueWithGoogle": "Continue with Google",
+    "orContinueWith": "Or continue with"
+  },
+  "MyPage": {
+    "title": "My Page",
+    "description": "Manage your language and currency settings.",
+    "language": "Language",
+    "currency": "Currency",
+    "saving": "Saving...",
+    "saved": "Settings saved successfully.",
+    "loadError": "Failed to load settings.",
+    "saveError": "Failed to save settings."
+  },
+  "Onboarding": {
+    "title": "Enter Subscription Details",
+    "description": "Enter details for {count} selected services.",
+    "noServices": "No services selected",
+    "noServicesDesc": "Please select subscription services first.",
+    "goSelect": "Go select services",
+    "price": "Price",
+    "currency": "Currency",
+    "cycle": "Cycle",
+    "priceError": "Please enter a price for at least one service.",
+    "submitError": "Failed to add subscriptions.",
+    "addingCount": "Add {count} subscriptions",
+    "adding": "Adding...",
+    "error": "An error occurred."
+  },
+  "Subscription": {
+    "title": "My Subscriptions",
+    "thisMonth": "This Month",
+    "activeCount": "Active Subscriptions",
+    "yearly": "Yearly Estimate",
+    "add": "Add Subscription",
+    "listView": "List",
+    "cardView": "Card",
+    "searchPlaceholder": "Search by name...",
+    "noData": "No data available.",
+    "loginRequired": "Login Required",
+    "loginRequiredDesc": "Please log in to manage your subscriptions.",
+    "confirmDelete": "Are you sure you want to delete?",
+    "count": "{count}",
+    "columns": {
+      "name": "Name",
+      "category": "Category",
+      "price": "Price",
+      "discount": "Discount",
+      "cycle": "Cycle",
+      "nextBilling": "Next Billing",
+      "status": "Status"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "billingCycle": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "weekly": "Weekly",
+      "quarterly": "Quarterly"
+    },
+    "billingCycleShort": {
+      "monthly": "mo",
+      "yearly": "yr",
+      "weekly": "wk",
+      "quarterly": "qtr"
+    }
+  },
+  "Header": {
+    "tagline": "What was I subscribed to again?"
+  },
+  "LocaleSwitcher": {
+    "ko": "한국어",
+    "en": "English",
+    "ja": "日本語"
+  }
+}

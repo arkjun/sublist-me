@@ -1,36 +1,28 @@
 'use client';
 
-import { useAuth } from '@/components/auth/auth-provider';
-import { Header } from '@/components/header';
-import { SubscriptionList } from '@/components/subscription/subscription-list';
-import { ServiceCatalogue } from './(landing)/_components/service-catalogue';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { routing } from '@/i18n/routing';
 
-export default function Home() {
-  const { user, loading } = useAuth();
+export default function RootPage() {
+  const router = useRouter();
 
-  // 로딩 중
-  if (loading) {
-    return (
-      <main className="container mx-auto flex min-h-screen max-w-5xl items-center justify-center px-4">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-      </main>
-    );
-  }
+  useEffect(() => {
+    const browserLocale = navigator.language.split('-')[0];
+    const targetLocale = routing.locales.includes(browserLocale as typeof routing.locales[number])
+      ? browserLocale
+      : routing.defaultLocale;
 
-  // 비로그인: 서비스 카탈로그 (랜딩)
-  if (!user) {
-    return (
-      <main className="container mx-auto max-w-5xl px-4 py-8">
-        <ServiceCatalogue locale="ko" />
-      </main>
-    );
-  }
+    router.replace(`/${targetLocale}`);
+  }, [router]);
 
-  // 로그인: 구독 목록
   return (
-    <main className="container mx-auto max-w-5xl px-4 py-8">
-      <Header />
-      <SubscriptionList />
-    </main>
+    <html lang="ko">
+      <body>
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-transparent" />
+        </div>
+      </body>
+    </html>
   );
 }

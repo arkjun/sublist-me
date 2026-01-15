@@ -1,0 +1,117 @@
+{
+  "Metadata": {
+    "title": "SubList Me - サブスク管理",
+    "description": "すべてのサブスクを一か所で管理"
+  },
+  "Common": {
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "mypage": "マイページ",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "loading": "読み込み中...",
+    "profile": "プロフィール",
+    "goBack": "戻る",
+    "add": "追加",
+    "delete": "削除",
+    "edit": "編集"
+  },
+  "Landing": {
+    "tagline": "サブスクサービスを選択して管理しましょう",
+    "selectCount": "{count}件選択中",
+    "instruction": "利用中のサブスクサービスを選択してログインすると、選択したサービスを一括で追加できます。",
+    "clear": "クリア",
+    "continue": "続ける"
+  },
+  "Login": {
+    "title": "SubList Me ログイン",
+    "subtitle": "サービスを利用するにはログインしてください",
+    "tabLogin": "ログイン",
+    "tabSignup": "新規登録",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "name": "名前",
+    "namePlaceholder": "山田太郎",
+    "loginButton": "ログイン",
+    "signupButton": "新規登録",
+    "loggingIn": "ログイン中...",
+    "signingUp": "登録中...",
+    "loginFailed": "ログインに失敗しました",
+    "signupFailed": "登録に失敗しました",
+    "continueWithGoogle": "Googleで続ける",
+    "orContinueWith": "または"
+  },
+  "MyPage": {
+    "title": "マイページ",
+    "description": "言語と通貨の設定を管理します。",
+    "language": "言語",
+    "currency": "通貨",
+    "saving": "保存中...",
+    "saved": "設定を保存しました。",
+    "loadError": "設定の読み込みに失敗しました。",
+    "saveError": "保存に失敗しました。"
+  },
+  "Onboarding": {
+    "title": "サブスク情報の入力",
+    "description": "選択した{count}件のサービスのサブスク情報を入力してください。",
+    "noServices": "選択されたサービスがありません",
+    "noServicesDesc": "先にサブスクサービスを選択してください。",
+    "goSelect": "サービスを選択する",
+    "price": "価格",
+    "currency": "通貨",
+    "cycle": "周期",
+    "priceError": "少なくとも1つのサービスに価格を入力してください。",
+    "submitError": "サブスクの追加に失敗しました。",
+    "addingCount": "{count}件のサブスクを追加",
+    "adding": "追加中...",
+    "error": "エラーが発生しました。"
+  },
+  "Subscription": {
+    "title": "マイサブスク",
+    "thisMonth": "今月の支出",
+    "activeCount": "アクティブなサブスク",
+    "yearly": "年間予想",
+    "add": "サブスクを追加",
+    "listView": "リスト",
+    "cardView": "カード",
+    "searchPlaceholder": "名前で検索...",
+    "noData": "データがありません。",
+    "loginRequired": "ログインが必要です",
+    "loginRequiredDesc": "サブスクを管理するにはログインしてください。",
+    "confirmDelete": "本当に削除しますか？",
+    "count": "{count}件",
+    "columns": {
+      "name": "サブスク名",
+      "category": "カテゴリ",
+      "price": "価格",
+      "discount": "割引率",
+      "cycle": "周期",
+      "nextBilling": "次回請求日",
+      "status": "状態"
+    },
+    "status": {
+      "active": "アクティブ",
+      "inactive": "非アクティブ"
+    },
+    "billingCycle": {
+      "monthly": "月額",
+      "yearly": "年額",
+      "weekly": "週額",
+      "quarterly": "四半期"
+    },
+    "billingCycleShort": {
+      "monthly": "月",
+      "yearly": "年",
+      "weekly": "週",
+      "quarterly": "四半期"
+    }
+  },
+  "Header": {
+    "tagline": "私、何をサブスクしてたっけ？"
+  },
+  "LocaleSwitcher": {
+    "ko": "한국어",
+    "en": "English",
+    "ja": "日本語"
+  }
+}

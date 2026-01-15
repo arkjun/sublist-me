@@ -10,11 +10,7 @@ import { CategorySection } from './category-section';
 import { LandingHeader } from './landing-header';
 import { SelectionBar } from './selection-bar';
 
-interface ServiceCatalogueProps {
-  locale?: 'ko' | 'en' | 'ja';
-}
-
-export function ServiceCatalogue({ locale = 'ko' }: ServiceCatalogueProps) {
+export function ServiceCatalogue() {
   const {
     selectedServices,
     toggleService,
@@ -23,7 +19,6 @@ export function ServiceCatalogue({ locale = 'ko' }: ServiceCatalogueProps) {
     count,
   } = useServiceSelection();
 
-  // 카테고리와 서비스 데이터 메모이제이션
   const categoriesWithServices = useMemo(() => {
     const categories = getCategoriesWithServices();
     return categories.map((category) => ({
@@ -36,7 +31,6 @@ export function ServiceCatalogue({ locale = 'ko' }: ServiceCatalogueProps) {
     <div className="relative min-h-screen pb-24">
       <LandingHeader selectedCount={count} />
 
-      {/* 카테고리별 섹션 */}
       {categoriesWithServices.map(({ category, services }) => (
         <CategorySection
           key={category.id}
@@ -44,16 +38,13 @@ export function ServiceCatalogue({ locale = 'ko' }: ServiceCatalogueProps) {
           services={services}
           selectedServices={selectedServices}
           onToggle={toggleService}
-          locale={locale}
         />
       ))}
 
-      {/* 하단 선택 바 */}
       <SelectionBar
         selectedServices={selectedServices}
         onClear={clearAll}
         onSaveToStorage={saveToStorage}
-        locale={locale}
       />
     </div>
   );

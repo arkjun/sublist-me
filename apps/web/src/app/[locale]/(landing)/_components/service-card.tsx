@@ -2,21 +2,21 @@
 
 import type { ServiceCatalogueItem } from '@sublistme/db/data/service-catalogue';
 import { Check } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import { cn } from '@/lib/utils';
 
 interface ServiceCardProps {
   service: ServiceCatalogueItem;
   isSelected: boolean;
   onToggle: () => void;
-  locale?: 'ko' | 'en' | 'ja';
 }
 
 export function ServiceCard({
   service,
   isSelected,
   onToggle,
-  locale = 'ko',
 }: ServiceCardProps) {
+  const locale = useLocale() as 'ko' | 'en' | 'ja';
   const name = service.names[locale] || service.names.en || service.slug;
 
   return (
@@ -28,7 +28,6 @@ export function ServiceCard({
         isSelected && 'border-primary bg-primary/5 ring-2 ring-primary',
       )}
     >
-      {/* 로고 */}
       <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
         {service.logoUrl ? (
           <img
@@ -47,10 +46,8 @@ export function ServiceCard({
         )}
       </div>
 
-      {/* 이름 */}
       <span className="flex-1 truncate text-sm font-medium">{name}</span>
 
-      {/* 체크 표시 */}
       <div
         className={cn(
           'flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border transition-all',

@@ -5,13 +5,6 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const billingCycleLabels: Record<string, string> = {
-  monthly: '월',
-  yearly: '년',
-  weekly: '주',
-  quarterly: '분기',
-};
-
 const currencySymbols: Record<string, string> = {
   KRW: '₩',
   USD: '$',
@@ -27,15 +20,42 @@ function formatPrice(price: number, currency: string) {
   return `${symbol}${price.toFixed(2)}`;
 }
 
+interface ColumnLabels {
+  name: string;
+  category: string;
+  price: string;
+  discount: string;
+  cycle: string;
+  nextBilling: string;
+  status: string;
+  active: string;
+  inactive: string;
+  billingCycleShort: {
+    monthly: string;
+    yearly: string;
+    weekly: string;
+    quarterly: string;
+  };
+}
+
 interface ColumnOptions {
   onEdit: (subscription: Subscription) => void;
   onDelete: (id: string) => void;
+  labels: ColumnLabels;
 }
 
 export function getColumns({
   onEdit,
   onDelete,
+  labels,
 }: ColumnOptions): ColumnDef<Subscription>[] {
+  const billingCycleLabels: Record<string, string> = {
+    monthly: labels.billingCycleShort.monthly,
+    yearly: labels.billingCycleShort.yearly,
+    weekly: labels.billingCycleShort.weekly,
+    quarterly: labels.billingCycleShort.quarterly,
+  };
+
   return [
     {
       accessorKey: 'name',
@@ -45,7 +65,7 @@ export function getColumns({
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            구독명
+            {labels.name}
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -73,7 +93,7 @@ export function getColumns({
     },
     {
       accessorKey: 'category',
-      header: '카테고리',
+      header: labels.category,
       cell: ({ row }) => {
         const category = row.getValue('category') as string | null;
         if (!category) return <span className="text-muted-foreground">-</span>;
@@ -92,7 +112,7 @@ export function getColumns({
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            가격
+            {labels.price}
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -113,7 +133,7 @@ export function getColumns({
     },
     {
       id: 'discount',
-      header: '할인율',
+      header: labels.discount,
       cell: ({ row }) => {
         const price = row.original.price;
         const originalPrice = row.original.originalPrice;
@@ -126,7 +146,7 @@ export function getColumns({
     },
     {
       accessorKey: 'billingCycle',
-      header: '주기',
+      header: labels.cycle,
       cell: ({ row }) => {
         const cycle = row.getValue('billingCycle') as string;
         return billingCycleLabels[cycle] || cycle;
@@ -134,7 +154,7 @@ export function getColumns({
     },
     {
       accessorKey: 'nextBillingDate',
-      header: '다음 결제일',
+      header: labels.nextBilling,
       cell: ({ row }) => {
         const nextBillingDate = row.getValue('nextBillingDate') as
           | string
@@ -147,7 +167,7 @@ export function getColumns({
     },
     {
       accessorKey: 'isActive',
-      header: '상태',
+      header: labels.status,
       cell: ({ row }) => {
         const isActive = row.getValue('isActive') as boolean;
         return (
@@ -158,7 +178,7 @@ export function getColumns({
                 : 'bg-gray-100 text-gray-700'
             }`}
           >
-            {isActive ? '활성' : '비활성'}
+            {isActive ? labels.active : labels.inactive}
           </span>
         );
       },

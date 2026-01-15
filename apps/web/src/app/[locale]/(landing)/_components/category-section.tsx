@@ -16,9 +16,9 @@ import {
   Wallet,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import { ServiceCard } from './service-card';
 
-// 아이콘 매핑
 const ICON_MAP: Record<string, LucideIcon> = {
   Tv,
   Music,
@@ -39,7 +39,6 @@ interface CategorySectionProps {
   services: ServiceCatalogueItem[];
   selectedServices: string[];
   onToggle: (slug: string) => void;
-  locale?: 'ko' | 'en' | 'ja';
 }
 
 export function CategorySection({
@@ -47,15 +46,14 @@ export function CategorySection({
   services,
   selectedServices,
   onToggle,
-  locale = 'ko',
 }: CategorySectionProps) {
+  const locale = useLocale() as 'ko' | 'en' | 'ja';
   const Icon = ICON_MAP[category.icon] || MoreHorizontal;
   const categoryName = category.names[locale] || category.names.en || category.id;
   const selectedCount = services.filter((s) => selectedServices.includes(s.slug)).length;
 
   return (
     <section className="mb-8">
-      {/* 카테고리 헤더 */}
       <div className="mb-4 flex items-center gap-2">
         <Icon className="h-5 w-5 text-muted-foreground" />
         <h2 className="text-lg font-semibold">{categoryName}</h2>
@@ -67,7 +65,6 @@ export function CategorySection({
         )}
       </div>
 
-      {/* 서비스 그리드 */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {services.map((service) => (
           <ServiceCard
@@ -75,7 +72,6 @@ export function CategorySection({
             service={service}
             isSelected={selectedServices.includes(service.slug)}
             onToggle={() => onToggle(service.slug)}
-            locale={locale}
           />
         ))}
       </div>

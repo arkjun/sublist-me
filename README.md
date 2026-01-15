@@ -1,141 +1,161 @@
-# SubList Me (서브리스트미)
+# SubList Me
 
-구독 서비스를 한눈에 관리하는 앱
+A subscription management app to track all your subscriptions in one place.
 
-## 기능
+[한국어](./README.ko.md) | [日本語](./README.ja.md)
 
-- 구독 서비스 등록 및 관리
-- 월별/연간 지출 현황 확인
-- 정가 대비 할인율 비교
-- 다음 결제일 알림
-- 라이트/다크/시스템 테마 지원
-- 다양한 로그인 방식 (이메일/비밀번호, Google OAuth)
+## Features
 
-## 기술 스택
+- Register and manage subscription services
+- View monthly/yearly spending overview
+- Compare discount rates against regular prices
+- Next payment date notifications
+- Light/Dark/System theme support
+- Multiple authentication methods (Email/Password, Google OAuth)
 
-| 구분 | 기술 |
-|------|------|
+## Tech Stack
+
+| Category | Technology |
+|----------|------------|
 | Frontend | Next.js 15, React 19, Tailwind CSS, shadcn/ui |
 | API | Hono (Cloudflare Workers) |
 | Database | Cloudflare D1 (SQLite) |
 | ORM | Drizzle |
-| 인증 | Lucia + Arctic (Google OAuth, Email/Password) |
-| 타입 공유 | Hono RPC |
+| Auth | Lucia + Arctic (Google OAuth, Email/Password) |
+| Type Sharing | Hono RPC |
+| Linting | Biome |
 
-## 프로젝트 구조
+## Project Structure
 
 ```
 sublistme/
 ├── apps/
 │   ├── api/          # Hono API (Cloudflare Workers)
-│   └── web/          # Next.js 웹앱 (Cloudflare Pages)
+│   └── web/          # Next.js web app (Cloudflare Pages)
 └── packages/
-    └── db/           # Drizzle 스키마 (공유)
+    └── db/           # Drizzle schema (shared)
 ```
 
-## 시작하기
+## Getting Started
 
-### 1. 의존성 설치
+### Prerequisites
+
+- Node.js >= 20
+- pnpm >= 9.15
+
+### 1. Install Dependencies
 
 ```bash
 pnpm install
 ```
 
-### 2. Cloudflare D1 데이터베이스 생성
+### 2. Create Cloudflare D1 Database
 
 ```bash
 cd apps/api
 wrangler d1 create sublistme-db
 ```
 
-출력된 `database_id`를 `apps/api/wrangler.toml`에 복사:
+Copy the output `database_id` to `apps/api/wrangler.toml`:
 
 ```toml
 [[d1_databases]]
 binding = "DB"
 database_name = "sublistme-db"
-database_id = "YOUR_DATABASE_ID"  # 여기에 붙여넣기
+database_id = "YOUR_DATABASE_ID"  # paste here
 ```
 
-### 3. 마이그레이션
+### 3. Run Migrations
 
 ```bash
-# 스키마에서 SQL 생성
+# Generate SQL from schema
 pnpm db:generate
 
-# 로컬 D1에 적용
+# Apply to local D1
 pnpm db:migrate
 ```
 
-### 4. 개발 서버 실행
+### 4. Start Development Server
 
 ```bash
-# API + Web 동시 실행
+# Run API + Web simultaneously
 pnpm dev
 
-# 또는 개별 실행
+# Or run individually
 pnpm dev:api   # http://localhost:8787
 pnpm dev:web   # http://localhost:3000
 ```
 
-## 배포
+## Scripts
 
-### 1. API 배포 (Cloudflare Workers)
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start all development servers |
+| `pnpm build` | Build all packages |
+| `pnpm lint` | Run Biome linting |
+| `pnpm lint:fix` | Auto-fix lint issues |
+| `pnpm format` | Format code with Biome |
+| `pnpm test` | Run API tests |
+| `pnpm test:e2e` | Run Playwright E2E tests |
+
+## Deployment
+
+### 1. Deploy API (Cloudflare Workers)
 
 ```bash
 cd apps/api
 
-# 프로덕션 DB 마이그레이션
+# Run production DB migration
 wrangler d1 migrations apply sublistme-db
 
-# Workers 배포
+# Deploy Workers
 wrangler deploy
 ```
 
-배포 후 API URL 확인: `https://sublistme-api.YOUR_SUBDOMAIN.workers.dev`
+API URL after deployment: `https://sublistme-api.YOUR_SUBDOMAIN.workers.dev`
 
-### 2. Web 배포 (Cloudflare Pages)
+### 2. Deploy Web (Cloudflare Pages)
 
 ```bash
 cd apps/web
 
-# 환경 변수와 함께 빌드 & 배포
+# Build & deploy with environment variables
 NEXT_PUBLIC_API_URL=https://sublistme-api.YOUR_SUBDOMAIN.workers.dev pnpm deploy
 ```
 
-또는 Cloudflare Pages 대시보드에서 환경 변수 설정 후 Git 연동으로 자동 배포.
+Or connect Git repository in Cloudflare Pages dashboard for automatic deployment.
 
-## 환경 변수
+## Environment Variables
 
-| 변수 | 설명 | 예시 |
-|------|------|------|
-| `NEXT_PUBLIC_API_URL` | API 서버 URL | `http://localhost:8787` (개발) |
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_API_URL` | API server URL | `http://localhost:8787` (dev) |
 | `GOOGLE_CLIENT_ID` | Google OAuth Client ID | - |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth Client Secret | - |
-| `GOOGLE_REDIRECT_URI` | OAuth 콜백 URL | `http://localhost:8787/auth/callback/google` |
+| `GOOGLE_REDIRECT_URI` | OAuth callback URL | `http://localhost:8787/auth/callback/google` |
 
-### apps/web/.env.local (개발용)
+### apps/web/.env.local (Development)
 
 ```
 NEXT_PUBLIC_API_URL=http://localhost:8787
 ```
 
-### apps/api/.dev.vars (개발용)
+### apps/api/.dev.vars (Development)
 
 ```
 GOOGLE_CLIENT_ID=your-client-id
 GOOGLE_CLIENT_SECRET=your-client-secret
 ```
 
-### Cloudflare Pages 환경 변수 (프로덕션)
+### Cloudflare Pages Environment Variables (Production)
 
-Cloudflare 대시보드 > Pages > 프로젝트 설정 > Environment variables:
+Cloudflare Dashboard > Pages > Project Settings > Environment variables:
 
 ```
 NEXT_PUBLIC_API_URL=https://sublistme-api.YOUR_SUBDOMAIN.workers.dev
 ```
 
-### Cloudflare Workers Secrets (프로덕션)
+### Cloudflare Workers Secrets (Production)
 
 ```bash
 cd apps/api
@@ -143,16 +163,16 @@ wrangler secret put GOOGLE_CLIENT_ID
 wrangler secret put GOOGLE_CLIENT_SECRET
 ```
 
-## Google OAuth 설정
+## Google OAuth Setup
 
-1. [Google Cloud Console](https://console.cloud.google.com/)에서 프로젝트 생성
-2. APIs & Services > Credentials > Create Credentials > OAuth 2.0 Client IDs
+1. Create a project in [Google Cloud Console](https://console.cloud.google.com/)
+2. Go to APIs & Services > Credentials > Create Credentials > OAuth 2.0 Client IDs
 3. Application type: Web application
-4. Authorized redirect URIs 추가:
-   - 개발: `http://localhost:8787/auth/callback/google`
-   - 프로덕션: `https://sublistme-api.YOUR_SUBDOMAIN.workers.dev/auth/callback/google`
-5. Client ID와 Client Secret을 환경 변수에 설정
+4. Add Authorized redirect URIs:
+   - Development: `http://localhost:8787/auth/callback/google`
+   - Production: `https://sublistme-api.YOUR_SUBDOMAIN.workers.dev/auth/callback/google`
+5. Set Client ID and Client Secret in environment variables
 
-## 라이센스
+## License
 
 MIT

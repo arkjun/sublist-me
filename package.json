@@ -6,7 +6,9 @@
     "dev:api": "pnpm --filter @sublistme/api dev",
     "dev:web": "pnpm --filter @sublistme/web dev",
     "build": "pnpm -r build",
-    "lint": "pnpm -r lint",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
     "test": "pnpm --filter @sublistme/api test",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
@@ -14,6 +16,7 @@
     "db:migrate": "pnpm --filter @sublistme/api db:migrate"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.3.11",
     "@playwright/test": "^1.57.0",
     "@vitest/coverage-v8": "^3.2.0",
     "typescript": "^5.7.2",

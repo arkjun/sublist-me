@@ -100,14 +100,19 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'netflix',
     names: { ko: '넷플릭스', en: 'Netflix', ja: 'ネットフリックス' },
     url: 'https://www.netflix.com',
-    logoUrl: 'https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png',
+    logoUrl:
+      'https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png',
     category: 'ott',
   },
   {
     slug: 'youtube-premium',
-    names: { ko: '유튜브 프리미엄', en: 'YouTube Premium', ja: 'YouTube Premium' },
+    names: {
+      ko: '유튜브 프리미엄',
+      en: 'YouTube Premium',
+      ja: 'YouTube Premium',
+    },
     url: 'https://www.youtube.com/premium',
-    logoUrl: 'https://www.youtube.com/s/desktop/f506bd45/img/favicon_144x144.png',
+    logoUrl: 'https://cdn.simpleicons.org/youtube',
     category: 'ott',
   },
   {
@@ -115,14 +120,19 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     names: { ko: '디즈니+', en: 'Disney+', ja: 'Disney+' },
     url: 'https://www.disneyplus.com',
     logoUrl:
-      'https://cnbl-cdn.bamgrid.com/assets/7ecc8bcb60ad77193058d63e321bd21cbac2fc67281dbd9927571f8fcb51a7a7/original',
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAZlBMVEX////z9vfd5ujX4eTQ3N8bbHwATWIAUGQAXW9kkZyyx8wAWmyjvcO8ztKKqrLv8/Tj6+0AUmZGgI2ct74AV2pNhZFlkp0ARl17oanH1tkAVWiXs7qBpa0wdIIAWGsOaHgAYXKov8XDi+0wAAAAs0lEQVR4Ac3ORQKEMBAEwMYhPgnu/P+R64bdty6RUfwpzw98D4fCKL5J0owdJHBxr5UqSpIs3DXVeDKKkzU45XJyOFI82lgqsaerZ8eaMuz4SYNntO12QcZ71jyKh3a9VZPROKXUUiSBJq/xox6UdNwFrI6SAEijVRCAbBkAU/nAPK/mde+gDIBwXO+7WN20Cx501AZYCaYhdY+LGmnBlpo5zSkR2QA7pupYpzqpccTHn7sCJ04JJcbrCv4AAAAASUVORK5CYII=',
     category: 'ott',
   },
   {
     slug: 'amazon-prime-video',
-    names: { ko: '아마존 프라임 비디오', en: 'Amazon Prime Video', ja: 'Amazonプライム・ビデオ' },
+    names: {
+      ko: '아마존 프라임 비디오',
+      en: 'Amazon Prime Video',
+      ja: 'Amazonプライム・ビデオ',
+    },
     url: 'https://www.primevideo.com',
-    logoUrl: 'https://m.media-amazon.com/images/G/01/digital/video/web/logo-min-remaster.png',
+    logoUrl:
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAilBMVEUFeP8AdP8Ad/9fov8Aev8gf/8rhf+01/82if8Adv9wq//N4//f7f+Gtv+oyf+w0v91sP/S5v/l8f+81//q9f+Fs/9ppf/X6f8Acv/B1v+Cuf/K3f+Iu/98sf++2f9Bj/9jnf+TwP+yzf9zqP9Rmf+jzP8Ab/8Aaf+cxP9Tnf/G3P9Mlf////8Abf8vOGooAAABHElEQVR4AcWPVXbEMAwAJVOjOA2Dl8IM9z9eGbyv/d8xewwSPBpk8B+MvVcu3seP1R0SBagnh0mUhBLIes7V3rOvn4IwipM0ywstf++aLFHpKRPR+cIjfvGuhYu/8lZW8cl9k2V9qd9kU5ElvSJrO1He2vrUn3Idqd9n8TaQEYreY33DSCIrESlx7Mtx6uZxNMyMCLYMYF58tSatszbmduFoSSiWuI/a2ff11Qu9PhXs1xo/aTd9yd3A84eznnZpSVz2vC9unm7nUjtRuRLYbEJW1DuK1RXK2n4VmDMSI0BiDEl018q+iTxRx5sCYGREOLcGLIybJrnC40CnS2Z/Qbizyk/3D3RnNoR7yECV39xeIgLBHxihMcjgsbwCDZYVxYRdCUMAAAAASUVORK5CYII=',
     category: 'ott',
   },
   {
@@ -130,13 +140,6 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     names: { ko: 'Apple TV+', en: 'Apple TV+', ja: 'Apple TV+' },
     url: 'https://tv.apple.com',
     logoUrl: 'https://tv.apple.com/assets/knowledge-graph/tv.png',
-    category: 'ott',
-  },
-  {
-    slug: 'hbo-max',
-    names: { ko: 'Max', en: 'Max', ja: 'Max' },
-    url: 'https://www.max.com',
-    logoUrl: 'https://play.max.com/img/max-h-w-l.svg',
     category: 'ott',
   },
   {
@@ -164,7 +167,7 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'coupang-play',
     names: { ko: '쿠팡플레이', en: 'Coupang Play', ja: 'Coupang Play' },
     url: 'https://www.coupangplay.com',
-    logoUrl: 'https://image6.coupangcdn.com/image/coupangplay/favicon/favicon.ico',
+    logoUrl: 'https://assets.coupangplay.com/favicon.ico',
     category: 'ott',
   },
 
@@ -173,7 +176,8 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'spotify',
     names: { ko: '스포티파이', en: 'Spotify', ja: 'Spotify' },
     url: 'https://www.spotify.com',
-    logoUrl: 'https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Green.png',
+    logoUrl:
+      'https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Green.png',
     category: 'music',
   },
   {
@@ -187,28 +191,29 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'youtube-music',
     names: { ko: '유튜브 뮤직', en: 'YouTube Music', ja: 'YouTube Music' },
     url: 'https://music.youtube.com',
-    logoUrl: 'https://music.youtube.com/img/on_platform_logo_dark.svg',
+    logoUrl: 'https://cdn.simpleicons.org/youtubemusic',
     category: 'music',
   },
   {
     slug: 'melon',
     names: { ko: '멜론', en: 'Melon', ja: 'Melon' },
     url: 'https://www.melon.com',
-    logoUrl: 'https://cdnimg.melon.co.kr/resource/image/web/common/logo_melon142x99.png',
+    logoUrl:
+      'https://cdnimg.melon.co.kr/resource/image/web/common/logo_melon142x99.png',
     category: 'music',
   },
   {
     slug: 'genie',
     names: { ko: '지니뮤직', en: 'Genie Music', ja: 'Genie Music' },
     url: 'https://www.genie.co.kr',
-    logoUrl: 'https://www.genie.co.kr/favicon.ico',
+    logoUrl: 'https://www.genie.co.kr/resources/favicon_32.ico',
     category: 'music',
   },
   {
     slug: 'bugs',
     names: { ko: '벅스', en: 'Bugs', ja: 'Bugs' },
     url: 'https://music.bugs.co.kr',
-    logoUrl: 'https://file.bugsm.co.kr/bdesign/sns/1200x630_bugs.png',
+    logoUrl: 'https://file.bugsm.co.kr/wbugs/common/faviconBugs.ico',
     category: 'music',
   },
   {
@@ -222,7 +227,8 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'amazon-music',
     names: { ko: '아마존 뮤직', en: 'Amazon Music', ja: 'Amazon Music' },
     url: 'https://music.amazon.com',
-    logoUrl: 'https://m.media-amazon.com/images/G/01/music/logo/1.0/amazon_music_410x82px.svg',
+    logoUrl:
+      'https://m.media-amazon.com/images/G/01/music/logo/1.0/smile_256x256.png',
     category: 'music',
   },
 
@@ -231,19 +237,29 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'xbox-game-pass',
     names: { ko: 'Xbox Game Pass', en: 'Xbox Game Pass', ja: 'Xbox Game Pass' },
     url: 'https://www.xbox.com/gamepass',
-    logoUrl: 'https://assets.xboxservices.com/assets/fb/d2/fbd2cb56-5c25-414d-9f46-e6a164cdf5be.png',
+    logoUrl:
+      'https://assets.xboxservices.com/assets/fb/d2/fbd2cb56-5c25-414d-9f46-e6a164cdf5be.png',
     category: 'gaming',
   },
   {
     slug: 'playstation-plus',
-    names: { ko: 'PlayStation Plus', en: 'PlayStation Plus', ja: 'PlayStation Plus' },
+    names: {
+      ko: 'PlayStation Plus',
+      en: 'PlayStation Plus',
+      ja: 'PlayStation Plus',
+    },
     url: 'https://www.playstation.com/ps-plus',
-    logoUrl: 'https://gmedia.playstation.com/is/image/SIEPDC/ps-plus-black-badge-01-22sep20',
+    logoUrl:
+      'https://gmedia.playstation.com/is/image/SIEPDC/ps-plus-black-badge-01-22sep20',
     category: 'gaming',
   },
   {
     slug: 'nintendo-switch-online',
-    names: { ko: 'Nintendo Switch Online', en: 'Nintendo Switch Online', ja: 'Nintendo Switch Online' },
+    names: {
+      ko: 'Nintendo Switch Online',
+      en: 'Nintendo Switch Online',
+      ja: 'Nintendo Switch Online',
+    },
     url: 'https://www.nintendo.com/switch/online',
     logoUrl:
       'https://assets.nintendo.com/image/upload/f_auto/q_auto/c_fill,w_800/ncom/en_US/switch/online-service/posters/nso-logo',
@@ -261,8 +277,7 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'geforce-now',
     names: { ko: '지포스 나우', en: 'GeForce NOW', ja: 'GeForce NOW' },
     url: 'https://www.nvidia.com/geforce-now',
-    logoUrl:
-      'https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/geforce-now/gfn-ultimate-ecosystem-text-nv-gf-wmfg-2560-d.jpg',
+    logoUrl: 'https://gfn.co.kr/favicon.ico',
     category: 'gaming',
   },
 
@@ -271,21 +286,31 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'amazon-prime',
     names: { ko: '아마존 프라임', en: 'Amazon Prime', ja: 'Amazonプライム' },
     url: 'https://www.amazon.com/prime',
-    logoUrl: 'https://m.media-amazon.com/images/G/01/kfw/landing/2023/MEMBER/PrimeCard_Stacked_Logo_1x.png',
+    logoUrl: 'https://m.media-amazon.com/images/I/51IiESUZAaL.png',
     category: 'shopping',
   },
   {
     slug: 'coupang-rocket-wow',
-    names: { ko: '쿠팡 로켓와우', en: 'Coupang Rocket WOW', ja: 'Coupang Rocket WOW' },
+    names: {
+      ko: '쿠팡 로켓와우',
+      en: 'Coupang Rocket WOW',
+      ja: 'Coupang Rocket WOW',
+    },
     url: 'https://www.coupang.com/np/rocketwow',
-    logoUrl: 'https://image7.coupangcdn.com/image/coupang/favicon/v2/favicon.ico',
+    logoUrl:
+      'https://image7.coupangcdn.com/image/coupang/favicon/v2/favicon.ico',
     category: 'shopping',
   },
   {
     slug: 'naver-plus',
-    names: { ko: '네이버 플러스 멤버십', en: 'Naver Plus Membership', ja: 'Naver Plus Membership' },
+    names: {
+      ko: '네이버 플러스 멤버십',
+      en: 'Naver Plus Membership',
+      ja: 'Naver Plus Membership',
+    },
     url: 'https://nid.naver.com/membership',
-    logoUrl: 'https://s.pstatic.net/static/www/mobile/edit/2016/0705/mobile_212852414260.png',
+    logoUrl:
+      'https://s.pstatic.net/static/www/mobile/edit/2016/0705/mobile_212852414260.png',
     category: 'shopping',
   },
   {
@@ -301,14 +326,15 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'microsoft-365',
     names: { ko: 'Microsoft 365', en: 'Microsoft 365', ja: 'Microsoft 365' },
     url: 'https://www.microsoft.com/microsoft-365',
-    logoUrl: 'https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE1Mu3b',
+    logoUrl:
+      'https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE1Mu3b',
     category: 'productivity',
   },
   {
     slug: 'google-one',
     names: { ko: 'Google One', en: 'Google One', ja: 'Google One' },
     url: 'https://one.google.com',
-    logoUrl: 'https://www.gstatic.com/images/branding/product/2x/google_one_512dp.png',
+    logoUrl: 'https://one.google.com/about/public/favicon-32x32.png',
     category: 'cloud',
   },
   {
@@ -330,14 +356,20 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'evernote',
     names: { ko: '에버노트', en: 'Evernote', ja: 'Evernote' },
     url: 'https://evernote.com',
-    logoUrl: 'https://images.prismic.io/evernote/aOTBRp5xUNkB1qqj_OG-HP.png?auto=format,compress',
+    logoUrl:
+      'https://images.prismic.io/evernote/aOTBRp5xUNkB1qqj_OG-HP.png?auto=format,compress',
     category: 'productivity',
   },
   {
     slug: 'adobe-creative-cloud',
-    names: { ko: 'Adobe Creative Cloud', en: 'Adobe Creative Cloud', ja: 'Adobe Creative Cloud' },
+    names: {
+      ko: 'Adobe Creative Cloud',
+      en: 'Adobe Creative Cloud',
+      ja: 'Adobe Creative Cloud',
+    },
     url: 'https://www.adobe.com/creativecloud',
-    logoUrl: 'https://www.adobe.com/cc-shared/assets/img/product-icons/svg/creative-cloud.svg',
+    logoUrl:
+      'https://www.adobe.com/cc-shared/assets/img/product-icons/svg/creative-cloud.svg',
     category: 'productivity',
   },
   {
@@ -352,14 +384,16 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'canva',
     names: { ko: '캔바', en: 'Canva', ja: 'Canva' },
     url: 'https://www.canva.com',
-    logoUrl: 'https://static.canva.com/static/images/canva-logo-1200x630.png',
+    logoUrl:
+      'https://static.canva.com/domain-assets/canva/static/images/favicon-1.ico',
     category: 'productivity',
   },
   {
     slug: 'slack',
     names: { ko: '슬랙', en: 'Slack', ja: 'Slack' },
     url: 'https://slack.com',
-    logoUrl: 'https://a.slack-edge.com/38f0e7c/marketing/img/nav/slack-salesforce-logo-nav-black.png',
+    logoUrl:
+      'https://a.slack-edge.com/38f0e7c/marketing/img/nav/slack-salesforce-logo-nav-black.png',
     category: 'productivity',
   },
   {
@@ -370,32 +404,24 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     category: 'productivity',
   },
   {
-    slug: 'chatgpt-plus',
+    slug: 'chatgpt',
     names: { ko: 'ChatGPT Plus', en: 'ChatGPT Plus', ja: 'ChatGPT Plus' },
     url: 'https://chat.openai.com',
     logoUrl: 'https://cdn.oaistatic.com/assets/apple-touch-icon-mz9nytnj.webp',
     category: 'productivity',
   },
   {
-    slug: 'claude-pro',
-    names: { ko: 'Claude Pro', en: 'Claude Pro', ja: 'Claude Pro' },
+    slug: 'claude',
+    names: { ko: 'Claude', en: 'Claude', ja: 'Claude' },
     url: 'https://claude.ai',
-    logoUrl: 'https://claude.ai/apple-touch-icon.png',
+    logoUrl: 'https://cdn.simpleicons.org/claude',
     category: 'productivity',
   },
   {
     slug: 'github-copilot',
     names: { ko: 'GitHub Copilot', en: 'GitHub Copilot', ja: 'GitHub Copilot' },
     url: 'https://github.com/features/copilot',
-    logoUrl:
-      'https://images.ctfassets.net/8aevphvgewt8/5IdZ8KizWhMOGixAmVSw0g/f81f5f263a88eabe5d3e102300d44a88/github-copilot-social-img.png',
-    category: 'productivity',
-  },
-  {
-    slug: 'midjourney',
-    names: { ko: '미드저니', en: 'Midjourney', ja: 'Midjourney' },
-    url: 'https://www.midjourney.com',
-    logoUrl: 'https://www.midjourney.com/favicon.ico',
+    logoUrl: 'https://github.githubassets.com/favicons/favicon.svg',
     category: 'productivity',
   },
 
@@ -404,7 +430,8 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'icloud-plus',
     names: { ko: 'iCloud+', en: 'iCloud+', ja: 'iCloud+' },
     url: 'https://www.icloud.com',
-    logoUrl: 'https://www.apple.com/v/icloud/b/images/overview/icloud_icon__lrfw0gouxxaa_large.png',
+    logoUrl:
+      'https://www.icloud.com/system/icloud.com/2546Build54/favicons/default-favicon-light-180x180.png',
     category: 'cloud',
   },
   {
@@ -418,7 +445,11 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
   // ========== News ==========
   {
     slug: 'nyt',
-    names: { ko: '뉴욕타임스', en: 'The New York Times', ja: 'ニューヨーク・タイムズ' },
+    names: {
+      ko: '뉴욕타임스',
+      en: 'The New York Times',
+      ja: 'ニューヨーク・タイムズ',
+    },
     url: 'https://www.nytimes.com',
     logoUrl:
       'https://www.nytimes.com/vi-assets/static-assets/apple-touch-icon-28865b72953380a40aa43318108876cb.png',
@@ -426,7 +457,11 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
   },
   {
     slug: 'wsj',
-    names: { ko: '월스트리트저널', en: 'The Wall Street Journal', ja: 'ウォール・ストリート・ジャーナル' },
+    names: {
+      ko: '월스트리트저널',
+      en: 'The Wall Street Journal',
+      ja: 'ウォール・ストリート・ジャーナル',
+    },
     url: 'https://www.wsj.com',
     logoUrl: 'https://s.wsj.net/media/wsj_apple-touch-icon-180x180.png',
     category: 'news',
@@ -456,15 +491,12 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     category: 'fitness',
   },
   {
-    slug: 'peloton',
-    names: { ko: '펠로톤', en: 'Peloton', ja: 'Peloton' },
-    url: 'https://www.onepeloton.com',
-    logoUrl: 'https://www.onepeloton.com/favicon.ico',
-    category: 'fitness',
-  },
-  {
     slug: 'nike-training-club',
-    names: { ko: '나이키 트레이닝 클럽', en: 'Nike Training Club', ja: 'Nike Training Club' },
+    names: {
+      ko: '나이키 트레이닝 클럽',
+      en: 'Nike Training Club',
+      ja: 'Nike Training Club',
+    },
     url: 'https://www.nike.com/ntc-app',
     logoUrl: 'https://www.nike.com/favicon.ico',
     category: 'fitness',
@@ -504,12 +536,17 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'duolingo',
     names: { ko: '듀오링고', en: 'Duolingo', ja: 'Duolingo' },
     url: 'https://www.duolingo.com',
-    logoUrl: 'https://d35aaqx5ub95lt.cloudfront.net/vendor/70a4be81f6c3239a5b2ac4ef05eb4ccb.svg',
+    logoUrl:
+      'https://d35aaqx5ub95lt.cloudfront.net/vendor/70a4be81f6c3239a5b2ac4ef05eb4ccb.svg',
     category: 'education',
   },
   {
     slug: 'linkedin-learning',
-    names: { ko: '링크드인 러닝', en: 'LinkedIn Learning', ja: 'LinkedIn Learning' },
+    names: {
+      ko: '링크드인 러닝',
+      en: 'LinkedIn Learning',
+      ja: 'LinkedIn Learning',
+    },
     url: 'https://www.linkedin.com/learning',
     logoUrl: 'https://static.licdn.com/aero-v1/sc/h/al2o9zrvru7aqj8e1x2rzsrca',
     category: 'education',
@@ -529,12 +566,17 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     slug: 'baemin-club',
     names: { ko: '배민클럽', en: 'Baemin Club', ja: '配達の民族Club' },
     url: 'https://www.baemin.com',
-    logoUrl: 'https://www.baemin.com/_next/static/media/baemin-og_thumbnail.31be89ff.png',
+    logoUrl:
+      'https://www.baemin.com/_next/static/media/baemin-og_thumbnail.31be89ff.png',
     category: 'food',
   },
   {
     slug: 'yogiyo-super',
-    names: { ko: '요기요 슈퍼클럽', en: 'Yogiyo Super Club', ja: 'Yogiyo Super Club' },
+    names: {
+      ko: '요기요 슈퍼클럽',
+      en: 'Yogiyo Super Club',
+      ja: 'Yogiyo Super Club',
+    },
     url: 'https://www.yogiyo.co.kr',
     logoUrl: 'https://www.yogiyo.co.kr/favicon.ico',
     category: 'food',

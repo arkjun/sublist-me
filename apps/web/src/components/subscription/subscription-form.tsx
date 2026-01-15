@@ -1,12 +1,7 @@
 'use client';
 
-import type {
-  BillingCycle,
-  Currency,
-  ServiceProvider,
-  Subscription,
-  SubscriptionInput,
-} from '@sublistme/db/types';
+import type { BillingCycle, Currency, Subscription, SubscriptionInput } from '@sublistme/db/types';
+import { SERVICE_CATALOGUE, type ServiceCatalogueItem } from '@sublistme/db/data/service-catalogue';
 import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -54,8 +49,6 @@ const defaultFormData: SubscriptionInput = {
   nextBillingDate: undefined,
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
-
 export function SubscriptionForm({
   open,
   onOpenChange,
@@ -64,50 +57,17 @@ export function SubscriptionForm({
 }: SubscriptionFormProps) {
   const [formData, setFormData] = useState<SubscriptionInput>(defaultFormData);
   const [loading, setLoading] = useState(false);
-  const [providers, setProviders] = useState<ServiceProvider[]>([]);
-  const [providersLoading, setProvidersLoading] = useState(false);
-  const [providersError, setProvidersError] = useState(false);
   const [providerQuery, setProviderQuery] = useState('');
 
   const isEdit = !!subscription;
 
+  // 카탈로그에서 서비스 옵션 생성
   const providerOptions = useMemo(() => {
-    return providers.map((provider) => {
-      const names = provider.names;
-      let parsedNames: Record<string, string> = {};
-      if (typeof names === 'string') {
-        try {
-          parsedNames = JSON.parse(names) as Record<string, string>;
-        } catch {
-          parsedNames = {};
-        }
-      } else if (typeof names === 'object' && names) {
-        parsedNames = names as Record<string, string>;
-      }
-
-      const label =
-        parsedNames.ko || parsedNames.en || parsedNames.ja || provider.slug;
-
-      let category = '';
-      const categories = provider.categories;
-      if (Array.isArray(categories)) {
-        category = categories[0] || '';
-      } else if (typeof categories === 'string') {
-        try {
-          const parsed = JSON.parse(categories) as string[];
-          category = parsed[0] || '';
-        } catch {
-          category = '';
-        }
-      }
-
-      return {
-        provider,
-        label,
-        category,
-      };
-    });
-  }, [providers]);
+    return SERVICE_CATALOGUE.map((service) => ({
+      service,
+      label: service.names.ko || service.names.en || service.slug,
+    }));
+  }, []);
 
   useEffect(() => {
     if (subscription) {
@@ -131,43 +91,6 @@ export function SubscriptionForm({
     }
   }, [subscription, open]);
 
-  useEffect(() => {
-    if (!open) return;
-    let ignore = false;
-
-    const fetchProviders = async () => {
-      setProvidersLoading(true);
-      setProvidersError(false);
-      try {
-        const res = await fetch(`${API_URL}/service-providers`, {
-          credentials: 'include',
-        });
-        if (!res.ok) {
-          throw new Error('Failed to fetch providers');
-        }
-        const data: ServiceProvider[] = await res.json();
-        if (!ignore) {
-          setProviders(data);
-        }
-      } catch {
-        if (!ignore) {
-          setProviders([]);
-          setProvidersError(true);
-        }
-      } finally {
-        if (!ignore) {
-          setProvidersLoading(false);
-        }
-      }
-    };
-
-    fetchProviders();
-
-    return () => {
-      ignore = true;
-    };
-  }, [open]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -182,25 +105,25 @@ export function SubscriptionForm({
   const handleProviderQueryChange = (value: string) => {
     setProviderQuery(value);
     const matched = providerOptions.find(
-      (option) => option.label === value || option.provider.slug === value,
+      (option) => option.label === value || option.service.slug === value,
     );
     if (matched) {
       setFormData((prev) => ({
         ...prev,
         name: matched.label,
-        url: matched.provider.url ?? prev.url,
-        logoUrl: matched.provider.logoUrl ?? prev.logoUrl,
-        category: matched.category || prev.category,
+        url: matched.service.url ?? prev.url,
+        logoUrl: matched.service.logoUrl ?? prev.logoUrl,
+        category: matched.service.category || prev.category,
       }));
     }
   };
 
   const selectedProvider = providerOptions.find(
     (option) =>
-      option.label === formData.name || option.provider.slug === formData.name,
+      option.label === formData.name || option.service.slug === formData.name,
   );
   const resolvedLogoUrl: string =
-    formData.logoUrl ?? selectedProvider?.provider.logoUrl ?? '';
+    formData.logoUrl ?? selectedProvider?.service.logoUrl ?? '';
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -235,19 +158,9 @@ export function SubscriptionForm({
             </div>
             <datalist id="service-providers">
               {providerOptions.map((option) => (
-                <option key={option.provider.id} value={option.label} />
+                <option key={option.service.slug} value={option.label} />
               ))}
             </datalist>
-            {providersLoading && (
-              <p className="text-xs text-muted-foreground">
-                서비스 목록 불러오는 중...
-              </p>
-            )}
-            {providersError && (
-              <p className="text-xs text-destructive">
-                서비스 목록을 불러오지 못했습니다.
-              </p>
-            )}
           </div>
 
           <div className="space-y-2">

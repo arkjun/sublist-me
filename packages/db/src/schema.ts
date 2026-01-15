@@ -107,29 +107,3 @@ export const categories = sqliteTable('categories', {
   createdAt: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
 
-// 구독 서비스 제공자 테이블 (seed 데이터용)
-// 자동완성 및 서비스 정보 제공에 사용
-export const serviceProviders = sqliteTable('service_providers', {
-  id: text('id')
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-
-  // 고유 식별자 (예: 'netflix', 'youtube-premium')
-  slug: text('slug').notNull().unique(),
-
-  // 다국어 이름 (JSON: {"ko": "넷플릭스", "en": "Netflix", "ja": "ネットフリックス"})
-  names: text('names', { mode: 'json' }).$type<LocalizedNames>().notNull(),
-
-  // 서비스 URL
-  url: text('url'),
-
-  // 로고 이미지 URL
-  logoUrl: text('logo_url'),
-
-  // 카테고리 (JSON 배열: ["ott", "streaming"])
-  categories: text('categories', { mode: 'json' }).$type<ServiceCategory[]>(),
-
-  // 타임스탬프
-  createdAt: text('created_at').notNull().default(sql`(datetime('now'))`),
-  updatedAt: text('updated_at').notNull().default(sql`(datetime('now'))`),
-});

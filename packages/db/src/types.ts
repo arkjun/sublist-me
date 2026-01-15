@@ -1,5 +1,5 @@
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
-import type { categories, serviceProviders, subscriptions } from './schema';
+import type { categories, subscriptions } from './schema';
 
 // Subscription types
 export type Subscription = InferSelectModel<typeof subscriptions>;
@@ -12,8 +12,5 @@ export type SubscriptionInput = Omit<NewSubscription, 'userId'>;
 export type Category = InferSelectModel<typeof categories>;
 export type NewCategory = InferInsertModel<typeof categories>;
 
-export type ServiceProvider = InferSelectModel<typeof serviceProviders>;
-export type NewServiceProvider = InferInsertModel<typeof serviceProviders>;
-
 // Re-export schema types
-export type { BillingCycle, Currency, Locale } from './schema';
+export type { BillingCycle, Currency, Locale, ServiceCategory } from './schema';

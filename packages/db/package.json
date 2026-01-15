@@ -6,7 +6,7 @@
   "exports": {
     "./schema": "./src/schema.ts",
     "./types": "./src/types.ts",
-    "./seeds": "./src/seeds/service-providers.ts"
+    "./data/service-catalogue": "./src/data/service-catalogue.ts"
   },
   "scripts": {
     "generate": "drizzle-kit generate"

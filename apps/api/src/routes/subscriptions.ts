@@ -1,4 +1,5 @@
 import { subscriptions as subscriptionsTable } from '@sublistme/db/schema';
+import type { SubscriptionInput } from '@sublistme/db/types';
 import { and, eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
 import { Hono } from 'hono';
@@ -57,6 +58,33 @@ export const subscriptions = new Hono<{ Bindings: Env; Variables: Variables }>()
       .values({ ...body, userId: user.id })
       .returning();
     return c.json(result[0], 201);
+  })
+
+  // 구독 일괄 생성 (다건)
+  .post('/bulk', async (c) => {
+    const user = c.get('user')!;
+    const db = drizzle(c.env.DB);
+    const body = await c.req.json<{ subscriptions: SubscriptionInput[] }>();
+
+    if (!body.subscriptions || !Array.isArray(body.subscriptions)) {
+      return c.json({ error: 'Invalid request body' }, 400);
+    }
+
+    if (body.subscriptions.length === 0) {
+      return c.json({ error: 'No subscriptions provided' }, 400);
+    }
+
+    const subscriptionsToInsert = body.subscriptions.map((s) => ({
+      ...s,
+      userId: user.id,
+    }));
+
+    const result = await db
+      .insert(subscriptionsTable)
+      .values(subscriptionsToInsert)
+      .returning();
+
+    return c.json(result, 201);
   })
 
   // 구독 수정 (사용자별)

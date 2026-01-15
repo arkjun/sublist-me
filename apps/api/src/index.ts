@@ -3,7 +3,6 @@ import { cors } from 'hono/cors';
 import type { Session, User } from 'lucia';
 import { sessionMiddleware } from './middleware/auth';
 import { auth } from './routes/auth';
-import { serviceProviders } from './routes/service-providers';
 import { subscriptions } from './routes/subscriptions';
 import { users } from './routes/users';
 
@@ -36,7 +35,6 @@ app.use('/*', sessionMiddleware);
 app.route('/auth', auth);
 app.route('/users', users);
 app.route('/subscriptions', subscriptions);
-app.route('/service-providers', serviceProviders);
 
 // Health check
 app.get('/', (c) => c.json({ message: 'SubList Me API', status: 'ok' }));

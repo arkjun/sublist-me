@@ -1,26 +1,26 @@
 import {
-  env,
   createExecutionContext,
+  env,
   waitOnExecutionContext,
-} from 'cloudflare:test'
-import { describe, it, expect, beforeAll } from 'vitest'
-import app from '../index'
-import { createLucia } from '../lib/auth'
+} from 'cloudflare:test';
+import { beforeAll, describe, expect, it } from 'vitest';
+import app from '../index';
+import { createLucia } from '../lib/auth';
 
 declare module 'cloudflare:test' {
   interface ProvidedEnv {
-    DB: D1Database
+    DB: D1Database;
   }
 }
 
 interface Subscription {
-  id: string
-  name: string
-  price: number
+  id: string;
+  name: string;
+  price: number;
 }
 
-let sessionCookieName = ''
-let sessionCookieValue = ''
+let sessionCookieName = '';
+let sessionCookieValue = '';
 
 describe('Subscriptions API', () => {
   // DB 초기화
@@ -35,7 +35,7 @@ describe('Subscriptions API', () => {
         password_hash TEXT,
         created_at TEXT NOT NULL DEFAULT (datetime('now'))
       )
-    `).run()
+    `).run();
 
     await env.DB.prepare(`
       CREATE TABLE IF NOT EXISTS sessions (
@@ -43,7 +43,7 @@ describe('Subscriptions API', () => {
         user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         expires_at INTEGER NOT NULL
       )
-    `).run()
+    `).run();
 
     await env.DB.prepare(`
       CREATE TABLE IF NOT EXISTS subscriptions (
@@ -65,25 +65,25 @@ describe('Subscriptions API', () => {
         created_at TEXT DEFAULT (datetime('now')),
         updated_at TEXT DEFAULT (datetime('now'))
       )
-    `).run()
+    `).run();
 
-    const userId = 'user-1'
+    const userId = 'user-1';
     await env.DB.prepare(
-      'INSERT INTO users (id, google_id, email, name, picture, password_hash) VALUES (?, ?, ?, ?, ?, ?)'
+      'INSERT INTO users (id, google_id, email, name, picture, password_hash) VALUES (?, ?, ?, ?, ?, ?)',
     )
       .bind(userId, 'google-1', 'test@example.com', 'Test User', null, null)
-      .run()
+      .run();
 
-    const lucia = createLucia(env.DB)
-    const session = await lucia.createSession(userId, {})
-    const sessionCookie = lucia.createSessionCookie(session.id)
-    sessionCookieName = sessionCookie.name
-    sessionCookieValue = sessionCookie.value
-  })
+    const lucia = createLucia(env.DB);
+    const session = await lucia.createSession(userId, {});
+    const sessionCookie = lucia.createSessionCookie(session.id);
+    sessionCookieName = sessionCookie.name;
+    sessionCookieValue = sessionCookie.value;
+  });
 
   describe('GET /subscriptions', () => {
     it('should return empty array initially', async () => {
-      const ctx = createExecutionContext()
+      const ctx = createExecutionContext();
       const res = await app.fetch(
         new Request('http://localhost/subscriptions', {
           headers: {
@@ -91,19 +91,19 @@ describe('Subscriptions API', () => {
           },
         }),
         env,
-        ctx
-      )
-      await waitOnExecutionContext(ctx)
+        ctx,
+      );
+      await waitOnExecutionContext(ctx);
 
-      expect(res.status).toBe(200)
-      const data = await res.json()
-      expect(Array.isArray(data)).toBe(true)
-    })
-  })
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      expect(Array.isArray(data)).toBe(true);
+    });
+  });
 
   describe('POST /subscriptions', () => {
     it('should create a new subscription', async () => {
-      const ctx = createExecutionContext()
+      const ctx = createExecutionContext();
       const res = await app.fetch(
         new Request('http://localhost/subscriptions', {
           method: 'POST',
@@ -119,21 +119,21 @@ describe('Subscriptions API', () => {
           }),
         }),
         env,
-        ctx
-      )
-      await waitOnExecutionContext(ctx)
+        ctx,
+      );
+      await waitOnExecutionContext(ctx);
 
-      expect(res.status).toBe(201)
-      const data = (await res.json()) as Subscription
-      expect(data.name).toBe('유튜브 프리미엄')
-      expect(data.price).toBe(14900)
-      expect(data.id).toBeDefined()
-    })
-  })
+      expect(res.status).toBe(201);
+      const data = (await res.json()) as Subscription;
+      expect(data.name).toBe('유튜브 프리미엄');
+      expect(data.price).toBe(14900);
+      expect(data.id).toBeDefined();
+    });
+  });
 
   describe('GET /subscriptions/:id', () => {
     it('should return 404 for non-existent subscription', async () => {
-      const ctx = createExecutionContext()
+      const ctx = createExecutionContext();
       const res = await app.fetch(
         new Request('http://localhost/subscriptions/non-existent-id', {
           headers: {
@@ -141,16 +141,16 @@ describe('Subscriptions API', () => {
           },
         }),
         env,
-        ctx
-      )
-      await waitOnExecutionContext(ctx)
+        ctx,
+      );
+      await waitOnExecutionContext(ctx);
 
-      expect(res.status).toBe(404)
-    })
+      expect(res.status).toBe(404);
+    });
 
     it('should return subscription by id', async () => {
       // 먼저 구독 생성
-      const createCtx = createExecutionContext()
+      const createCtx = createExecutionContext();
       const createRes = await app.fetch(
         new Request('http://localhost/subscriptions', {
           method: 'POST',
@@ -164,13 +164,13 @@ describe('Subscriptions API', () => {
           }),
         }),
         env,
-        createCtx
-      )
-      await waitOnExecutionContext(createCtx)
-      const created = (await createRes.json()) as Subscription
+        createCtx,
+      );
+      await waitOnExecutionContext(createCtx);
+      const created = (await createRes.json()) as Subscription;
 
       // 조회
-      const getCtx = createExecutionContext()
+      const getCtx = createExecutionContext();
       const res = await app.fetch(
         new Request(`http://localhost/subscriptions/${created.id}`, {
           headers: {
@@ -178,20 +178,20 @@ describe('Subscriptions API', () => {
           },
         }),
         env,
-        getCtx
-      )
-      await waitOnExecutionContext(getCtx)
+        getCtx,
+      );
+      await waitOnExecutionContext(getCtx);
 
-      expect(res.status).toBe(200)
-      const data = (await res.json()) as Subscription
-      expect(data.name).toBe('Netflix')
-    })
-  })
+      expect(res.status).toBe(200);
+      const data = (await res.json()) as Subscription;
+      expect(data.name).toBe('Netflix');
+    });
+  });
 
   describe('PUT /subscriptions/:id', () => {
     it('should update subscription', async () => {
       // 먼저 구독 생성
-      const createCtx = createExecutionContext()
+      const createCtx = createExecutionContext();
       const createRes = await app.fetch(
         new Request('http://localhost/subscriptions', {
           method: 'POST',
@@ -205,13 +205,13 @@ describe('Subscriptions API', () => {
           }),
         }),
         env,
-        createCtx
-      )
-      await waitOnExecutionContext(createCtx)
-      const created = (await createRes.json()) as Subscription
+        createCtx,
+      );
+      await waitOnExecutionContext(createCtx);
+      const created = (await createRes.json()) as Subscription;
 
       // 수정
-      const updateCtx = createExecutionContext()
+      const updateCtx = createExecutionContext();
       const res = await app.fetch(
         new Request(`http://localhost/subscriptions/${created.id}`, {
           method: 'PUT',
@@ -224,17 +224,17 @@ describe('Subscriptions API', () => {
           }),
         }),
         env,
-        updateCtx
-      )
-      await waitOnExecutionContext(updateCtx)
+        updateCtx,
+      );
+      await waitOnExecutionContext(updateCtx);
 
-      expect(res.status).toBe(200)
-      const data = (await res.json()) as Subscription
-      expect(data.price).toBe(11900)
-    })
+      expect(res.status).toBe(200);
+      const data = (await res.json()) as Subscription;
+      expect(data.price).toBe(11900);
+    });
 
     it('should return 404 for non-existent subscription', async () => {
-      const ctx = createExecutionContext()
+      const ctx = createExecutionContext();
       const res = await app.fetch(
         new Request('http://localhost/subscriptions/non-existent-id', {
           method: 'PUT',
@@ -245,18 +245,18 @@ describe('Subscriptions API', () => {
           body: JSON.stringify({ name: 'Test' }),
         }),
         env,
-        ctx
-      )
-      await waitOnExecutionContext(ctx)
+        ctx,
+      );
+      await waitOnExecutionContext(ctx);
 
-      expect(res.status).toBe(404)
-    })
-  })
+      expect(res.status).toBe(404);
+    });
+  });
 
   describe('DELETE /subscriptions/:id', () => {
     it('should delete subscription', async () => {
       // 먼저 구독 생성
-      const createCtx = createExecutionContext()
+      const createCtx = createExecutionContext();
       const createRes = await app.fetch(
         new Request('http://localhost/subscriptions', {
           method: 'POST',
@@ -270,13 +270,13 @@ describe('Subscriptions API', () => {
           }),
         }),
         env,
-        createCtx
-      )
-      await waitOnExecutionContext(createCtx)
-      const created = (await createRes.json()) as Subscription
+        createCtx,
+      );
+      await waitOnExecutionContext(createCtx);
+      const created = (await createRes.json()) as Subscription;
 
       // 삭제
-      const deleteCtx = createExecutionContext()
+      const deleteCtx = createExecutionContext();
       const res = await app.fetch(
         new Request(`http://localhost/subscriptions/${created.id}`, {
           method: 'DELETE',
@@ -285,16 +285,16 @@ describe('Subscriptions API', () => {
           },
         }),
         env,
-        deleteCtx
-      )
-      await waitOnExecutionContext(deleteCtx)
+        deleteCtx,
+      );
+      await waitOnExecutionContext(deleteCtx);
 
-      expect(res.status).toBe(200)
-      const data = (await res.json()) as { success: boolean }
-      expect(data.success).toBe(true)
+      expect(res.status).toBe(200);
+      const data = (await res.json()) as { success: boolean };
+      expect(data.success).toBe(true);
 
       // 삭제 확인
-      const getCtx = createExecutionContext()
+      const getCtx = createExecutionContext();
       const getRes = await app.fetch(
         new Request(`http://localhost/subscriptions/${created.id}`, {
           headers: {
@@ -302,14 +302,14 @@ describe('Subscriptions API', () => {
           },
         }),
         env,
-        getCtx
-      )
-      await waitOnExecutionContext(getCtx)
-      expect(getRes.status).toBe(404)
-    })
+        getCtx,
+      );
+      await waitOnExecutionContext(getCtx);
+      expect(getRes.status).toBe(404);
+    });
 
     it('should return 404 for non-existent subscription', async () => {
-      const ctx = createExecutionContext()
+      const ctx = createExecutionContext();
       const res = await app.fetch(
         new Request('http://localhost/subscriptions/non-existent-id', {
           method: 'DELETE',
@@ -318,11 +318,11 @@ describe('Subscriptions API', () => {
           },
         }),
         env,
-        ctx
-      )
-      await waitOnExecutionContext(ctx)
+        ctx,
+      );
+      await waitOnExecutionContext(ctx);
 
-      expect(res.status).toBe(404)
-    })
-  })
-})
+      expect(res.status).toBe(404);
+    });
+  });
+});

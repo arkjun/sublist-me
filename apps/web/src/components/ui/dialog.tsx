@@ -1,66 +1,69 @@
-'use client'
+'use client';
 
-import * as React from 'react'
-import { X } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { X } from 'lucide-react';
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
 interface DialogContextType {
-  open: boolean
-  setOpen: (open: boolean) => void
+  open: boolean;
+  setOpen: (open: boolean) => void;
 }
 
 const DialogContext = React.createContext<DialogContextType | undefined>(
-  undefined
-)
+  undefined,
+);
 
 interface DialogProps {
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  children: React.ReactNode
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children: React.ReactNode;
 }
 
 function Dialog({ open: controlledOpen, onOpenChange, children }: DialogProps) {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false)
-  const open = controlledOpen ?? uncontrolledOpen
-  const setOpen = onOpenChange ?? setUncontrolledOpen
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
+  const open = controlledOpen ?? uncontrolledOpen;
+  const setOpen = onOpenChange ?? setUncontrolledOpen;
 
   return (
     <DialogContext.Provider value={{ open, setOpen }}>
       {children}
     </DialogContext.Provider>
-  )
+  );
 }
 
 function DialogTrigger({
   children,
   asChild,
 }: {
-  children: React.ReactNode
-  asChild?: boolean
+  children: React.ReactNode;
+  asChild?: boolean;
 }) {
-  const context = React.useContext(DialogContext)
-  if (!context) throw new Error('DialogTrigger must be used within Dialog')
+  const context = React.useContext(DialogContext);
+  if (!context) throw new Error('DialogTrigger must be used within Dialog');
 
   if (asChild && React.isValidElement(children)) {
-    return React.cloneElement(children as React.ReactElement<{ onClick?: () => void }>, {
-      onClick: () => context.setOpen(true),
-    })
+    return React.cloneElement(
+      children as React.ReactElement<{ onClick?: () => void }>,
+      {
+        onClick: () => context.setOpen(true),
+      },
+    );
   }
 
-  return <button onClick={() => context.setOpen(true)}>{children}</button>
+  return <button onClick={() => context.setOpen(true)}>{children}</button>;
 }
 
 function DialogContent({
   children,
   className,
 }: {
-  children: React.ReactNode
-  className?: string
+  children: React.ReactNode;
+  className?: string;
 }) {
-  const context = React.useContext(DialogContext)
-  if (!context) throw new Error('DialogContent must be used within Dialog')
+  const context = React.useContext(DialogContext);
+  if (!context) throw new Error('DialogContent must be used within Dialog');
 
-  if (!context.open) return null
+  if (!context.open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -71,7 +74,7 @@ function DialogContent({
       <div
         className={cn(
           'relative z-50 w-full max-w-lg rounded-lg border bg-background p-6 shadow-lg',
-          className
+          className,
         )}
       >
         <button
@@ -83,7 +86,7 @@ function DialogContent({
         {children}
       </div>
     </div>
-  )
+  );
 }
 
 function DialogHeader({
@@ -92,10 +95,13 @@ function DialogHeader({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex flex-col space-y-1.5 text-center sm:text-left', className)}
+      className={cn(
+        'flex flex-col space-y-1.5 text-center sm:text-left',
+        className,
+      )}
       {...props}
     />
-  )
+  );
 }
 
 function DialogTitle({
@@ -104,10 +110,13 @@ function DialogTitle({
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h2
-      className={cn('text-lg font-semibold leading-none tracking-tight', className)}
+      className={cn(
+        'text-lg font-semibold leading-none tracking-tight',
+        className,
+      )}
       {...props}
     />
-  )
+  );
 }
 
 function DialogDescription({
@@ -115,11 +124,8 @@ function DialogDescription({
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p
-      className={cn('text-sm text-muted-foreground', className)}
-      {...props}
-    />
-  )
+    <p className={cn('text-sm text-muted-foreground', className)} {...props} />
+  );
 }
 
 export {
@@ -129,4 +135,4 @@ export {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-}
+};

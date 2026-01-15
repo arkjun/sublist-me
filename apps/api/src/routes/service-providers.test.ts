@@ -1,20 +1,20 @@
 import {
-  env,
   createExecutionContext,
+  env,
   waitOnExecutionContext,
-} from 'cloudflare:test'
-import { describe, it, expect, beforeAll } from 'vitest'
-import app from '../index'
-import { createLucia } from '../lib/auth'
+} from 'cloudflare:test';
+import { beforeAll, describe, expect, it } from 'vitest';
+import app from '../index';
+import { createLucia } from '../lib/auth';
 
 declare module 'cloudflare:test' {
   interface ProvidedEnv {
-    DB: D1Database
+    DB: D1Database;
   }
 }
 
-let sessionCookieName = ''
-let sessionCookieValue = ''
+let sessionCookieName = '';
+let sessionCookieValue = '';
 
 describe('Service providers API', () => {
   beforeAll(async () => {
@@ -28,7 +28,7 @@ describe('Service providers API', () => {
         password_hash TEXT,
         created_at TEXT NOT NULL DEFAULT (datetime('now'))
       )
-    `).run()
+    `).run();
 
     await env.DB.prepare(`
       CREATE TABLE IF NOT EXISTS sessions (
@@ -36,7 +36,7 @@ describe('Service providers API', () => {
         user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         expires_at INTEGER NOT NULL
       )
-    `).run()
+    `).run();
 
     await env.DB.prepare(`
       CREATE TABLE IF NOT EXISTS service_providers (
@@ -49,10 +49,10 @@ describe('Service providers API', () => {
         created_at TEXT DEFAULT (datetime('now')) NOT NULL,
         updated_at TEXT DEFAULT (datetime('now')) NOT NULL
       )
-    `).run()
+    `).run();
 
     await env.DB.prepare(
-      'INSERT INTO service_providers (id, slug, names, url, logo_url, categories) VALUES (?, ?, ?, ?, ?, ?)'
+      'INSERT INTO service_providers (id, slug, names, url, logo_url, categories) VALUES (?, ?, ?, ?, ?, ?)',
     )
       .bind(
         'provider-1',
@@ -60,26 +60,26 @@ describe('Service providers API', () => {
         JSON.stringify({ ko: '넷플릭스', en: 'Netflix' }),
         'https://netflix.com',
         'https://netflix.com/logo.png',
-        JSON.stringify(['ott'])
+        JSON.stringify(['ott']),
       )
-      .run()
+      .run();
 
-    const userId = 'user-1'
+    const userId = 'user-1';
     await env.DB.prepare(
-      'INSERT INTO users (id, google_id, email, name, picture, password_hash) VALUES (?, ?, ?, ?, ?, ?)'
+      'INSERT INTO users (id, google_id, email, name, picture, password_hash) VALUES (?, ?, ?, ?, ?, ?)',
     )
       .bind(userId, 'google-1', 'test@example.com', 'Test User', null, null)
-      .run()
+      .run();
 
-    const lucia = createLucia(env.DB)
-    const session = await lucia.createSession(userId, {})
-    const sessionCookie = lucia.createSessionCookie(session.id)
-    sessionCookieName = sessionCookie.name
-    sessionCookieValue = sessionCookie.value
-  })
+    const lucia = createLucia(env.DB);
+    const session = await lucia.createSession(userId, {});
+    const sessionCookie = lucia.createSessionCookie(session.id);
+    sessionCookieName = sessionCookie.name;
+    sessionCookieValue = sessionCookie.value;
+  });
 
   it('should return service providers for authenticated user', async () => {
-    const ctx = createExecutionContext()
+    const ctx = createExecutionContext();
     const res = await app.fetch(
       new Request('http://localhost/service-providers', {
         headers: {
@@ -87,15 +87,15 @@ describe('Service providers API', () => {
         },
       }),
       env,
-      ctx
-    )
-    await waitOnExecutionContext(ctx)
+      ctx,
+    );
+    await waitOnExecutionContext(ctx);
 
-    expect(res.status).toBe(200)
-    const data = await res.json()
-    expect(Array.isArray(data)).toBe(true)
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(Array.isArray(data)).toBe(true);
     if (Array.isArray(data)) {
-      expect(data.length).toBeGreaterThan(0)
+      expect(data.length).toBeGreaterThan(0);
     }
-  })
-})
+  });
+});

@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { ThemeToggle } from '@/components/theme/theme-toggle'
-import { useAuth } from '@/components/auth/auth-provider'
-import { Button } from '@/components/ui/button'
-import { LogIn, LogOut } from 'lucide-react'
-import Link from 'next/link'
+import { LogIn, LogOut } from 'lucide-react';
+import Link from 'next/link';
+import { useAuth } from '@/components/auth/auth-provider';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { Button } from '@/components/ui/button';
 
 export function Header() {
-  const { user, loading, login, logout } = useAuth()
+  const { user, loading, login, logout } = useAuth();
 
   return (
     <header className="mb-8 flex items-center justify-between">
@@ -31,7 +31,9 @@ export function Header() {
                   {user.name || user.email}
                 </span>
                 <Link href="/my">
-                  <Button variant="outline" size="sm">마이페이지</Button>
+                  <Button variant="outline" size="sm">
+                    마이페이지
+                  </Button>
                 </Link>
                 <Button variant="outline" size="sm" onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
@@ -51,5 +53,5 @@ export function Header() {
         <ThemeToggle />
       </div>
     </header>
-  )
+  );
 }

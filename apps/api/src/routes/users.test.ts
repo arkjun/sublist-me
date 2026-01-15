@@ -1,20 +1,20 @@
 import {
-  env,
   createExecutionContext,
+  env,
   waitOnExecutionContext,
-} from 'cloudflare:test'
-import { describe, it, expect, beforeAll } from 'vitest'
-import app from '../index'
-import { createLucia } from '../lib/auth'
+} from 'cloudflare:test';
+import { beforeAll, describe, expect, it } from 'vitest';
+import app from '../index';
+import { createLucia } from '../lib/auth';
 
 declare module 'cloudflare:test' {
   interface ProvidedEnv {
-    DB: D1Database
+    DB: D1Database;
   }
 }
 
-let sessionCookieName = ''
-let sessionCookieValue = ''
+let sessionCookieName = '';
+let sessionCookieValue = '';
 
 describe('User Preferences API', () => {
   beforeAll(async () => {
@@ -30,7 +30,7 @@ describe('User Preferences API', () => {
         currency TEXT NOT NULL DEFAULT 'KRW',
         created_at TEXT NOT NULL DEFAULT (datetime('now'))
       )
-    `).run()
+    `).run();
 
     await env.DB.prepare(`
       CREATE TABLE IF NOT EXISTS sessions (
@@ -38,24 +38,33 @@ describe('User Preferences API', () => {
         user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         expires_at INTEGER NOT NULL
       )
-    `).run()
+    `).run();
 
-    const userId = 'user-preferences-1'
+    const userId = 'user-preferences-1';
     await env.DB.prepare(
-      'INSERT INTO users (id, google_id, email, name, picture, password_hash, locale, currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+      'INSERT INTO users (id, google_id, email, name, picture, password_hash, locale, currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
     )
-      .bind(userId, 'google-1', 'prefs@example.com', 'Prefs User', null, null, 'ko', 'KRW')
-      .run()
+      .bind(
+        userId,
+        'google-1',
+        'prefs@example.com',
+        'Prefs User',
+        null,
+        null,
+        'ko',
+        'KRW',
+      )
+      .run();
 
-    const lucia = createLucia(env.DB)
-    const session = await lucia.createSession(userId, {})
-    const sessionCookie = lucia.createSessionCookie(session.id)
-    sessionCookieName = sessionCookie.name
-    sessionCookieValue = sessionCookie.value
-  })
+    const lucia = createLucia(env.DB);
+    const session = await lucia.createSession(userId, {});
+    const sessionCookie = lucia.createSessionCookie(session.id);
+    sessionCookieName = sessionCookie.name;
+    sessionCookieValue = sessionCookie.value;
+  });
 
   it('GET /users/preferences returns current preferences', async () => {
-    const ctx = createExecutionContext()
+    const ctx = createExecutionContext();
     const res = await app.fetch(
       new Request('http://localhost/users/preferences', {
         headers: {
@@ -63,18 +72,18 @@ describe('User Preferences API', () => {
         },
       }),
       env,
-      ctx
-    )
-    await waitOnExecutionContext(ctx)
+      ctx,
+    );
+    await waitOnExecutionContext(ctx);
 
-    expect(res.status).toBe(200)
-    const data = (await res.json()) as { locale: string; currency: string }
-    expect(data.locale).toBe('ko')
-    expect(data.currency).toBe('KRW')
-  })
+    expect(res.status).toBe(200);
+    const data = (await res.json()) as { locale: string; currency: string };
+    expect(data.locale).toBe('ko');
+    expect(data.currency).toBe('KRW');
+  });
 
   it('PUT /users/preferences updates preferences', async () => {
-    const ctx = createExecutionContext()
+    const ctx = createExecutionContext();
     const res = await app.fetch(
       new Request('http://localhost/users/preferences', {
         method: 'PUT',
@@ -85,18 +94,18 @@ describe('User Preferences API', () => {
         body: JSON.stringify({ locale: 'ja', currency: 'JPY' }),
       }),
       env,
-      ctx
-    )
-    await waitOnExecutionContext(ctx)
+      ctx,
+    );
+    await waitOnExecutionContext(ctx);
 
-    expect(res.status).toBe(200)
-    const data = (await res.json()) as { locale: string; currency: string }
-    expect(data.locale).toBe('ja')
-    expect(data.currency).toBe('JPY')
-  })
+    expect(res.status).toBe(200);
+    const data = (await res.json()) as { locale: string; currency: string };
+    expect(data.locale).toBe('ja');
+    expect(data.currency).toBe('JPY');
+  });
 
   it('PUT /users/preferences rejects invalid currency', async () => {
-    const ctx = createExecutionContext()
+    const ctx = createExecutionContext();
     const res = await app.fetch(
       new Request('http://localhost/users/preferences', {
         method: 'PUT',
@@ -107,10 +116,10 @@ describe('User Preferences API', () => {
         body: JSON.stringify({ currency: 'ABC' }),
       }),
       env,
-      ctx
-    )
-    await waitOnExecutionContext(ctx)
+      ctx,
+    );
+    await waitOnExecutionContext(ctx);
 
-    expect(res.status).toBe(400)
-  })
-})
+    expect(res.status).toBe(400);
+  });
+});

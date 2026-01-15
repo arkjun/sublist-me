@@ -1,54 +1,61 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useAuth } from '@/components/auth/auth-provider'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ThemeToggle } from '@/components/theme/theme-toggle'
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useAuth } from '@/components/auth/auth-provider';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function LoginPage() {
-  const router = useRouter()
-  const { login, loginWithEmail, signupWithEmail } = useAuth()
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const { login, loginWithEmail, signupWithEmail } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
 
   const handleEmailLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setLoading(true)
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
 
     try {
-      await loginWithEmail(email, password)
-      router.push('/')
+      await loginWithEmail(email, password);
+      router.push('/');
     } catch (err: any) {
-      setError(err.message || '로그인에 실패했습니다')
+      setError(err.message || '로그인에 실패했습니다');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setLoading(true)
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
 
     try {
-      await signupWithEmail(email, password, name)
-      router.push('/')
+      await signupWithEmail(email, password, name);
+      router.push('/');
     } catch (err: any) {
-      setError(err.message || '회원가입에 실패했습니다')
+      setError(err.message || '회원가입에 실패했습니다');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
@@ -57,8 +64,12 @@ export default function LoginPage() {
       </div>
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">SubList Me 로그인</CardTitle>
-          <CardDescription className="text-center">서비스를 이용하려면 로그인해주세요</CardDescription>
+          <CardTitle className="text-2xl text-center">
+            SubList Me 로그인
+          </CardTitle>
+          <CardDescription className="text-center">
+            서비스를 이용하려면 로그인해주세요
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
@@ -142,7 +153,9 @@ export default function LoginPage() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
             </div>
           </div>
 
@@ -152,5 +165,5 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

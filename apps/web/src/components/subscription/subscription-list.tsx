@@ -1,56 +1,57 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
-import { Plus, LogIn } from 'lucide-react'
-import type { Subscription, SubscriptionInput } from '@sublistme/db/types'
-import { Button } from '@/components/ui/button'
-import { DataTable } from '@/components/ui/data-table'
-import { getColumns } from './columns'
-import { SubscriptionCard } from './subscription-card'
-import { SubscriptionForm } from './subscription-form'
-import { useAuth } from '@/components/auth/auth-provider'
+import type { Subscription, SubscriptionInput } from '@sublistme/db/types';
+import { LogIn, Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useAuth } from '@/components/auth/auth-provider';
+import { Button } from '@/components/ui/button';
+import { DataTable } from '@/components/ui/data-table';
+import { getColumns } from './columns';
+import { SubscriptionCard } from './subscription-card';
+import { SubscriptionForm } from './subscription-form';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 
 export function SubscriptionList() {
-  const router = useRouter()
-  const { user, loading: authLoading } = useAuth()
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
-  const [loading, setLoading] = useState(true)
-  const [formOpen, setFormOpen] = useState(false)
-  const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null)
-  const [viewMode, setViewMode] = useState<'list' | 'card'>('list')
+  const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingSubscription, setEditingSubscription] =
+    useState<Subscription | null>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'card'>('list');
 
   const fetchSubscriptions = useCallback(async () => {
     if (!user) {
-      setSubscriptions([])
-      setLoading(false)
-      return
+      setSubscriptions([]);
+      setLoading(false);
+      return;
     }
     try {
       const res = await fetch(`${API_URL}/subscriptions`, {
         credentials: 'include',
-      })
+      });
       if (res.ok) {
-        const data: Subscription[] = await res.json()
-        setSubscriptions(data)
+        const data: Subscription[] = await res.json();
+        setSubscriptions(data);
       } else {
-        setSubscriptions([])
+        setSubscriptions([]);
       }
     } catch (error) {
-      console.error('Failed to fetch subscriptions:', error)
-      setSubscriptions([])
+      console.error('Failed to fetch subscriptions:', error);
+      setSubscriptions([]);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [user])
+  }, [user]);
 
   useEffect(() => {
     if (!authLoading) {
-      fetchSubscriptions()
+      fetchSubscriptions();
     }
-  }, [fetchSubscriptions, authLoading])
+  }, [fetchSubscriptions, authLoading]);
 
   const handleCreate = async (data: SubscriptionInput) => {
     const res = await fetch(`${API_URL}/subscriptions`, {
@@ -58,69 +59,72 @@ export function SubscriptionList() {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify(data),
-    })
+    });
     if (res.ok) {
-      await fetchSubscriptions()
+      await fetchSubscriptions();
     }
-  }
+  };
 
   const handleUpdate = async (data: SubscriptionInput) => {
-    if (!editingSubscription) return
-    const res = await fetch(`${API_URL}/subscriptions/${editingSubscription.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(data),
-    })
+    if (!editingSubscription) return;
+    const res = await fetch(
+      `${API_URL}/subscriptions/${editingSubscription.id}`,
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(data),
+      },
+    );
     if (res.ok) {
-      await fetchSubscriptions()
+      await fetchSubscriptions();
     }
-  }
+  };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('정말 삭제하시겠습니까?')) return
+    if (!confirm('정말 삭제하시겠습니까?')) return;
     const res = await fetch(`${API_URL}/subscriptions/${id}`, {
       method: 'DELETE',
       credentials: 'include',
-    })
+    });
     if (res.ok) {
-      await fetchSubscriptions()
+      await fetchSubscriptions();
     }
-  }
+  };
 
   const handleEdit = (subscription: Subscription) => {
-    setEditingSubscription(subscription)
-    setFormOpen(true)
-  }
+    setEditingSubscription(subscription);
+    setFormOpen(true);
+  };
 
   const handleFormClose = (open: boolean) => {
-    setFormOpen(open)
+    setFormOpen(open);
     if (!open) {
-      setEditingSubscription(null)
+      setEditingSubscription(null);
     }
-  }
+  };
 
   const columns = useMemo(
     () => getColumns({ onEdit: handleEdit, onDelete: handleDelete }),
-    [handleEdit, handleDelete]
-  )
+    [handleEdit, handleDelete],
+  );
 
   // 통계 계산
   const monthlyTotal = subscriptions
     .filter((s) => s.isActive)
     .reduce((sum, s) => {
-      let monthlyPrice = s.price
-      if (s.billingCycle === 'yearly') monthlyPrice = s.price / 12
-      if (s.billingCycle === 'weekly') monthlyPrice = s.price * 4
-      if (s.billingCycle === 'quarterly') monthlyPrice = s.price / 3
-      return sum + monthlyPrice
-    }, 0)
+      let monthlyPrice = s.price;
+      if (s.billingCycle === 'yearly') monthlyPrice = s.price / 12;
+      if (s.billingCycle === 'weekly') monthlyPrice = s.price * 4;
+      if (s.billingCycle === 'quarterly') monthlyPrice = s.price / 3;
+      return sum + monthlyPrice;
+    }, 0);
 
-  const yearlyTotal = monthlyTotal * 12
-  const activeCount = subscriptions.filter((s) => s.isActive).length
+  const yearlyTotal = monthlyTotal * 12;
+  const activeCount = subscriptions.filter((s) => s.isActive).length;
 
   if (authLoading || loading) {
-    return <div className="text-center text-muted-foreground">로딩 중...</div>
+    return <div className="text-center text-muted-foreground">로딩 중...</div>;
   }
 
   if (!user) {
@@ -138,7 +142,7 @@ export function SubscriptionList() {
           로그인
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -147,7 +151,9 @@ export function SubscriptionList() {
       <div className="mb-8 grid gap-4 md:grid-cols-3">
         <div className="rounded-lg border bg-card p-6">
           <p className="text-sm text-muted-foreground">이번 달 지출</p>
-          <p className="text-2xl font-bold">₩{Math.round(monthlyTotal).toLocaleString()}</p>
+          <p className="text-2xl font-bold">
+            ₩{Math.round(monthlyTotal).toLocaleString()}
+          </p>
         </div>
         <div className="rounded-lg border bg-card p-6">
           <p className="text-sm text-muted-foreground">활성 구독</p>
@@ -155,7 +161,9 @@ export function SubscriptionList() {
         </div>
         <div className="rounded-lg border bg-card p-6">
           <p className="text-sm text-muted-foreground">연간 예상</p>
-          <p className="text-2xl font-bold">₩{Math.round(yearlyTotal).toLocaleString()}</p>
+          <p className="text-2xl font-bold">
+            ₩{Math.round(yearlyTotal).toLocaleString()}
+          </p>
         </div>
       </div>
 
@@ -219,5 +227,5 @@ export function SubscriptionList() {
         onSubmit={editingSubscription ? handleUpdate : handleCreate}
       />
     </div>
-  )
+  );
 }

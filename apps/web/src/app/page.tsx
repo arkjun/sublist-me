@@ -1,5 +1,5 @@
-import { SubscriptionList } from '@/components/subscription/subscription-list'
-import { Header } from '@/components/header'
+import { Header } from '@/components/header';
+import { SubscriptionList } from '@/components/subscription/subscription-list';
 
 export default function Home() {
   return (
@@ -7,5 +7,5 @@ export default function Home() {
       <Header />
       <SubscriptionList />
     </main>
-  )
+  );
 }

@@ -1,29 +1,29 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useMemo } from 'react'
 import type {
-  Subscription,
-  SubscriptionInput,
   BillingCycle,
   Currency,
   ServiceProvider,
-} from '@sublistme/db/types'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select } from '@/components/ui/select'
+  Subscription,
+  SubscriptionInput,
+} from '@sublistme/db/types';
+import { useEffect, useMemo, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select } from '@/components/ui/select';
 
 interface SubscriptionFormProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  subscription?: Subscription | null
-  onSubmit: (data: SubscriptionInput) => Promise<void>
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  subscription?: Subscription | null;
+  onSubmit: (data: SubscriptionInput) => Promise<void>;
 }
 
 const billingCycles: { value: BillingCycle; label: string }[] = [
@@ -31,14 +31,14 @@ const billingCycles: { value: BillingCycle; label: string }[] = [
   { value: 'yearly', label: '연간' },
   { value: 'weekly', label: '주간' },
   { value: 'quarterly', label: '분기' },
-]
+];
 
 const currencies: { value: Currency; label: string }[] = [
   { value: 'KRW', label: '원 (KRW)' },
   { value: 'USD', label: '달러 (USD)' },
   { value: 'JPY', label: '엔 (JPY)' },
   { value: 'EUR', label: '유로 (EUR)' },
-]
+];
 
 const defaultFormData: SubscriptionInput = {
   name: '',
@@ -52,9 +52,9 @@ const defaultFormData: SubscriptionInput = {
   logoUrl: '',
   memo: '',
   nextBillingDate: undefined,
-}
+};
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 
 export function SubscriptionForm({
   open,
@@ -62,42 +62,42 @@ export function SubscriptionForm({
   subscription,
   onSubmit,
 }: SubscriptionFormProps) {
-  const [formData, setFormData] = useState<SubscriptionInput>(defaultFormData)
-  const [loading, setLoading] = useState(false)
-  const [providers, setProviders] = useState<ServiceProvider[]>([])
-  const [providersLoading, setProvidersLoading] = useState(false)
-  const [providersError, setProvidersError] = useState(false)
-  const [providerQuery, setProviderQuery] = useState('')
+  const [formData, setFormData] = useState<SubscriptionInput>(defaultFormData);
+  const [loading, setLoading] = useState(false);
+  const [providers, setProviders] = useState<ServiceProvider[]>([]);
+  const [providersLoading, setProvidersLoading] = useState(false);
+  const [providersError, setProvidersError] = useState(false);
+  const [providerQuery, setProviderQuery] = useState('');
 
-  const isEdit = !!subscription
+  const isEdit = !!subscription;
 
   const providerOptions = useMemo(() => {
     return providers.map((provider) => {
-      const names = provider.names
-      let parsedNames: Record<string, string> = {}
+      const names = provider.names;
+      let parsedNames: Record<string, string> = {};
       if (typeof names === 'string') {
         try {
-          parsedNames = JSON.parse(names) as Record<string, string>
+          parsedNames = JSON.parse(names) as Record<string, string>;
         } catch {
-          parsedNames = {}
+          parsedNames = {};
         }
       } else if (typeof names === 'object' && names) {
-        parsedNames = names as Record<string, string>
+        parsedNames = names as Record<string, string>;
       }
 
       const label =
-        parsedNames.ko || parsedNames.en || parsedNames.ja || provider.slug
+        parsedNames.ko || parsedNames.en || parsedNames.ja || provider.slug;
 
-      let category = ''
-      const categories = provider.categories
+      let category = '';
+      const categories = provider.categories;
       if (Array.isArray(categories)) {
-        category = categories[0] || ''
+        category = categories[0] || '';
       } else if (typeof categories === 'string') {
         try {
-          const parsed = JSON.parse(categories) as string[]
-          category = parsed[0] || ''
+          const parsed = JSON.parse(categories) as string[];
+          category = parsed[0] || '';
         } catch {
-          category = ''
+          category = '';
         }
       }
 
@@ -105,9 +105,9 @@ export function SubscriptionForm({
         provider,
         label,
         category,
-      }
-    })
-  }, [providers])
+      };
+    });
+  }, [providers]);
 
   useEffect(() => {
     if (subscription) {
@@ -123,67 +123,67 @@ export function SubscriptionForm({
         logoUrl: subscription.logoUrl ?? '',
         memo: subscription.memo ?? '',
         nextBillingDate: subscription.nextBillingDate ?? '',
-      })
-      setProviderQuery(subscription.name)
+      });
+      setProviderQuery(subscription.name);
     } else {
-      setFormData(defaultFormData)
-      setProviderQuery('')
+      setFormData(defaultFormData);
+      setProviderQuery('');
     }
-  }, [subscription, open])
+  }, [subscription, open]);
 
   useEffect(() => {
-    if (!open) return
-    let ignore = false
+    if (!open) return;
+    let ignore = false;
 
     const fetchProviders = async () => {
-      setProvidersLoading(true)
-      setProvidersError(false)
+      setProvidersLoading(true);
+      setProvidersError(false);
       try {
         const res = await fetch(`${API_URL}/service-providers`, {
           credentials: 'include',
-        })
+        });
         if (!res.ok) {
-          throw new Error('Failed to fetch providers')
+          throw new Error('Failed to fetch providers');
         }
-        const data: ServiceProvider[] = await res.json()
+        const data: ServiceProvider[] = await res.json();
         if (!ignore) {
-          setProviders(data)
+          setProviders(data);
         }
       } catch {
         if (!ignore) {
-          setProviders([])
-          setProvidersError(true)
+          setProviders([]);
+          setProvidersError(true);
         }
       } finally {
         if (!ignore) {
-          setProvidersLoading(false)
+          setProvidersLoading(false);
         }
       }
-    }
+    };
 
-    fetchProviders()
+    fetchProviders();
 
     return () => {
-      ignore = true
-    }
-  }, [open])
+      ignore = true;
+    };
+  }, [open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
     try {
-      await onSubmit(formData)
-      onOpenChange(false)
+      await onSubmit(formData);
+      onOpenChange(false);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleProviderQueryChange = (value: string) => {
-    setProviderQuery(value)
+    setProviderQuery(value);
     const matched = providerOptions.find(
-      (option) => option.label === value || option.provider.slug === value
-    )
+      (option) => option.label === value || option.provider.slug === value,
+    );
     if (matched) {
       setFormData((prev) => ({
         ...prev,
@@ -191,15 +191,16 @@ export function SubscriptionForm({
         url: matched.provider.url ?? prev.url,
         logoUrl: matched.provider.logoUrl ?? prev.logoUrl,
         category: matched.category || prev.category,
-      }))
+      }));
     }
-  }
+  };
 
   const selectedProvider = providerOptions.find(
-    (option) => option.label === formData.name || option.provider.slug === formData.name
-  )
+    (option) =>
+      option.label === formData.name || option.provider.slug === formData.name,
+  );
   const resolvedLogoUrl: string =
-    formData.logoUrl ?? selectedProvider?.provider.logoUrl ?? ''
+    formData.logoUrl ?? selectedProvider?.provider.logoUrl ?? '';
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -218,7 +219,7 @@ export function SubscriptionForm({
                     alt=""
                     className="h-8 w-8 object-contain"
                     onError={(e) => {
-                      e.currentTarget.style.display = 'none'
+                      e.currentTarget.style.display = 'none';
                     }}
                   />
                 </div>
@@ -238,7 +239,9 @@ export function SubscriptionForm({
               ))}
             </datalist>
             {providersLoading && (
-              <p className="text-xs text-muted-foreground">서비스 목록 불러오는 중...</p>
+              <p className="text-xs text-muted-foreground">
+                서비스 목록 불러오는 중...
+              </p>
             )}
             {providersError && (
               <p className="text-xs text-destructive">
@@ -252,7 +255,9 @@ export function SubscriptionForm({
             <Input
               id="name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               placeholder="예: 유튜브 프리미엄"
               required
             />
@@ -278,7 +283,10 @@ export function SubscriptionForm({
                 id="currency"
                 value={formData.currency}
                 onChange={(e) =>
-                  setFormData({ ...formData, currency: e.target.value as Currency })
+                  setFormData({
+                    ...formData,
+                    currency: e.target.value as Currency,
+                  })
                 }
               >
                 {currencies.map((c) => (
@@ -300,7 +308,9 @@ export function SubscriptionForm({
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    originalPrice: e.target.value ? Number(e.target.value) : undefined,
+                    originalPrice: e.target.value
+                      ? Number(e.target.value)
+                      : undefined,
                   })
                 }
                 placeholder="할인 비교용"
@@ -348,7 +358,9 @@ export function SubscriptionForm({
             <Input
               id="category"
               value={formData.category || ''}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, category: e.target.value })
+              }
               placeholder="예: 엔터테인먼트, 생산성"
             />
           </div>
@@ -359,7 +371,9 @@ export function SubscriptionForm({
               id="url"
               type="url"
               value={formData.url || ''}
-              onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, url: e.target.value })
+              }
               placeholder="https://..."
             />
           </div>
@@ -369,7 +383,9 @@ export function SubscriptionForm({
             <Input
               id="memo"
               value={formData.memo || ''}
-              onChange={(e) => setFormData({ ...formData, memo: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, memo: e.target.value })
+              }
               placeholder="추가 메모"
             />
           </div>
@@ -389,5 +405,5 @@ export function SubscriptionForm({
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

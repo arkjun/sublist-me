@@ -1,21 +1,21 @@
-import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core'
-import { sql } from 'drizzle-orm'
+import { sql } from 'drizzle-orm';
+import { integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 declare const crypto: {
-  randomUUID: () => string
-}
+  randomUUID: () => string;
+};
 
 // 납부 주기
-export type BillingCycle = 'monthly' | 'yearly' | 'weekly' | 'quarterly'
+export type BillingCycle = 'monthly' | 'yearly' | 'weekly' | 'quarterly';
 
 // 통화
-export type Currency = 'KRW' | 'USD' | 'JPY' | 'EUR'
+export type Currency = 'KRW' | 'USD' | 'JPY' | 'EUR';
 
 // 지원 언어
-export type Locale = 'ko' | 'en' | 'ja'
+export type Locale = 'ko' | 'en' | 'ja';
 
 // 다국어 이름 타입
-export type LocalizedNames = Partial<Record<Locale, string>>
+export type LocalizedNames = Partial<Record<Locale, string>>;
 
 // 서비스 카테고리 타입
 export type ServiceCategory =
@@ -30,7 +30,7 @@ export type ServiceCategory =
   | 'education'
   | 'finance'
   | 'food'
-  | 'other'
+  | 'other';
 
 // 사용자 테이블
 export const users = sqliteTable('users', {
@@ -41,10 +41,8 @@ export const users = sqliteTable('users', {
   picture: text('picture'),
   locale: text('locale').$type<Locale>().notNull().default('ko'),
   currency: text('currency').$type<Currency>().notNull().default('KRW'),
-  createdAt: text('created_at')
-    .notNull()
-    .default(sql`(datetime('now'))`),
-})
+  createdAt: text('created_at').notNull().default(sql`(datetime('now'))`),
+});
 
 // 세션 테이블
 export const sessions = sqliteTable('sessions', {
@@ -53,7 +51,7 @@ export const sessions = sqliteTable('sessions', {
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   expiresAt: integer('expires_at').notNull(),
-})
+});
 
 // 구독 테이블
 export const subscriptions = sqliteTable('subscriptions', {
@@ -76,7 +74,10 @@ export const subscriptions = sqliteTable('subscriptions', {
   currency: text('currency').$type<Currency>().notNull().default('KRW'),
 
   // 납부 정보
-  billingCycle: text('billing_cycle').$type<BillingCycle>().notNull().default('monthly'),
+  billingCycle: text('billing_cycle')
+    .$type<BillingCycle>()
+    .notNull()
+    .default('monthly'),
   nextBillingDate: text('next_billing_date'), // ISO 8601 format
   startDate: text('start_date'), // 구독 시작일
 
@@ -91,13 +92,9 @@ export const subscriptions = sqliteTable('subscriptions', {
   isActive: integer('is_active', { mode: 'boolean' }).notNull().default(true),
 
   // 타임스탬프
-  createdAt: text('created_at')
-    .notNull()
-    .default(sql`(datetime('now'))`),
-  updatedAt: text('updated_at')
-    .notNull()
-    .default(sql`(datetime('now'))`),
-})
+  createdAt: text('created_at').notNull().default(sql`(datetime('now'))`),
+  updatedAt: text('updated_at').notNull().default(sql`(datetime('now'))`),
+});
 
 // 카테고리 테이블 (나중에 확장 가능)
 export const categories = sqliteTable('categories', {
@@ -107,10 +104,8 @@ export const categories = sqliteTable('categories', {
   name: text('name').notNull(),
   color: text('color'), // HEX color
   icon: text('icon'), // 아이콘 이름
-  createdAt: text('created_at')
-    .notNull()
-    .default(sql`(datetime('now'))`),
-})
+  createdAt: text('created_at').notNull().default(sql`(datetime('now'))`),
+});
 
 // 구독 서비스 제공자 테이블 (seed 데이터용)
 // 자동완성 및 서비스 정보 제공에 사용
@@ -135,10 +130,6 @@ export const serviceProviders = sqliteTable('service_providers', {
   categories: text('categories', { mode: 'json' }).$type<ServiceCategory[]>(),
 
   // 타임스탬프
-  createdAt: text('created_at')
-    .notNull()
-    .default(sql`(datetime('now'))`),
-  updatedAt: text('updated_at')
-    .notNull()
-    .default(sql`(datetime('now'))`),
-})
+  createdAt: text('created_at').notNull().default(sql`(datetime('now'))`),
+  updatedAt: text('updated_at').notNull().default(sql`(datetime('now'))`),
+});

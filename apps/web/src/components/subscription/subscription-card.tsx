@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import { Pencil, Trash2 } from 'lucide-react'
-import type { Subscription } from '@sublistme/db/types'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import type { Subscription } from '@sublistme/db/types';
+import { Pencil, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface SubscriptionCardProps {
-  subscription: Subscription
-  onEdit: (subscription: Subscription) => void
-  onDelete: (id: string) => void
+  subscription: Subscription;
+  onEdit: (subscription: Subscription) => void;
+  onDelete: (id: string) => void;
 }
 
 const billingCycleLabels: Record<string, string> = {
@@ -16,21 +16,21 @@ const billingCycleLabels: Record<string, string> = {
   yearly: '년',
   weekly: '주',
   quarterly: '분기',
-}
+};
 
 const currencySymbols: Record<string, string> = {
   KRW: '₩',
   USD: '$',
   JPY: '¥',
   EUR: '€',
-}
+};
 
 function formatPrice(price: number, currency: string) {
-  const symbol = currencySymbols[currency] || currency
+  const symbol = currencySymbols[currency] || currency;
   if (currency === 'KRW' || currency === 'JPY') {
-    return `${symbol}${price.toLocaleString()}`
+    return `${symbol}${price.toLocaleString()}`;
   }
-  return `${symbol}${price.toFixed(2)}`
+  return `${symbol}${price.toFixed(2)}`;
 }
 
 export function SubscriptionCard({
@@ -38,7 +38,8 @@ export function SubscriptionCard({
   onEdit,
   onDelete,
 }: SubscriptionCardProps) {
-  const cycleLabel = billingCycleLabels[subscription.billingCycle] || subscription.billingCycle
+  const cycleLabel =
+    billingCycleLabels[subscription.billingCycle] || subscription.billingCycle;
 
   return (
     <Card className="group">
@@ -51,7 +52,7 @@ export function SubscriptionCard({
                 alt=""
                 className="h-8 w-8 object-contain"
                 onError={(e) => {
-                  e.currentTarget.style.display = 'none'
+                  e.currentTarget.style.display = 'none';
                 }}
               />
             </div>
@@ -66,12 +67,19 @@ export function SubscriptionCard({
               )}
             </div>
             <p className="text-sm text-muted-foreground">
-              {formatPrice(subscription.price, subscription.currency)} / {cycleLabel}
-              {subscription.originalPrice && subscription.originalPrice > subscription.price && (
-                <span className="ml-2 text-green-600">
-                  ({Math.round((1 - subscription.price / subscription.originalPrice) * 100)}% 할인)
-                </span>
-              )}
+              {formatPrice(subscription.price, subscription.currency)} /{' '}
+              {cycleLabel}
+              {subscription.originalPrice &&
+                subscription.originalPrice > subscription.price && (
+                  <span className="ml-2 text-green-600">
+                    (
+                    {Math.round(
+                      (1 - subscription.price / subscription.originalPrice) *
+                        100,
+                    )}
+                    % 할인)
+                  </span>
+                )}
             </p>
             <p className="text-xs text-muted-foreground">
               다음 결제일: {subscription.nextBillingDate || '-'}
@@ -96,5 +104,5 @@ export function SubscriptionCard({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { LogIn, LogOut, Menu, Plus, User, X } from 'lucide-react';
+import { LogIn, LogOut, Menu, User, X } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
@@ -13,7 +13,6 @@ export function Header() {
   const { user, loading, logout } = useAuth();
   const t = useTranslations('Header');
   const tCommon = useTranslations('Common');
-  const tSub = useTranslations('Subscription');
   const tLanding = useTranslations('Landing');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -43,12 +42,6 @@ export function Header() {
                   <span className="text-sm text-muted-foreground">
                     {user.name || user.email}
                   </span>
-                  <Link href="/">
-                    <Button variant="outline" size="sm">
-                      <Plus className="mr-2 h-4 w-4" />
-                      {tSub('add')}
-                    </Button>
-                  </Link>
                   <Link href="/my">
                     <Button variant="outline" size="sm">
                       {tCommon('mypage')}
@@ -110,12 +103,6 @@ export function Header() {
                       <p className="font-medium truncate">{user.name || user.email}</p>
                     </div>
                   </div>
-                  <Link href="/" className="block">
-                    <Button variant="outline" className="w-full justify-start">
-                      <Plus className="mr-2 h-4 w-4" />
-                      {tSub('add')}
-                    </Button>
-                  </Link>
                   <Link href="/my" className="block">
                     <Button variant="outline" className="w-full justify-start">
                       <User className="mr-2 h-4 w-4" />

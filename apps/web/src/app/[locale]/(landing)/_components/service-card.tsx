@@ -3,6 +3,12 @@
 import type { ServiceCatalogueItem } from '@sublistme/db/data/service-catalogue';
 import { Check } from 'lucide-react';
 import { useLocale } from 'next-intl';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 interface ServiceCardProps {
@@ -46,7 +52,18 @@ export function ServiceCard({
         )}
       </div>
 
-      <span className="flex-1 truncate text-sm font-medium">{name}</span>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="flex-1 text-sm font-medium line-clamp-2 sm:truncate sm:line-clamp-none">
+              {name}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent className="hidden sm:block">
+            <p>{name}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       <div
         className={cn(

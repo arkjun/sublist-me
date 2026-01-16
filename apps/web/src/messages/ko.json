@@ -24,7 +24,11 @@
     "clear": "초기화",
     "continue": "계속하기",
     "save": "저장하기",
-    "mySubscriptions": "내 구독 목록"
+    "mySubscriptions": "내 구독 목록",
+    "searchPlaceholder": "서비스 검색...",
+    "noResults": "검색 결과가 없습니다",
+    "menu": "메뉴",
+    "language": "언어"
   },
   "Login": {
     "title": "SubList Me 로그인",

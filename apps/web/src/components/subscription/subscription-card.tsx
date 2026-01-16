@@ -4,6 +4,12 @@ import type { Subscription } from '@sublistme/db/types';
 import { Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface SubscriptionCardProps {
   subscription: Subscription;
@@ -59,7 +65,18 @@ export function SubscriptionCard({
           )}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold truncate">{subscription.name}</h3>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <h3 className="font-semibold line-clamp-2 sm:truncate sm:line-clamp-none">
+                      {subscription.name}
+                    </h3>
+                  </TooltipTrigger>
+                  <TooltipContent className="hidden sm:block">
+                    <p>{subscription.name}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               {subscription.category && (
                 <span className="rounded-full bg-secondary px-2 py-0.5 text-xs text-secondary-foreground shrink-0">
                   {subscription.category}

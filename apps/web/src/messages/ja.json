@@ -24,7 +24,11 @@
     "clear": "クリア",
     "continue": "続ける",
     "save": "保存する",
-    "mySubscriptions": "マイサブスク"
+    "mySubscriptions": "マイサブスク",
+    "searchPlaceholder": "サービスを検索...",
+    "noResults": "サービスが見つかりません",
+    "menu": "メニュー",
+    "language": "言語"
   },
   "Login": {
     "title": "SubList Me ログイン",

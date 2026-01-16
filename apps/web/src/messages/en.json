@@ -24,7 +24,11 @@
     "clear": "Clear",
     "continue": "Continue",
     "save": "Save",
-    "mySubscriptions": "My Subscriptions"
+    "mySubscriptions": "My Subscriptions",
+    "searchPlaceholder": "Search services...",
+    "noResults": "No services found",
+    "menu": "Menu",
+    "language": "Language"
   },
   "Login": {
     "title": "Login to SubList Me",

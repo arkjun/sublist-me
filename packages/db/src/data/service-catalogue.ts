@@ -86,10 +86,16 @@ export const CATEGORY_INFO: CategoryInfo[] = [
     order: 11,
   },
   {
+    id: 'security',
+    names: { ko: '보안', en: 'Security', ja: 'セキュリティ' },
+    icon: 'Shield',
+    order: 12,
+  },
+  {
     id: 'other',
     names: { ko: '기타', en: 'Other', ja: 'その他' },
     icon: 'MoreHorizontal',
-    order: 12,
+    order: 13,
   },
 ];
 
@@ -424,6 +430,13 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     logoUrl: 'https://github.githubassets.com/favicons/favicon.svg',
     category: 'productivity',
   },
+  {
+    slug: 'ticktick',
+    names: { ko: 'TickTick', en: 'TickTick', ja: 'TickTick' },
+    url: 'https://ticktick.com',
+    logoUrl: 'https://cdn.simpleicons.org/ticktick',
+    category: 'productivity',
+  },
 
   // ========== Cloud Storage ==========
   {
@@ -580,6 +593,22 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     url: 'https://www.yogiyo.co.kr',
     logoUrl: 'https://www.yogiyo.co.kr/favicon.ico',
     category: 'food',
+  },
+
+  // ========== Security ==========
+  {
+    slug: '1password',
+    names: { ko: '1Password', en: '1Password', ja: '1Password' },
+    url: 'https://1password.com',
+    logoUrl: 'https://cdn.simpleicons.org/1password',
+    category: 'security',
+  },
+  {
+    slug: 'nordvpn',
+    names: { ko: 'NordVPN', en: 'NordVPN', ja: 'NordVPN' },
+    url: 'https://nordvpn.com',
+    logoUrl: 'https://cdn.simpleicons.org/nordvpn',
+    category: 'security',
   },
 ];
 

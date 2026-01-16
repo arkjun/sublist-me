@@ -4,7 +4,7 @@ import { Lucia, Scrypt } from 'lucia';
 
 export const scrypt = new Scrypt();
 
-export function createLucia(db: D1Database) {
+export function createLucia(db: D1Database, isProduction = true) {
   const adapter = new D1Adapter(db, {
     user: 'users',
     session: 'sessions',
@@ -13,9 +13,9 @@ export function createLucia(db: D1Database) {
   return new Lucia(adapter, {
     sessionCookie: {
       attributes: {
-        secure: true,
+        secure: isProduction,
         sameSite: 'lax',
-        domain: '.sublistme.com',
+        ...(isProduction && { domain: '.sublistme.com' }),
       },
     },
     getUserAttributes: (attributes) => {

@@ -5,6 +5,7 @@ import { createLucia } from '../lib/auth';
 
 type Env = {
   DB: D1Database;
+  FRONTEND_URL?: string;
 };
 
 type AuthVariables = {
@@ -17,7 +18,8 @@ export const sessionMiddleware = createMiddleware<{
   Bindings: Env;
   Variables: AuthVariables;
 }>(async (c, next) => {
-  const lucia = createLucia(c.env.DB);
+  const isProduction = c.env.FRONTEND_URL?.includes('sublistme.com') ?? false;
+  const lucia = createLucia(c.env.DB, isProduction);
   const sessionId = getCookie(c, lucia.sessionCookieName);
 
   if (!sessionId) {

@@ -94,7 +94,8 @@ auth.get('/callback/google', async (c) => {
       picture: string;
     } = await googleUserRes.json();
 
-    const lucia = createLucia(c.env.DB);
+    const isProduction = c.env.FRONTEND_URL?.includes('sublistme.com') ?? false;
+    const lucia = createLucia(c.env.DB, isProduction);
 
     // 기존 사용자 확인 (google_id 또는 email로)
     let existingUser = await c.env.DB.prepare(
@@ -168,7 +169,8 @@ auth.get('/callback/google', async (c) => {
 
 // 로그아웃
 auth.post('/logout', async (c) => {
-  const lucia = createLucia(c.env.DB);
+  const isProduction = c.env.FRONTEND_URL?.includes('sublistme.com') ?? false;
+  const lucia = createLucia(c.env.DB, isProduction);
   const sessionId = getCookie(c, lucia.sessionCookieName);
 
   if (sessionId) {
@@ -221,7 +223,8 @@ auth.post('/signup/email', async (c) => {
       .bind(userId, email, hashedPassword, username, name)
       .run();
 
-    const lucia = createLucia(c.env.DB);
+    const isProduction = c.env.FRONTEND_URL?.includes('sublistme.com') ?? false;
+    const lucia = createLucia(c.env.DB, isProduction);
     const session = await lucia.createSession(userId, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
 
@@ -263,7 +266,8 @@ auth.post('/login/email', async (c) => {
     return c.json({ error: 'Invalid email or password' }, 400);
   }
 
-  const lucia = createLucia(c.env.DB);
+  const isProduction = c.env.FRONTEND_URL?.includes('sublistme.com') ?? false;
+  const lucia = createLucia(c.env.DB, isProduction);
   const session = await lucia.createSession(user.id, {});
   const sessionCookie = lucia.createSessionCookie(session.id);
 
@@ -277,7 +281,8 @@ auth.post('/login/email', async (c) => {
 
 // 현재 사용자 정보
 auth.get('/me', async (c) => {
-  const lucia = createLucia(c.env.DB);
+  const isProduction = c.env.FRONTEND_URL?.includes('sublistme.com') ?? false;
+  const lucia = createLucia(c.env.DB, isProduction);
   const sessionId = getCookie(c, lucia.sessionCookieName);
 
   if (!sessionId) {

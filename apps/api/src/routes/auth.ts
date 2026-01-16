@@ -235,7 +235,11 @@ auth.post('/signup/email', async (c) => {
 
     return c.json({ success: true, userId });
   } catch (e) {
-    return c.json({ error: 'Email already exists or invalid' }, 400);
+    console.error('Signup error:', e);
+    if (e instanceof Error && e.message.includes('UNIQUE constraint failed: users.email')) {
+      return c.json({ error: 'Email already exists' }, 400);
+    }
+    return c.json({ error: 'Failed to create account' }, 500);
   }
 });
 

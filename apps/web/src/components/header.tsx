@@ -40,7 +40,7 @@ export function Header() {
                     />
                   )}
                   <span className="text-sm text-muted-foreground">
-                    {user.name || user.email}
+                    {user.username}
                   </span>
                   <Link href="/my">
                     <Button variant="outline" size="sm">
@@ -100,7 +100,7 @@ export function Header() {
                       />
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{user.name || user.email}</p>
+                      <p className="font-medium truncate">{user.username}</p>
                     </div>
                   </div>
                   <Link href="/my" className="block">

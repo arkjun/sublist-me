@@ -24,6 +24,16 @@ export function useServiceSelection() {
     setIsInitialized(true);
   }, []);
 
+  // 선택이 변경될 때마다 자동으로 localStorage에 저장
+  useEffect(() => {
+    if (!isInitialized) return;
+    if (selectedServices.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedServices));
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, [selectedServices, isInitialized]);
+
   const toggleService = useCallback((slug: string) => {
     setSelectedServices((prev) =>
       prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug],

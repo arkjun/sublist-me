@@ -58,7 +58,7 @@ export function LandingHeader({ selectedCount }: LandingHeaderProps) {
               </Button>
             </>
           ) : (
-            <Link href="/login">
+            <Link href={selectedCount > 0 ? '/login?redirect=/onboarding' : '/login'}>
               <Button variant="outline" size="sm">
                 <LogIn className="mr-2 h-4 w-4" />
                 {tCommon('login')}
@@ -121,7 +121,7 @@ export function LandingHeader({ selectedCount }: LandingHeaderProps) {
               </Button>
             </>
           ) : (
-            <Link href="/login" className="block">
+            <Link href={selectedCount > 0 ? '/login?redirect=/onboarding' : '/login'} className="block">
               <Button className="w-full">
                 <LogIn className="mr-2 h-4 w-4" />
                 {tCommon('login')}

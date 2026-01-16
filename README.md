@@ -7,10 +7,13 @@ A subscription management app to track all your subscriptions in one place.
 ## Features
 
 - Register and manage subscription services
+- Service catalogue with popular services for quick registration
 - View monthly/yearly spending overview
 - Compare discount rates against regular prices
-- Next payment date notifications
+- Next payment date tracking
+- List/Card view toggle
 - Light/Dark/System theme support
+- Multi-language support (English, Korean, Japanese)
 - Multiple authentication methods (Email/Password, Google OAuth)
 
 ## Tech Stack

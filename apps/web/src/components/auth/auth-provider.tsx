@@ -15,6 +15,7 @@ type User = {
   id: string;
   googleId: string;
   email: string;
+  username: string;
   name: string | null;
   picture: string | null;
   locale: 'ko' | 'en' | 'ja';

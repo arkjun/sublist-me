@@ -22,6 +22,7 @@ export function createLucia(db: D1Database) {
       return {
         googleId: attributes.google_id,
         email: attributes.email,
+        username: attributes.username,
         name: attributes.name,
         picture: attributes.picture,
         locale: attributes.locale,
@@ -46,6 +47,7 @@ declare module 'lucia' {
     DatabaseUserAttributes: {
       google_id: string | null;
       email: string;
+      username: string;
       name: string | null;
       picture: string | null;
       locale: string;

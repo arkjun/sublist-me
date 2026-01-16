@@ -1,7 +1,7 @@
 'use client';
 
 import type { Currency, Locale } from '@sublistme/db/types';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/components/auth/auth-provider';
@@ -14,9 +14,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
-import { fetchUserPreferences, updateUserPreferences } from '@/lib/api';
+import {
+  checkUsernameAvailability,
+  fetchUserPreferences,
+  fetchUsername,
+  updateUsername,
+  updateUserPreferences,
+} from '@/lib/api';
 import { Footer } from '@/components/footer';
 
 const localeOptions: { value: Locale; label: string }[] = [
@@ -36,13 +43,69 @@ export default function MyPage() {
   const router = useRouter();
   const t = useTranslations('MyPage');
   const tCommon = useTranslations('Common');
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, refreshUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [locale, setLocale] = useState<Locale>('ko');
   const [currency, setCurrency] = useState<Currency>('KRW');
+
+  // Username state
+  const [username, setUsername] = useState('');
+  const [originalUsername, setOriginalUsername] = useState('');
+  const [usernameError, setUsernameError] = useState<string | null>(null);
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(
+    null,
+  );
+  const [checkingUsername, setCheckingUsername] = useState(false);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Debounced username availability check
+  const checkUsername = useCallback(
+    async (value: string) => {
+      if (!value || value === originalUsername) {
+        setUsernameAvailable(null);
+        setUsernameError(null);
+        return;
+      }
+
+      setCheckingUsername(true);
+      try {
+        const result = await checkUsernameAvailability(value);
+        if (result.available) {
+          setUsernameAvailable(true);
+          setUsernameError(null);
+        } else {
+          setUsernameAvailable(false);
+          setUsernameError(result.error || t('usernameTaken'));
+        }
+      } catch {
+        setUsernameError(t('saveError'));
+        setUsernameAvailable(false);
+      } finally {
+        setCheckingUsername(false);
+      }
+    },
+    [originalUsername, t],
+  );
+
+  const handleUsernameChange = (value: string) => {
+    const normalized = value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+    setUsername(normalized);
+    setUsernameError(null);
+    setUsernameAvailable(null);
+
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    if (normalized && normalized !== originalUsername) {
+      debounceTimer.current = setTimeout(() => {
+        checkUsername(normalized);
+      }, 500);
+    }
+  };
 
   useEffect(() => {
     if (authLoading) return;
@@ -55,14 +118,17 @@ export default function MyPage() {
       setLoading(true);
       setError(null);
       try {
-        const prefs = await fetchUserPreferences();
+        const [prefs, usernameData] = await Promise.all([
+          fetchUserPreferences(),
+          fetchUsername(),
+        ]);
         setLocale(prefs.locale);
         setCurrency(prefs.currency);
+        setUsername(usernameData.username);
+        setOriginalUsername(usernameData.username);
       } catch (err) {
         const message =
-          err instanceof Error
-            ? err.message
-            : t('loadError');
+          err instanceof Error ? err.message : t('loadError');
         setError(message);
       } finally {
         setLoading(false);
@@ -76,10 +142,22 @@ export default function MyPage() {
     setSaving(true);
     setError(null);
     setSuccess(null);
+
     try {
+      // Update preferences
       const prefs = await updateUserPreferences({ locale, currency });
       setLocale(prefs.locale);
       setCurrency(prefs.currency);
+
+      // Update username if changed
+      if (username !== originalUsername) {
+        const usernameResult = await updateUsername(username);
+        setUsername(usernameResult.username);
+        setOriginalUsername(usernameResult.username);
+        setUsernameAvailable(null);
+        await refreshUser();
+      }
+
       setSuccess(t('saved'));
     } catch (err) {
       const message =
@@ -110,6 +188,28 @@ export default function MyPage() {
           <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="username">{t('username')}</Label>
+            <Input
+              id="username"
+              value={username}
+              onChange={(e) => handleUsernameChange(e.target.value)}
+              placeholder="my-username"
+              maxLength={20}
+            />
+            <p className="text-xs text-muted-foreground">{t('usernameHint')}</p>
+            {checkingUsername && (
+              <p className="text-xs text-muted-foreground">
+                {t('checkingUsername')}
+              </p>
+            )}
+            {usernameError && (
+              <p className="text-xs text-destructive">{usernameError}</p>
+            )}
+            {usernameAvailable && !usernameError && (
+              <p className="text-xs text-green-600">{t('usernameAvailable')}</p>
+            )}
+          </div>
           <div className="space-y-2">
             <Label htmlFor="locale">{t('language')}</Label>
             <Select
@@ -142,7 +242,10 @@ export default function MyPage() {
           {success && <p className="text-sm text-green-600">{success}</p>}
         </CardContent>
         <CardFooter>
-          <Button onClick={handleSave} disabled={saving}>
+          <Button
+            onClick={handleSave}
+            disabled={saving || checkingUsername || !!usernameError}
+          >
             {saving ? t('saving') : tCommon('save')}
           </Button>
         </CardFooter>

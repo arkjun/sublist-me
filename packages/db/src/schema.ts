@@ -30,6 +30,7 @@ export type ServiceCategory =
   | 'education'
   | 'finance'
   | 'food'
+  | 'security'
   | 'other';
 
 // 사용자 테이블
@@ -37,6 +38,7 @@ export const users = sqliteTable('users', {
   id: text('id').primaryKey(),
   googleId: text('google_id').notNull().unique(),
   email: text('email').notNull().unique(),
+  username: text('username').notNull().unique(),
   name: text('name'),
   picture: text('picture'),
   locale: text('locale').$type<Locale>().notNull().default('ko'),

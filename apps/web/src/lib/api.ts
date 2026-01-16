@@ -40,3 +40,51 @@ export async function updateUserPreferences(
 
   return res.json();
 }
+
+// Username API functions
+export async function fetchUsername(): Promise<{ username: string }> {
+  const res = await fetch(`${API_URL}/users/username`, {
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch username');
+  }
+
+  return res.json();
+}
+
+export async function updateUsername(
+  username: string,
+): Promise<{ username: string }> {
+  const res = await fetch(`${API_URL}/users/username`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username }),
+  });
+
+  if (!res.ok) {
+    const error = (await res.json()) as { error?: string };
+    throw new Error(error.error || 'Failed to update username');
+  }
+
+  return res.json();
+}
+
+export async function checkUsernameAvailability(
+  username: string,
+): Promise<{ available: boolean; error?: string }> {
+  const res = await fetch(
+    `${API_URL}/users/username/check?username=${encodeURIComponent(username)}`,
+    {
+      credentials: 'include',
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error('Failed to check username availability');
+  }
+
+  return res.json();
+}

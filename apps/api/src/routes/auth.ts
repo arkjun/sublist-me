@@ -3,6 +3,7 @@ import { Hono } from 'hono';
 import { getCookie, setCookie } from 'hono/cookie';
 import { generateIdFromEntropySize } from 'lucia';
 import { createGoogleAuth, createLucia, scrypt } from '../lib/auth';
+import { generateUniqueUsername } from '../lib/username';
 
 type Env = {
   DB: D1Database;
@@ -124,13 +125,23 @@ auth.get('/callback/google', async (c) => {
     } else {
       // 새 사용자 생성
       userId = generateIdFromEntropySize(10);
+      const checkUsernameExists = async (username: string) => {
+        const result = await c.env.DB.prepare(
+          'SELECT 1 FROM users WHERE username = ?',
+        )
+          .bind(username)
+          .first();
+        return !!result;
+      };
+      const username = await generateUniqueUsername(checkUsernameExists);
       await c.env.DB.prepare(
-        'INSERT INTO users (id, google_id, email, name, picture) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO users (id, google_id, email, username, name, picture) VALUES (?, ?, ?, ?, ?, ?)',
       )
         .bind(
           userId,
           googleUser.id,
           googleUser.email,
+          username,
           googleUser.name,
           googleUser.picture,
         )
@@ -193,11 +204,21 @@ auth.post('/signup/email', async (c) => {
   const hashedPassword = await scrypt.hash(password);
   const userId = generateIdFromEntropySize(10);
 
+  const checkUsernameExists = async (username: string) => {
+    const result = await c.env.DB.prepare(
+      'SELECT 1 FROM users WHERE username = ?',
+    )
+      .bind(username)
+      .first();
+    return !!result;
+  };
+  const username = await generateUniqueUsername(checkUsernameExists);
+
   try {
     await c.env.DB.prepare(
-      'INSERT INTO users (id, email, password_hash, name) VALUES (?, ?, ?, ?)',
+      'INSERT INTO users (id, email, password_hash, username, name) VALUES (?, ?, ?, ?, ?)',
     )
-      .bind(userId, email, hashedPassword, name)
+      .bind(userId, email, hashedPassword, username, name)
       .run();
 
     const lucia = createLucia(c.env.DB);

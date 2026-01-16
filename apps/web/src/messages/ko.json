@@ -3,6 +3,14 @@
     "title": "SubList Me - 구독 관리",
     "description": "내 구독 서비스를 한눈에 관리하세요"
   },
+  "LoginMeta": {
+    "title": "로그인 - SubList Me",
+    "description": "SubList Me에 로그인하여 구독 서비스를 관리하세요"
+  },
+  "SubscriptionsMeta": {
+    "title": "내 구독 - SubList Me",
+    "description": "등록된 구독 서비스를 확인하고 관리하세요"
+  },
   "Common": {
     "login": "로그인",
     "logout": "로그아웃",

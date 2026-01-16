@@ -3,6 +3,14 @@
     "title": "SubList Me - サブスク管理",
     "description": "すべてのサブスクを一か所で管理"
   },
+  "LoginMeta": {
+    "title": "ログイン - SubList Me",
+    "description": "SubList Meにログインしてサブスクを管理しましょう"
+  },
+  "SubscriptionsMeta": {
+    "title": "マイサブスク - SubList Me",
+    "description": "登録済みのサブスクを確認・管理しましょう"
+  },
   "Common": {
     "login": "ログイン",
     "logout": "ログアウト",

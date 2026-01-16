@@ -2,22 +2,39 @@ import type { MetadataRoute } from "next";
 
 export const dynamic = "force-static";
 
+type RouteConfig = {
+  path: string;
+  changeFrequency: "weekly" | "monthly" | "daily";
+  priority: number;
+};
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://app.sublistme.com";
-  const locales = ["ko", "en", "ja"];
+  const locales = ["ko", "en", "ja"] as const;
 
-  // 공개 페이지 (my, onboarding, api 제외)
-  const publicRoutes = ["", "/login", "/subscriptions"];
+  const publicRoutes: RouteConfig[] = [
+    { path: "", changeFrequency: "weekly", priority: 1.0 },
+    { path: "/login", changeFrequency: "monthly", priority: 0.7 },
+    { path: "/subscriptions", changeFrequency: "weekly", priority: 0.9 },
+  ];
 
   const urls: MetadataRoute.Sitemap = [];
 
   for (const locale of locales) {
     for (const route of publicRoutes) {
+      const alternateLanguages: Record<string, string> = {};
+      for (const altLocale of locales) {
+        alternateLanguages[altLocale] = `${baseUrl}/${altLocale}${route.path}`;
+      }
+
       urls.push({
-        url: `${baseUrl}/${locale}${route}`,
+        url: `${baseUrl}/${locale}${route.path}`,
         lastModified: new Date(),
-        changeFrequency: "weekly",
-        priority: route === "" ? 1 : 0.8,
+        changeFrequency: route.changeFrequency,
+        priority: route.priority,
+        alternates: {
+          languages: alternateLanguages,
+        },
       });
     }
   }

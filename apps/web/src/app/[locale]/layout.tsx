@@ -24,9 +24,43 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Metadata' });
 
+  const title = t('title');
+  const description = t('description');
+
   return {
-    title: t('title'),
-    description: t('description'),
+    title,
+    description,
+    metadataBase: new URL('https://app.sublistme.com'),
+    alternates: {
+      canonical: `https://app.sublistme.com/${locale}`,
+      languages: {
+        ko: 'https://app.sublistme.com/ko',
+        en: 'https://app.sublistme.com/en',
+        ja: 'https://app.sublistme.com/ja',
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://app.sublistme.com/${locale}`,
+      siteName: 'SubList Me',
+      locale,
+      type: 'website',
+      images: [
+        {
+          url: '/og-image.svg',
+          width: 1200,
+          height: 630,
+          alt: 'SubList Me',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ['/og-image.svg'],
+    },
   };
 }
 

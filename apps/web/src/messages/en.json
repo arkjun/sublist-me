@@ -3,6 +3,14 @@
     "title": "SubList Me - Subscription Manager",
     "description": "Manage all your subscriptions in one place"
   },
+  "LoginMeta": {
+    "title": "Login - SubList Me",
+    "description": "Log in to SubList Me to manage your subscriptions"
+  },
+  "SubscriptionsMeta": {
+    "title": "My Subscriptions - SubList Me",
+    "description": "View and manage your registered subscriptions"
+  },
   "Common": {
     "login": "Login",
     "logout": "Logout",

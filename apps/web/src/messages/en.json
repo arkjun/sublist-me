@@ -96,7 +96,7 @@
     "thisMonth": "This Month",
     "activeCount": "Active Subscriptions",
     "yearly": "Yearly Estimate",
-    "add": "Add Subscription",
+    "add": "Add Subscription Details",
     "listView": "List",
     "cardView": "Card",
     "searchPlaceholder": "Search by name...",
@@ -129,6 +129,44 @@
       "yearly": "yr",
       "weekly": "wk",
       "quarterly": "qtr"
+    }
+  },
+  "SubscriptionForm": {
+    "titleCreate": "Add Subscription",
+    "titleEdit": "Edit Subscription",
+    "providerLabel": "Select Service",
+    "providerPlaceholder": "Search and select a service",
+    "nameLabel": "Subscription Name *",
+    "namePlaceholder": "e.g. YouTube Premium",
+    "priceLabel": "Price *",
+    "pricePlaceholder": "14900",
+    "currencyLabel": "Currency",
+    "originalPriceLabel": "List Price (Optional)",
+    "originalPricePlaceholder": "For discount comparison",
+    "billingCycleLabel": "Billing Cycle",
+    "nextBillingDateLabel": "Next Billing Date",
+    "datePlaceholder": "YYYY-MM-DD",
+    "categoryLabel": "Category",
+    "categoryPlaceholder": "e.g. Entertainment, Productivity",
+    "urlLabel": "Service URL",
+    "urlPlaceholder": "https://...",
+    "memoLabel": "Memo",
+    "memoPlaceholder": "Additional notes",
+    "cancel": "Cancel",
+    "submitCreate": "Add",
+    "submitEdit": "Save",
+    "submitting": "Saving...",
+    "billingCycle": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "weekly": "Weekly",
+      "quarterly": "Quarterly"
+    },
+    "currency": {
+      "KRW": "Korean Won (KRW)",
+      "USD": "US Dollar (USD)",
+      "JPY": "Japanese Yen (JPY)",
+      "EUR": "Euro (EUR)"
     }
   },
   "Header": {

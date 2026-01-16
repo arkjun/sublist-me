@@ -96,7 +96,7 @@
     "thisMonth": "今月の支出",
     "activeCount": "アクティブなサブスク",
     "yearly": "年間予想",
-    "add": "サブスクを追加",
+    "add": "サブスク詳細を追加",
     "listView": "リスト",
     "cardView": "カード",
     "searchPlaceholder": "名前で検索...",
@@ -129,6 +129,44 @@
       "yearly": "年",
       "weekly": "週",
       "quarterly": "四半期"
+    }
+  },
+  "SubscriptionForm": {
+    "titleCreate": "サブスク追加",
+    "titleEdit": "サブスク編集",
+    "providerLabel": "サービス選択",
+    "providerPlaceholder": "サービスを検索して選択",
+    "nameLabel": "サブスク名 *",
+    "namePlaceholder": "例: YouTube Premium",
+    "priceLabel": "価格 *",
+    "pricePlaceholder": "14900",
+    "currencyLabel": "通貨",
+    "originalPriceLabel": "定価（任意）",
+    "originalPricePlaceholder": "割引比較用",
+    "billingCycleLabel": "請求周期",
+    "nextBillingDateLabel": "次回請求日",
+    "datePlaceholder": "YYYY-MM-DD",
+    "categoryLabel": "カテゴリ",
+    "categoryPlaceholder": "例: エンタメ、プロダクティビティ",
+    "urlLabel": "サービスURL",
+    "urlPlaceholder": "https://...",
+    "memoLabel": "メモ",
+    "memoPlaceholder": "追加メモ",
+    "cancel": "キャンセル",
+    "submitCreate": "追加",
+    "submitEdit": "保存",
+    "submitting": "保存中...",
+    "billingCycle": {
+      "monthly": "月額",
+      "yearly": "年額",
+      "weekly": "週額",
+      "quarterly": "四半期"
+    },
+    "currency": {
+      "KRW": "韓国ウォン (KRW)",
+      "USD": "米ドル (USD)",
+      "JPY": "日本円 (JPY)",
+      "EUR": "ユーロ (EUR)"
     }
   },
   "Header": {

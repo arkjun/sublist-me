@@ -1,8 +1,14 @@
 'use client';
 
-import type { BillingCycle, Currency, Subscription, SubscriptionInput } from '@sublistme/db/types';
-import { SERVICE_CATALOGUE, type ServiceCatalogueItem } from '@sublistme/db/data/service-catalogue';
+import type {
+  BillingCycle,
+  Currency,
+  Subscription,
+  SubscriptionInput,
+} from '@sublistme/db/types';
+import { SERVICE_CATALOGUE } from '@sublistme/db/data/service-catalogue';
 import { useEffect, useMemo, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -20,20 +26,6 @@ interface SubscriptionFormProps {
   subscription?: Subscription | null;
   onSubmit: (data: SubscriptionInput) => Promise<void>;
 }
-
-const billingCycles: { value: BillingCycle; label: string }[] = [
-  { value: 'monthly', label: '월간' },
-  { value: 'yearly', label: '연간' },
-  { value: 'weekly', label: '주간' },
-  { value: 'quarterly', label: '분기' },
-];
-
-const currencies: { value: Currency; label: string }[] = [
-  { value: 'KRW', label: '원 (KRW)' },
-  { value: 'USD', label: '달러 (USD)' },
-  { value: 'JPY', label: '엔 (JPY)' },
-  { value: 'EUR', label: '유로 (EUR)' },
-];
 
 const defaultFormData: SubscriptionInput = {
   name: '',
@@ -55,19 +47,47 @@ export function SubscriptionForm({
   subscription,
   onSubmit,
 }: SubscriptionFormProps) {
+  const t = useTranslations('SubscriptionForm');
+  const locale = useLocale() as 'ko' | 'en' | 'ja';
   const [formData, setFormData] = useState<SubscriptionInput>(defaultFormData);
   const [loading, setLoading] = useState(false);
   const [providerQuery, setProviderQuery] = useState('');
 
   const isEdit = !!subscription;
 
-  // 카탈로그에서 서비스 옵션 생성
+  const billingCycles: { value: BillingCycle; label: string }[] = useMemo(
+    () => [
+      { value: 'monthly', label: t('billingCycle.monthly') },
+      { value: 'yearly', label: t('billingCycle.yearly') },
+      { value: 'weekly', label: t('billingCycle.weekly') },
+      { value: 'quarterly', label: t('billingCycle.quarterly') },
+    ],
+    [t],
+  );
+
+  const currencies: { value: Currency; label: string }[] = useMemo(
+    () => [
+      { value: 'KRW', label: t('currency.KRW') },
+      { value: 'USD', label: t('currency.USD') },
+      { value: 'JPY', label: t('currency.JPY') },
+      { value: 'EUR', label: t('currency.EUR') },
+    ],
+    [t],
+  );
+
   const providerOptions = useMemo(() => {
-    return SERVICE_CATALOGUE.map((service) => ({
-      service,
-      label: service.names.ko || service.names.en || service.slug,
-    }));
-  }, []);
+    return SERVICE_CATALOGUE.map((service) => {
+      const localizedName =
+        service.names[locale] ||
+        service.names.ko ||
+        service.names.en ||
+        service.slug;
+      return {
+        service,
+        label: localizedName,
+      };
+    });
+  }, [locale]);
 
   useEffect(() => {
     if (subscription) {
@@ -89,7 +109,7 @@ export function SubscriptionForm({
       setFormData(defaultFormData);
       setProviderQuery('');
     }
-  }, [subscription, open]);
+  }, [subscription]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,11 +149,13 @@ export function SubscriptionForm({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{isEdit ? '구독 수정' : '새 구독 추가'}</DialogTitle>
+          <DialogTitle>
+            {isEdit ? t('titleEdit') : t('titleCreate')}
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="provider">서비스 선택</Label>
+            <Label htmlFor="provider">{t('providerLabel')}</Label>
             <div className="flex items-center gap-3">
               {resolvedLogoUrl && (
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-white">
@@ -152,7 +174,7 @@ export function SubscriptionForm({
                 list="service-providers"
                 value={providerQuery}
                 onChange={(e) => handleProviderQueryChange(e.target.value)}
-                placeholder="서비스를 검색해 선택하세요"
+                placeholder={t('providerPlaceholder')}
                 className="flex-1"
               />
             </div>
@@ -164,21 +186,21 @@ export function SubscriptionForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="name">구독명 *</Label>
+            <Label htmlFor="name">{t('nameLabel')}</Label>
             <Input
               id="name"
               value={formData.name}
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
-              placeholder="예: 유튜브 프리미엄"
+              placeholder={t('namePlaceholder')}
               required
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="price">가격 *</Label>
+              <Label htmlFor="price">{t('priceLabel')}</Label>
               <Input
                 id="price"
                 type="number"
@@ -186,12 +208,12 @@ export function SubscriptionForm({
                 onChange={(e) =>
                   setFormData({ ...formData, price: Number(e.target.value) })
                 }
-                placeholder="14900"
+                placeholder={t('pricePlaceholder')}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="currency">통화</Label>
+              <Label htmlFor="currency">{t('currencyLabel')}</Label>
               <Select
                 id="currency"
                 value={formData.currency}
@@ -213,7 +235,7 @@ export function SubscriptionForm({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="originalPrice">정가 (선택)</Label>
+              <Label htmlFor="originalPrice">{t('originalPriceLabel')}</Label>
               <Input
                 id="originalPrice"
                 type="number"
@@ -226,11 +248,11 @@ export function SubscriptionForm({
                       : undefined,
                   })
                 }
-                placeholder="할인 비교용"
+                placeholder={t('originalPricePlaceholder')}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="billingCycle">결제 주기</Label>
+              <Label htmlFor="billingCycle">{t('billingCycleLabel')}</Label>
               <Select
                 id="billingCycle"
                 value={formData.billingCycle}
@@ -251,7 +273,7 @@ export function SubscriptionForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="nextBillingDate">다음 결제일</Label>
+            <Label htmlFor="nextBillingDate">{t('nextBillingDateLabel')}</Label>
             <Input
               id="nextBillingDate"
               type="date"
@@ -262,24 +284,24 @@ export function SubscriptionForm({
                   nextBillingDate: e.target.value || undefined,
                 })
               }
-              placeholder="YYYY-MM-DD"
+              placeholder={t('datePlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="category">카테고리</Label>
+            <Label htmlFor="category">{t('categoryLabel')}</Label>
             <Input
               id="category"
               value={formData.category || ''}
               onChange={(e) =>
                 setFormData({ ...formData, category: e.target.value })
               }
-              placeholder="예: 엔터테인먼트, 생산성"
+              placeholder={t('categoryPlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="url">서비스 URL</Label>
+            <Label htmlFor="url">{t('urlLabel')}</Label>
             <Input
               id="url"
               type="url"
@@ -287,19 +309,19 @@ export function SubscriptionForm({
               onChange={(e) =>
                 setFormData({ ...formData, url: e.target.value })
               }
-              placeholder="https://..."
+              placeholder={t('urlPlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="memo">메모</Label>
+            <Label htmlFor="memo">{t('memoLabel')}</Label>
             <Input
               id="memo"
               value={formData.memo || ''}
               onChange={(e) =>
                 setFormData({ ...formData, memo: e.target.value })
               }
-              placeholder="추가 메모"
+              placeholder={t('memoPlaceholder')}
             />
           </div>
 
@@ -309,10 +331,14 @@ export function SubscriptionForm({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              취소
+              {t('cancel')}
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? '저장 중...' : isEdit ? '수정' : '추가'}
+              {loading
+                ? t('submitting')
+                : isEdit
+                  ? t('submitEdit')
+                  : t('submitCreate')}
             </Button>
           </div>
         </form>

@@ -96,7 +96,7 @@
     "thisMonth": "이번 달 지출",
     "activeCount": "활성 구독",
     "yearly": "연간 예상",
-    "add": "구독 추가",
+    "add": "구독 상세 추가",
     "listView": "리스트",
     "cardView": "카드",
     "searchPlaceholder": "구독명으로 검색...",
@@ -129,6 +129,44 @@
       "yearly": "년",
       "weekly": "주",
       "quarterly": "분기"
+    }
+  },
+  "SubscriptionForm": {
+    "titleCreate": "구독 추가",
+    "titleEdit": "구독 수정",
+    "providerLabel": "서비스 선택",
+    "providerPlaceholder": "서비스를 검색해 선택하세요",
+    "nameLabel": "구독명 *",
+    "namePlaceholder": "예: 유튜브 프리미엄",
+    "priceLabel": "가격 *",
+    "pricePlaceholder": "14900",
+    "currencyLabel": "통화",
+    "originalPriceLabel": "정가 (선택)",
+    "originalPricePlaceholder": "할인 비교용",
+    "billingCycleLabel": "결제 주기",
+    "nextBillingDateLabel": "다음 결제일",
+    "datePlaceholder": "YYYY-MM-DD",
+    "categoryLabel": "카테고리",
+    "categoryPlaceholder": "예: 엔터테인먼트, 생산성",
+    "urlLabel": "서비스 URL",
+    "urlPlaceholder": "https://...",
+    "memoLabel": "메모",
+    "memoPlaceholder": "추가 메모",
+    "cancel": "취소",
+    "submitCreate": "추가",
+    "submitEdit": "수정",
+    "submitting": "저장 중...",
+    "billingCycle": {
+      "monthly": "월간",
+      "yearly": "연간",
+      "weekly": "주간",
+      "quarterly": "분기"
+    },
+    "currency": {
+      "KRW": "원 (KRW)",
+      "USD": "달러 (USD)",
+      "JPY": "엔 (JPY)",
+      "EUR": "유로 (EUR)"
     }
   },
   "Header": {

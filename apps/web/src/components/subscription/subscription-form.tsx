@@ -289,31 +289,6 @@ export function SubscriptionForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="category">{t('categoryLabel')}</Label>
-            <Input
-              id="category"
-              value={formData.category || ''}
-              onChange={(e) =>
-                setFormData({ ...formData, category: e.target.value })
-              }
-              placeholder={t('categoryPlaceholder')}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="url">{t('urlLabel')}</Label>
-            <Input
-              id="url"
-              type="url"
-              value={formData.url || ''}
-              onChange={(e) =>
-                setFormData({ ...formData, url: e.target.value })
-              }
-              placeholder={t('urlPlaceholder')}
-            />
-          </div>
-
-          <div className="space-y-2">
             <Label htmlFor="memo">{t('memoLabel')}</Label>
             <Input
               id="memo"

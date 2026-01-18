@@ -34,7 +34,8 @@ A subscription management app to track all your subscriptions in one place.
 sublist-me/
 ├── apps/
 │   ├── api/          # Hono API (Cloudflare Workers)
-│   └── web/          # Next.js web app (Cloudflare Pages)
+│   ├── web/          # Next.js web app (Cloudflare Pages)
+│   └── www/          # Next.js marketing site
 └── packages/
     └── db/           # Drizzle schema (shared)
 ```

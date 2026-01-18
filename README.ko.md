@@ -34,7 +34,8 @@
 sublist-me/
 ├── apps/
 │   ├── api/          # Hono API (Cloudflare Workers)
-│   └── web/          # Next.js 웹앱 (Cloudflare Pages)
+│   ├── web/          # Next.js 웹앱 (Cloudflare Pages)
+│   └── www/          # Next.js 마케팅 사이트
 └── packages/
     └── db/           # Drizzle 스키마 (공유)
 ```

@@ -1,7 +1,7 @@
 'use client';
 
 import type { Subscription, SubscriptionInput } from '@sublistme/db/types';
-import { LogIn, Plus } from 'lucide-react';
+import { ChevronDown, ChevronUp, LogIn, Plus } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
@@ -25,6 +25,7 @@ export function SubscriptionList() {
   const [editingSubscription, setEditingSubscription] =
     useState<Subscription | null>(null);
   const [viewMode, setViewMode] = useState<'list' | 'card'>('list');
+  const [statsExpanded, setStatsExpanded] = useState(false);
 
   const fetchSubscriptions = useCallback(async () => {
     if (!user) {
@@ -167,7 +168,38 @@ export function SubscriptionList() {
 
   return (
     <div>
-      <div className="mb-8 grid gap-4 md:grid-cols-3">
+      {/* Mobile: Collapsible summary */}
+      <div className="mb-4 md:hidden">
+        <button
+          onClick={() => setStatsExpanded(!statsExpanded)}
+          className="flex w-full items-center justify-between rounded-lg border bg-card p-3"
+        >
+          <div className="flex items-center gap-4">
+            <div>
+              <p className="text-xs text-muted-foreground">{t('thisMonth')}</p>
+              <p className="text-base font-bold">₩{Math.round(monthlyTotal).toLocaleString()}</p>
+            </div>
+            <div className="border-l pl-4">
+              <p className="text-xs text-muted-foreground">{t('activeCount')}</p>
+              <p className="text-base font-bold">{t('count', { count: activeCount })}</p>
+            </div>
+          </div>
+          {statsExpanded ? (
+            <ChevronUp className="h-5 w-5 text-muted-foreground" />
+          ) : (
+            <ChevronDown className="h-5 w-5 text-muted-foreground" />
+          )}
+        </button>
+        {statsExpanded && (
+          <div className="mt-2 rounded-lg border bg-card p-3">
+            <p className="text-xs text-muted-foreground">{t('yearly')}</p>
+            <p className="text-base font-bold">₩{Math.round(yearlyTotal).toLocaleString()}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop: Full stats grid */}
+      <div className="mb-8 hidden gap-4 md:grid md:grid-cols-3">
         <div className="rounded-lg border bg-card p-6">
           <p className="text-sm text-muted-foreground">{t('thisMonth')}</p>
           <p className="text-2xl font-bold">

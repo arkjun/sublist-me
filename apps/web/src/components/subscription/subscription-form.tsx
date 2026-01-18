@@ -204,12 +204,11 @@ export function SubscriptionForm({
               <Input
                 id="price"
                 type="number"
-                value={formData.price || ''}
+                value={formData.price ?? ''}
                 onChange={(e) =>
                   setFormData({ ...formData, price: Number(e.target.value) })
                 }
                 placeholder={t('pricePlaceholder')}
-                required
               />
             </div>
             <div className="space-y-2">

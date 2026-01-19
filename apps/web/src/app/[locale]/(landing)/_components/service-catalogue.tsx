@@ -1,6 +1,5 @@
 'use client';
 
-import type { Subscription } from '@sublistme/db/types';
 import {
   CATEGORY_INFO,
   getCategoriesWithServices,
@@ -8,9 +7,10 @@ import {
   getSlugByLogoUrl,
   SERVICE_CATALOGUE,
 } from '@sublistme/db/data/service-catalogue';
+import type { Subscription } from '@sublistme/db/types';
 import { Search, X } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,7 +23,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 
 export function ServiceCatalogue() {
   const { user } = useAuth();
-  const locale = useLocale() as 'ko' | 'en' | 'ja';
+  const _locale = useLocale() as 'ko' | 'en' | 'ja';
   const t = useTranslations('Landing');
   const {
     selectedServices,
@@ -37,8 +37,10 @@ export function ServiceCatalogue() {
   } = useServiceSelection();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [existingSubscriptionSlugs, setExistingSubscriptionSlugs] = useState<string[]>([]);
-  const [subscriptionsLoaded, setSubscriptionsLoaded] = useState(false);
+  const [existingSubscriptionSlugs, setExistingSubscriptionSlugs] = useState<
+    string[]
+  >([]);
+  const [_subscriptionsLoaded, setSubscriptionsLoaded] = useState(false);
 
   // 로그인 사용자의 기존 구독 목록 fetch
   const fetchExistingSubscriptions = useCallback(async () => {
@@ -56,7 +58,9 @@ export function ServiceCatalogue() {
         const data: Subscription[] = await res.json();
         // logoUrl을 사용하여 slug 매핑
         const slugs = data
-          .map((sub) => (sub.logoUrl ? getSlugByLogoUrl(sub.logoUrl) : undefined))
+          .map((sub) =>
+            sub.logoUrl ? getSlugByLogoUrl(sub.logoUrl) : undefined,
+          )
           .filter((slug): slug is string => slug !== undefined);
         setExistingSubscriptionSlugs(slugs);
         // 기존 구독 서비스를 선택 상태로 설정
@@ -90,12 +94,12 @@ export function ServiceCatalogue() {
     // Filter services that match the query
     const matchingServices = SERVICE_CATALOGUE.filter((service) => {
       const nameMatch = Object.values(service.names).some((name) =>
-        name.toLowerCase().includes(query)
+        name.toLowerCase().includes(query),
       );
       const categoryInfo = CATEGORY_INFO.find((c) => c.id === service.category);
       const categoryMatch = categoryInfo
         ? Object.values(categoryInfo.names).some((name) =>
-            name.toLowerCase().includes(query)
+            name.toLowerCase().includes(query),
           )
         : false;
       const slugMatch = service.slug.toLowerCase().includes(query);
@@ -119,7 +123,7 @@ export function ServiceCatalogue() {
 
   const totalFilteredServices = filteredCategoriesWithServices.reduce(
     (acc, { services }) => acc + services.length,
-    0
+    0,
   );
 
   return (

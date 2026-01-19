@@ -1,21 +1,21 @@
-import type { MetadataRoute } from "next";
+import type { MetadataRoute } from 'next';
 
-export const dynamic = "force-static";
+export const dynamic = 'force-static';
 
 type RouteConfig = {
   path: string;
-  changeFrequency: "weekly" | "monthly" | "daily";
+  changeFrequency: 'weekly' | 'monthly' | 'daily';
   priority: number;
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://app.sublistme.com";
-  const locales = ["ko", "en", "ja"] as const;
+  const baseUrl = 'https://app.sublistme.com';
+  const locales = ['ko', 'en', 'ja'] as const;
 
   const publicRoutes: RouteConfig[] = [
-    { path: "", changeFrequency: "weekly", priority: 1.0 },
-    { path: "/login", changeFrequency: "monthly", priority: 0.7 },
-    { path: "/subscriptions", changeFrequency: "weekly", priority: 0.9 },
+    { path: '', changeFrequency: 'weekly', priority: 1.0 },
+    { path: '/login', changeFrequency: 'monthly', priority: 0.7 },
+    { path: '/subscriptions', changeFrequency: 'weekly', priority: 0.9 },
   ];
 
   const urls: MetadataRoute.Sitemap = [];

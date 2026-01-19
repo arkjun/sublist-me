@@ -40,7 +40,10 @@ test.describe('Subscription Flow - Unauthenticated', () => {
     // 카드가 없으면 버튼으로 시도
     if (!(await firstServiceCard.isVisible())) {
       // 서비스 선택 영역에서 첫 번째 클릭 가능한 요소 찾기
-      const serviceButton = page.locator('button').filter({ hasText: /넷플릭스|Netflix/i }).first();
+      const serviceButton = page
+        .locator('button')
+        .filter({ hasText: /넷플릭스|Netflix/i })
+        .first();
       if (await serviceButton.isVisible()) {
         await serviceButton.click();
       }
@@ -58,13 +61,17 @@ test.describe('Subscription Flow - Unauthenticated', () => {
     await page.goto('/');
 
     // 서비스 선택 (첫 번째 서비스 찾아서 클릭)
-    const serviceCards = page.locator('button').filter({ hasText: /넷플릭스|Netflix/i });
+    const serviceCards = page
+      .locator('button')
+      .filter({ hasText: /넷플릭스|Netflix/i });
     if (await serviceCards.first().isVisible()) {
       await serviceCards.first().click();
     }
 
     // "계속하기" 버튼이 표시되는지 확인
-    const continueButton = page.getByRole('button', { name: /계속하기|continue/i });
+    const continueButton = page.getByRole('button', {
+      name: /계속하기|continue/i,
+    });
     await expect(continueButton).toBeVisible({ timeout: 5000 });
   });
 
@@ -72,13 +79,17 @@ test.describe('Subscription Flow - Unauthenticated', () => {
     await page.goto('/');
 
     // 서비스 선택
-    const serviceCards = page.locator('button').filter({ hasText: /넷플릭스|Netflix/i });
+    const serviceCards = page
+      .locator('button')
+      .filter({ hasText: /넷플릭스|Netflix/i });
     if (await serviceCards.first().isVisible()) {
       await serviceCards.first().click();
     }
 
     // "계속하기" 클릭
-    const continueButton = page.getByRole('button', { name: /계속하기|continue/i });
+    const continueButton = page.getByRole('button', {
+      name: /계속하기|continue/i,
+    });
     await continueButton.click();
 
     // 로그인 페이지로 리다이렉트 확인
@@ -89,13 +100,17 @@ test.describe('Subscription Flow - Unauthenticated', () => {
     await page.goto('/');
 
     // 서비스 선택
-    const serviceCards = page.locator('button').filter({ hasText: /넷플릭스|Netflix/i });
+    const serviceCards = page
+      .locator('button')
+      .filter({ hasText: /넷플릭스|Netflix/i });
     if (await serviceCards.first().isVisible()) {
       await serviceCards.first().click();
     }
 
     // "계속하기" 클릭
-    const continueButton = page.getByRole('button', { name: /계속하기|continue/i });
+    const continueButton = page.getByRole('button', {
+      name: /계속하기|continue/i,
+    });
     await continueButton.click();
 
     // localStorage 확인
@@ -147,7 +162,10 @@ test.describe('ServiceCatalogue Selection', () => {
     await page.goto('/');
 
     // 서비스 선택
-    const serviceButton = page.locator('button').filter({ hasText: /넷플릭스|Netflix/i }).first();
+    const serviceButton = page
+      .locator('button')
+      .filter({ hasText: /넷플릭스|Netflix/i })
+      .first();
 
     if (await serviceButton.isVisible()) {
       // 첫 번째 클릭 - 선택
@@ -172,8 +190,14 @@ test.describe('ServiceCatalogue Selection', () => {
     await page.goto('/');
 
     // 여러 서비스 선택
-    const netflixButton = page.locator('button').filter({ hasText: /넷플릭스|Netflix/i }).first();
-    const spotifyButton = page.locator('button').filter({ hasText: /스포티파이|Spotify/i }).first();
+    const netflixButton = page
+      .locator('button')
+      .filter({ hasText: /넷플릭스|Netflix/i })
+      .first();
+    const spotifyButton = page
+      .locator('button')
+      .filter({ hasText: /스포티파이|Spotify/i })
+      .first();
 
     if (await netflixButton.isVisible()) {
       await netflixButton.click();
@@ -205,9 +229,9 @@ test.describe('LocaleSwitcher', () => {
     await expect(page.locator('h1')).toContainText('SubList Me');
 
     // 언어 변경 버튼이 있는지 확인
-    const localeSwitcher = page.locator('[data-testid="locale-switcher"]').or(
-      page.getByRole('button', { name: /한국어|English|日本語/i })
-    );
+    const localeSwitcher = page
+      .locator('[data-testid="locale-switcher"]')
+      .or(page.getByRole('button', { name: /한국어|English|日本語/i }));
 
     if (await localeSwitcher.isVisible()) {
       // 언어 전환 테스트는 UI에 따라 다를 수 있음

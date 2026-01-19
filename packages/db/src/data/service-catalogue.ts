@@ -21,7 +21,11 @@ export interface CategoryInfo {
 export const CATEGORY_INFO: CategoryInfo[] = [
   {
     id: 'ott',
-    names: { ko: 'OTT / 스트리밍', en: 'OTT / Streaming', ja: 'OTT / ストリーミング' },
+    names: {
+      ko: 'OTT / 스트리밍',
+      en: 'OTT / Streaming',
+      ja: 'OTT / ストリーミング',
+    },
     icon: 'Tv',
     order: 1,
   },
@@ -39,7 +43,11 @@ export const CATEGORY_INFO: CategoryInfo[] = [
   },
   {
     id: 'shopping',
-    names: { ko: '쇼핑 / 멤버십', en: 'Shopping / Membership', ja: 'ショッピング / 会員' },
+    names: {
+      ko: '쇼핑 / 멤버십',
+      en: 'Shopping / Membership',
+      ja: 'ショッピング / 会員',
+    },
     icon: 'ShoppingBag',
     order: 4,
   },
@@ -51,7 +59,11 @@ export const CATEGORY_INFO: CategoryInfo[] = [
   },
   {
     id: 'cloud',
-    names: { ko: '클라우드 스토리지', en: 'Cloud Storage', ja: 'クラウドストレージ' },
+    names: {
+      ko: '클라우드 스토리지',
+      en: 'Cloud Storage',
+      ja: 'クラウドストレージ',
+    },
     icon: 'Cloud',
     order: 6,
   },
@@ -288,7 +300,11 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
   },
   {
     slug: 'google-play-pass',
-    names: { ko: '구글 플레이 패스', en: 'Google Play Pass', ja: 'Google Play Pass' },
+    names: {
+      ko: '구글 플레이 패스',
+      en: 'Google Play Pass',
+      ja: 'Google Play Pass',
+    },
     url: 'https://play.google.com/store/pass',
     logoUrl: 'https://cdn.simpleicons.org/googleplay',
     category: 'gaming',
@@ -622,12 +638,16 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
 // 유틸리티 함수: slug로 서비스 찾기
 const SERVICE_BY_SLUG = new Map(SERVICE_CATALOGUE.map((s) => [s.slug, s]));
 
-export function getServiceBySlug(slug: string): ServiceCatalogueItem | undefined {
+export function getServiceBySlug(
+  slug: string,
+): ServiceCatalogueItem | undefined {
   return SERVICE_BY_SLUG.get(slug);
 }
 
 // 유틸리티 함수: 카테고리별 서비스 목록
-export function getServicesByCategory(category: ServiceCategory): ServiceCatalogueItem[] {
+export function getServicesByCategory(
+  category: ServiceCategory,
+): ServiceCatalogueItem[] {
   return SERVICE_CATALOGUE.filter((s) => s.category === category);
 }
 
@@ -638,13 +658,15 @@ export function getAllCategories(): CategoryInfo[] {
 
 // 유틸리티 함수: 서비스가 있는 카테고리만 반환
 export function getCategoriesWithServices(): CategoryInfo[] {
-  const categoriesWithServices = new Set(SERVICE_CATALOGUE.map((s) => s.category));
+  const categoriesWithServices = new Set(
+    SERVICE_CATALOGUE.map((s) => s.category),
+  );
   return getAllCategories().filter((c) => categoriesWithServices.has(c.id));
 }
 
 // 유틸리티 함수: logoUrl로 서비스 slug 찾기
 const SERVICE_BY_LOGO_URL = new Map(
-  SERVICE_CATALOGUE.filter((s) => s.logoUrl).map((s) => [s.logoUrl, s.slug])
+  SERVICE_CATALOGUE.filter((s) => s.logoUrl).map((s) => [s.logoUrl, s.slug]),
 );
 
 export function getSlugByLogoUrl(logoUrl: string): string | undefined {

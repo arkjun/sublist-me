@@ -1,10 +1,10 @@
 'use client';
 
 import type { Currency, Locale } from '@sublistme/db/types';
-import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from '@/i18n/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
+import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -17,14 +17,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
+import { useRouter } from '@/i18n/navigation';
 import {
   checkUsernameAvailability,
-  fetchUserPreferences,
   fetchUsername,
+  fetchUserPreferences,
   updateUsername,
   updateUserPreferences,
 } from '@/lib/api';
-import { Footer } from '@/components/footer';
 
 const localeOptions: { value: Locale; label: string }[] = [
   { value: 'ko', label: '한국어' },
@@ -127,8 +127,7 @@ export default function MyPage() {
         setUsername(usernameData.username);
         setOriginalUsername(usernameData.username);
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : t('loadError');
+        const message = err instanceof Error ? err.message : t('loadError');
         setError(message);
       } finally {
         setLoading(false);
@@ -160,8 +159,7 @@ export default function MyPage() {
 
       setSuccess(t('saved'));
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : t('saveError');
+      const message = err instanceof Error ? err.message : t('saveError');
       setError(message);
     } finally {
       setSaving(false);
@@ -183,73 +181,79 @@ export default function MyPage() {
     <div className="flex min-h-screen flex-col">
       <main className="container mx-auto max-w-5xl flex-1 px-4 py-8">
         <Card className="max-w-xl">
-        <CardHeader>
-          <CardTitle>{t('title')}</CardTitle>
-          <CardDescription>{t('description')}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="username">{t('username')}</Label>
-            <Input
-              id="username"
-              value={username}
-              onChange={(e) => handleUsernameChange(e.target.value)}
-              placeholder="my-username"
-              maxLength={20}
-            />
-            <p className="text-xs text-muted-foreground">{t('usernameHint')}</p>
-            {checkingUsername && (
+          <CardHeader>
+            <CardTitle>{t('title')}</CardTitle>
+            <CardDescription>{t('description')}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="username">{t('username')}</Label>
+              <Input
+                id="username"
+                value={username}
+                onChange={(e) => handleUsernameChange(e.target.value)}
+                placeholder="my-username"
+                maxLength={20}
+              />
               <p className="text-xs text-muted-foreground">
-                {t('checkingUsername')}
+                {t('usernameHint')}
               </p>
-            )}
-            {usernameError && (
-              <p className="text-xs text-destructive">{usernameError}</p>
-            )}
-            {usernameAvailable && !usernameError && (
-              <p className="text-xs text-green-600">{t('usernameAvailable')}</p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="locale">{t('language')}</Label>
-            <Select
-              id="locale"
-              value={locale}
-              onChange={(event) => setLocale(event.target.value as Locale)}
+              {checkingUsername && (
+                <p className="text-xs text-muted-foreground">
+                  {t('checkingUsername')}
+                </p>
+              )}
+              {usernameError && (
+                <p className="text-xs text-destructive">{usernameError}</p>
+              )}
+              {usernameAvailable && !usernameError && (
+                <p className="text-xs text-green-600">
+                  {t('usernameAvailable')}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="locale">{t('language')}</Label>
+              <Select
+                id="locale"
+                value={locale}
+                onChange={(event) => setLocale(event.target.value as Locale)}
+              >
+                {localeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="currency">{t('currency')}</Label>
+              <Select
+                id="currency"
+                value={currency}
+                onChange={(event) =>
+                  setCurrency(event.target.value as Currency)
+                }
+              >
+                {currencyOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            {error && <p className="text-sm text-destructive">{error}</p>}
+            {success && <p className="text-sm text-green-600">{success}</p>}
+          </CardContent>
+          <CardFooter>
+            <Button
+              onClick={handleSave}
+              disabled={saving || checkingUsername || !!usernameError}
             >
-              {localeOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="currency">{t('currency')}</Label>
-            <Select
-              id="currency"
-              value={currency}
-              onChange={(event) => setCurrency(event.target.value as Currency)}
-            >
-              {currencyOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-          </div>
-          {error && <p className="text-sm text-destructive">{error}</p>}
-          {success && <p className="text-sm text-green-600">{success}</p>}
-        </CardContent>
-        <CardFooter>
-          <Button
-            onClick={handleSave}
-            disabled={saving || checkingUsername || !!usernameError}
-          >
-            {saving ? t('saving') : tCommon('save')}
-          </Button>
-        </CardFooter>
-      </Card>
+              {saving ? t('saving') : tCommon('save')}
+            </Button>
+          </CardFooter>
+        </Card>
       </main>
       <Footer />
     </div>

@@ -3,9 +3,9 @@
 import { getServiceBySlug } from '@sublistme/db/data/service-catalogue';
 import { ArrowRight, Check, X } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
+import { useRouter } from '@/i18n/navigation';
 
 interface SelectionBarProps {
   selectedServices: string[];
@@ -29,7 +29,7 @@ export function SelectionBar({
 
   // 새로 추가할 구독 (기존 구독 제외)
   const newSubscriptions = selectedServices.filter(
-    (slug) => !existingSubscriptionSlugs.includes(slug)
+    (slug) => !existingSubscriptionSlugs.includes(slug),
   );
 
   const handleAction = () => {
@@ -70,7 +70,9 @@ export function SelectionBar({
                   <div
                     key={service.slug}
                     className="h-8 w-8 overflow-hidden rounded-full border-2 border-background bg-muted"
-                    title={service.names[locale] || service.names.en || service.slug}
+                    title={
+                      service.names[locale] || service.names.en || service.slug
+                    }
                   >
                     <img
                       src={service.logoUrl}
@@ -83,7 +85,12 @@ export function SelectionBar({
                     key={service?.slug}
                     className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-bold"
                   >
-                    {(service?.names[locale] || service?.names.en || service?.slug || '?').charAt(0)}
+                    {(
+                      service?.names[locale] ||
+                      service?.names.en ||
+                      service?.slug ||
+                      '?'
+                    ).charAt(0)}
                   </div>
                 ),
               )}
@@ -91,7 +98,10 @@ export function SelectionBar({
             <span className="text-sm font-medium">
               {t('selectCount', { count: selectedServices.length })}
               {remainingCount > 0 && (
-                <span className="text-muted-foreground"> (+{remainingCount})</span>
+                <span className="text-muted-foreground">
+                  {' '}
+                  (+{remainingCount})
+                </span>
               )}
             </span>
           </div>

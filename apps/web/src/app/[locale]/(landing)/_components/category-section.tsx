@@ -1,6 +1,10 @@
 'use client';
 
-import type { CategoryInfo, ServiceCatalogueItem } from '@sublistme/db/data/service-catalogue';
+import type {
+  CategoryInfo,
+  ServiceCatalogueItem,
+} from '@sublistme/db/data/service-catalogue';
+import type { LucideIcon } from 'lucide-react';
 import {
   Briefcase,
   Cloud,
@@ -15,7 +19,6 @@ import {
   UtensilsCrossed,
   Wallet,
 } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { ServiceCard } from './service-card';
 
@@ -49,15 +52,20 @@ export function CategorySection({
 }: CategorySectionProps) {
   const locale = useLocale() as 'ko' | 'en' | 'ja';
   const Icon = ICON_MAP[category.icon] || MoreHorizontal;
-  const categoryName = category.names[locale] || category.names.en || category.id;
-  const selectedCount = services.filter((s) => selectedServices.includes(s.slug)).length;
+  const categoryName =
+    category.names[locale] || category.names.en || category.id;
+  const selectedCount = services.filter((s) =>
+    selectedServices.includes(s.slug),
+  ).length;
 
   return (
     <section className="mb-8">
       <div className="mb-4 flex items-center gap-2">
         <Icon className="h-5 w-5 text-muted-foreground" />
         <h2 className="text-lg font-semibold">{categoryName}</h2>
-        <span className="text-sm text-muted-foreground">({services.length})</span>
+        <span className="text-sm text-muted-foreground">
+          ({services.length})
+        </span>
         {selectedCount > 0 && (
           <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
             {selectedCount} selected

@@ -111,7 +111,9 @@ describe('Username Library', () => {
         const result = validateUsername('john@doe');
         expect(result.valid).toBe(false);
         if (!result.valid) {
-          expect(result.error).toContain('lowercase letters, numbers, and hyphens');
+          expect(result.error).toContain(
+            'lowercase letters, numbers, and hyphens',
+          );
         }
       });
 
@@ -119,7 +121,9 @@ describe('Username Library', () => {
         const result = validateUsername('john doe');
         expect(result.valid).toBe(false);
         if (!result.valid) {
-          expect(result.error).toContain('lowercase letters, numbers, and hyphens');
+          expect(result.error).toContain(
+            'lowercase letters, numbers, and hyphens',
+          );
         }
       });
 
@@ -127,7 +131,9 @@ describe('Username Library', () => {
         const result = validateUsername('john_doe');
         expect(result.valid).toBe(false);
         if (!result.valid) {
-          expect(result.error).toContain('lowercase letters, numbers, and hyphens');
+          expect(result.error).toContain(
+            'lowercase letters, numbers, and hyphens',
+          );
         }
       });
     });
@@ -159,16 +165,15 @@ describe('Username Library', () => {
         'dashboard',
       ];
 
-      it.each(reservedNames)(
-        'should reject reserved username: %s',
-        (username) => {
-          const result = validateUsername(username);
-          expect(result.valid).toBe(false);
-          if (!result.valid) {
-            expect(result.error).toBe('This username is reserved');
-          }
-        },
-      );
+      it.each(
+        reservedNames,
+      )('should reject reserved username: %s', (username) => {
+        const result = validateUsername(username);
+        expect(result.valid).toBe(false);
+        if (!result.valid) {
+          expect(result.error).toBe('This username is reserved');
+        }
+      });
 
       it('should reject reserved username with uppercase', () => {
         const result = validateUsername('ADMIN');

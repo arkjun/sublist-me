@@ -1,10 +1,10 @@
 'use client';
 
-import { Suspense, useState } from 'react';
-import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { useRouter } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
+import { Suspense, useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
+import { Footer } from '@/components/footer';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,7 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Footer } from '@/components/footer';
+import { useRouter } from '@/i18n/navigation';
 
 function LoginForm() {
   const router = useRouter();
@@ -72,7 +72,9 @@ function LoginForm() {
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle className="text-center text-2xl">{t('title')}</CardTitle>
-        <CardDescription className="text-center">{t('subtitle')}</CardDescription>
+        <CardDescription className="text-center">
+          {t('subtitle')}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="login" className="w-full">

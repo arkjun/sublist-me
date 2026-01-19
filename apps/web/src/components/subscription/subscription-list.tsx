@@ -2,12 +2,12 @@
 
 import type { Subscription, SubscriptionInput } from '@sublistme/db/types';
 import { ChevronDown, ChevronUp, LogIn, Plus } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from '@/i18n/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
+import { useRouter } from '@/i18n/navigation';
 import { getColumns } from './columns';
 import { SubscriptionCard } from './subscription-card';
 import { SubscriptionForm } from './subscription-form';
@@ -127,7 +127,12 @@ export function SubscriptionList() {
   };
 
   const columns = useMemo(
-    () => getColumns({ onEdit: handleEdit, onDelete: handleDelete, labels: columnLabels }),
+    () =>
+      getColumns({
+        onEdit: handleEdit,
+        onDelete: handleDelete,
+        labels: columnLabels,
+      }),
     [handleEdit, handleDelete, columnLabels],
   );
 
@@ -145,7 +150,11 @@ export function SubscriptionList() {
   const activeCount = subscriptions.filter((s) => s.isActive).length;
 
   if (authLoading || loading) {
-    return <div className="text-center text-muted-foreground">{tCommon('loading')}</div>;
+    return (
+      <div className="text-center text-muted-foreground">
+        {tCommon('loading')}
+      </div>
+    );
   }
 
   if (!user) {
@@ -155,9 +164,7 @@ export function SubscriptionList() {
           <LogIn className="h-12 w-12 text-muted-foreground" />
         </div>
         <h2 className="mb-2 text-2xl font-semibold">{t('loginRequired')}</h2>
-        <p className="mb-6 text-muted-foreground">
-          {t('loginRequiredDesc')}
-        </p>
+        <p className="mb-6 text-muted-foreground">{t('loginRequiredDesc')}</p>
         <Button size="lg" onClick={() => router.push('/login')}>
           <LogIn className="mr-2 h-5 w-5" />
           {tCommon('login')}
@@ -177,11 +184,17 @@ export function SubscriptionList() {
           <div className="flex items-center gap-4">
             <div>
               <p className="text-xs text-muted-foreground">{t('thisMonth')}</p>
-              <p className="text-base font-bold">₩{Math.round(monthlyTotal).toLocaleString()}</p>
+              <p className="text-base font-bold">
+                ₩{Math.round(monthlyTotal).toLocaleString()}
+              </p>
             </div>
             <div className="border-l pl-4">
-              <p className="text-xs text-muted-foreground">{t('activeCount')}</p>
-              <p className="text-base font-bold">{t('count', { count: activeCount })}</p>
+              <p className="text-xs text-muted-foreground">
+                {t('activeCount')}
+              </p>
+              <p className="text-base font-bold">
+                {t('count', { count: activeCount })}
+              </p>
             </div>
           </div>
           {statsExpanded ? (
@@ -193,7 +206,9 @@ export function SubscriptionList() {
         {statsExpanded && (
           <div className="mt-2 rounded-lg border bg-card p-3">
             <p className="text-xs text-muted-foreground">{t('yearly')}</p>
-            <p className="text-base font-bold">₩{Math.round(yearlyTotal).toLocaleString()}</p>
+            <p className="text-base font-bold">
+              ₩{Math.round(yearlyTotal).toLocaleString()}
+            </p>
           </div>
         )}
       </div>
@@ -208,7 +223,9 @@ export function SubscriptionList() {
         </div>
         <div className="rounded-lg border bg-card p-6">
           <p className="text-sm text-muted-foreground">{t('activeCount')}</p>
-          <p className="text-2xl font-bold">{t('count', { count: activeCount })}</p>
+          <p className="text-2xl font-bold">
+            {t('count', { count: activeCount })}
+          </p>
         </div>
         <div className="rounded-lg border bg-card p-6">
           <p className="text-sm text-muted-foreground">{t('yearly')}</p>

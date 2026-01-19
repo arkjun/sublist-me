@@ -1,13 +1,13 @@
 'use client';
 
 import { List, LogIn, LogOut, Menu, X } from 'lucide-react';
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import { useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
-import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { LocaleSwitcher } from '@/components/locale-switcher';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { Button } from '@/components/ui/button';
+import { Link } from '@/i18n/navigation';
 
 interface LandingHeaderProps {
   selectedCount: number;
@@ -24,7 +24,9 @@ export function LandingHeader({ selectedCount }: LandingHeaderProps) {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold">SubList Me</h1>
-          <p className="text-sm sm:text-base text-muted-foreground">{t('tagline')}</p>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            {t('tagline')}
+          </p>
         </div>
 
         {/* Desktop controls - hidden on mobile */}
@@ -58,7 +60,11 @@ export function LandingHeader({ selectedCount }: LandingHeaderProps) {
               </Button>
             </>
           ) : (
-            <Link href={selectedCount > 0 ? '/login?redirect=/onboarding' : '/login'}>
+            <Link
+              href={
+                selectedCount > 0 ? '/login?redirect=/onboarding' : '/login'
+              }
+            >
               <Button variant="outline" size="sm">
                 <LogIn className="mr-2 h-4 w-4" />
                 {tCommon('login')}
@@ -106,7 +112,9 @@ export function LandingHeader({ selectedCount }: LandingHeaderProps) {
                   />
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate">{user.name || user.email}</p>
+                  <p className="font-medium truncate">
+                    {user.name || user.email}
+                  </p>
                 </div>
               </div>
               <Link href="/subscriptions" className="block">
@@ -115,13 +123,22 @@ export function LandingHeader({ selectedCount }: LandingHeaderProps) {
                   {t('mySubscriptions')}
                 </Button>
               </Link>
-              <Button variant="outline" className="w-full justify-start" onClick={logout}>
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={logout}
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 {tCommon('logout')}
               </Button>
             </>
           ) : (
-            <Link href={selectedCount > 0 ? '/login?redirect=/onboarding' : '/login'} className="block">
+            <Link
+              href={
+                selectedCount > 0 ? '/login?redirect=/onboarding' : '/login'
+              }
+              className="block"
+            >
               <Button className="w-full">
                 <LogIn className="mr-2 h-4 w-4" />
                 {tCommon('login')}
@@ -130,7 +147,9 @@ export function LandingHeader({ selectedCount }: LandingHeaderProps) {
           )}
           <div className="pt-3 border-t">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{t('language')}</span>
+              <span className="text-sm text-muted-foreground">
+                {t('language')}
+              </span>
               <LocaleSwitcher />
             </div>
           </div>
@@ -141,13 +160,17 @@ export function LandingHeader({ selectedCount }: LandingHeaderProps) {
         <p className="text-sm text-muted-foreground">
           {user ? (
             <>
-              <span className="font-medium text-foreground">Select → Save → Manage</span>
+              <span className="font-medium text-foreground">
+                Select → Save → Manage
+              </span>
               {' · '}
               {t('instructionLoggedIn')}
             </>
           ) : (
             <>
-              <span className="font-medium text-foreground">Select → Login → Track</span>
+              <span className="font-medium text-foreground">
+                Select → Login → Track
+              </span>
               {' · '}
               {t('instruction')}
             </>

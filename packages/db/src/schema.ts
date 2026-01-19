@@ -108,4 +108,3 @@ export const categories = sqliteTable('categories', {
   icon: text('icon'), // 아이콘 이름
   createdAt: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
-

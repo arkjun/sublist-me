@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { routing } from '@/i18n/routing';
 
 export default function RootPage() {
@@ -9,7 +9,9 @@ export default function RootPage() {
 
   useEffect(() => {
     const browserLocale = navigator.language.split('-')[0];
-    const targetLocale = routing.locales.includes(browserLocale as typeof routing.locales[number])
+    const targetLocale = routing.locales.includes(
+      browserLocale as (typeof routing.locales)[number],
+    )
       ? browserLocale
       : routing.defaultLocale;
 

@@ -48,11 +48,16 @@ describe('Auth Library', () => {
 
     it('should be able to create and validate sessions', async () => {
       // 테스트 사용자 생성
-      const userId = 'test-user-lucia-' + Date.now();
+      const userId = `test-user-lucia-${Date.now()}`;
       await env.DB.prepare(
         'INSERT INTO users (id, google_id, email, name) VALUES (?, ?, ?, ?)',
       )
-        .bind(userId, 'google-' + Date.now(), `lucia-${Date.now()}@test.com`, 'Test User')
+        .bind(
+          userId,
+          `google-${Date.now()}`,
+          `lucia-${Date.now()}@test.com`,
+          'Test User',
+        )
         .run();
 
       const lucia = createLucia(env.DB);
@@ -72,11 +77,16 @@ describe('Auth Library', () => {
 
     it('should invalidate session properly', async () => {
       // 테스트 사용자 생성
-      const userId = 'test-user-invalidate-' + Date.now();
+      const userId = `test-user-invalidate-${Date.now()}`;
       await env.DB.prepare(
         'INSERT INTO users (id, google_id, email, name) VALUES (?, ?, ?, ?)',
       )
-        .bind(userId, 'google-inv-' + Date.now(), `invalidate-${Date.now()}@test.com`, 'Test User')
+        .bind(
+          userId,
+          `google-inv-${Date.now()}`,
+          `invalidate-${Date.now()}@test.com`,
+          'Test User',
+        )
         .run();
 
       const lucia = createLucia(env.DB);

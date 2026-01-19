@@ -7,7 +7,6 @@ import {
   getServicesByCategory,
   getSlugByLogoUrl,
   SERVICE_CATALOGUE,
-  type ServiceCatalogueItem,
 } from './service-catalogue';
 
 describe('Service Catalogue', () => {
@@ -35,7 +34,7 @@ describe('Service Catalogue', () => {
     it('should have at least Korean name for all services', () => {
       SERVICE_CATALOGUE.forEach((service) => {
         expect(service.names.ko).toBeDefined();
-        expect(service.names.ko!.length).toBeGreaterThan(0);
+        expect(service.names.ko?.length).toBeGreaterThan(0);
       });
     });
 
@@ -86,8 +85,8 @@ describe('Service Catalogue', () => {
     it('should return service for valid slug', () => {
       const netflix = getServiceBySlug('netflix');
       expect(netflix).toBeDefined();
-      expect(netflix!.slug).toBe('netflix');
-      expect(netflix!.names.ko).toBe('넷플릭스');
+      expect(netflix?.slug).toBe('netflix');
+      expect(netflix?.names.ko).toBe('넷플릭스');
     });
 
     it('should return undefined for invalid slug', () => {
@@ -106,7 +105,7 @@ describe('Service Catalogue', () => {
       testCases.forEach(({ slug, expectedKo }) => {
         const service = getServiceBySlug(slug);
         expect(service).toBeDefined();
-        expect(service!.names.ko).toBe(expectedKo);
+        expect(service?.names.ko).toBe(expectedKo);
       });
     });
 

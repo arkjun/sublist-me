@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { SubscriptionList } from '@/components/subscription/subscription-list';
+import { useRouter } from '@/i18n/navigation';
 
 export default function SubscriptionsPage() {
   const { user, loading } = useAuth();

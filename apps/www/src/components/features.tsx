@@ -1,4 +1,4 @@
-import { CreditCard, PieChart, Bell, Globe } from 'lucide-react';
+import { Bell, CreditCard, Globe, PieChart } from 'lucide-react';
 
 const features = [
   {

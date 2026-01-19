@@ -5,8 +5,8 @@ import { drizzle } from 'drizzle-orm/d1';
 import { Hono } from 'hono';
 import type { Session, User } from 'lucia';
 import type { Env } from '../index';
-import { requireAuth } from '../middleware/auth';
 import { validateUsername } from '../lib/username';
+import { requireAuth } from '../middleware/auth';
 
 type Variables = {
   user: User | null;
@@ -153,8 +153,7 @@ export const users = new Hono<{ Bindings: Env; Variables: Variables }>()
       .where(eq(usersTable.username, normalized));
 
     // Available if no one has it, or if the current user already has it
-    const available =
-      existing.length === 0 || existing[0]?.id === user.id;
+    const available = existing.length === 0 || existing[0]?.id === user.id;
 
     return c.json({ available });
   });

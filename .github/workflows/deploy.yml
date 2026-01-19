@@ -5,6 +5,29 @@ on:
     branches: [main]
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      api: ${{ steps.filter.outputs.api }}
+      web: ${{ steps.filter.outputs.web }}
+      www: ${{ steps.filter.outputs.www }}
+      shared: ${{ steps.filter.outputs.shared }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            api:
+              - 'apps/api/**'
+            web:
+              - 'apps/web/**'
+            www:
+              - 'apps/www/**'
+            shared:
+              - 'packages/**'
+              - 'pnpm-lock.yaml'
+
   lint-and-test:
     runs-on: ubuntu-latest
     steps:
@@ -19,7 +42,8 @@ jobs:
       - run: pnpm test
 
   migrate:
-    needs: lint-and-test
+    needs: [lint-and-test, changes]
+    if: needs.changes.outputs.api == 'true' || needs.changes.outputs.shared == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,7 +59,8 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
   deploy-api:
-    needs: migrate
+    needs: [lint-and-test, changes, migrate]
+    if: always() && needs.lint-and-test.result == 'success' && (needs.changes.outputs.api == 'true' || needs.changes.outputs.shared == 'true')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +76,8 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
   deploy-web:
-    needs: migrate
+    needs: [lint-and-test, changes]
+    if: needs.changes.outputs.web == 'true' || needs.changes.outputs.shared == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -67,7 +93,8 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
   deploy-www:
-    needs: migrate
+    needs: [lint-and-test, changes]
+    if: needs.changes.outputs.www == 'true' || needs.changes.outputs.shared == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

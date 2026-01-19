@@ -286,6 +286,13 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     logoUrl: 'https://gfn.co.kr/favicon.ico',
     category: 'gaming',
   },
+  {
+    slug: 'google-play-pass',
+    names: { ko: '구글 플레이 패스', en: 'Google Play Pass', ja: 'Google Play Pass' },
+    url: 'https://play.google.com/store/pass',
+    logoUrl: 'https://cdn.simpleicons.org/googleplay',
+    category: 'gaming',
+  },
 
   // ========== Shopping / Membership ==========
   {

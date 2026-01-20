@@ -188,6 +188,13 @@ export const SERVICE_CATALOGUE: ServiceCatalogueItem[] = [
     logoUrl: 'https://assets.coupangplay.com/favicon.ico',
     category: 'ott',
   },
+  {
+    slug: 'laftel',
+    names: { ko: '라프텔', en: 'Laftel', ja: 'Laftel' },
+    url: 'https://www.laftel.net',
+    logoUrl: 'https://static.laftel.net/favicon.ico',
+    category: 'ott',
+  },
 
   // ========== Music ==========
   {

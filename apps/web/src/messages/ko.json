@@ -129,7 +129,8 @@
       "yearly": "년",
       "weekly": "주",
       "quarterly": "분기"
-    }
+    },
+    "mixedCurrencyNote": "환율 변환 포함 (예상치)"
   },
   "SubscriptionForm": {
     "titleCreate": "구독 추가",

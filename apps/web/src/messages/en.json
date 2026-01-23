@@ -129,7 +129,8 @@
       "yearly": "yr",
       "weekly": "wk",
       "quarterly": "qtr"
-    }
+    },
+    "mixedCurrencyNote": "Includes currency conversion (estimate)"
   },
   "SubscriptionForm": {
     "titleCreate": "Add Subscription",

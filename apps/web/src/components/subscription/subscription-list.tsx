@@ -1,13 +1,14 @@
 'use client';
 
 import type { Subscription, SubscriptionInput } from '@sublistme/db/types';
-import { ChevronDown, ChevronUp, LogIn, Plus } from 'lucide-react';
+import { ChevronDown, ChevronUp, Info, LogIn, Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { useRouter } from '@/i18n/navigation';
+import { calculateMonthlyTotal, CURRENCY_SYMBOLS } from '@/lib/currency';
 import { getColumns } from './columns';
 import { SubscriptionCard } from './subscription-card';
 import { SubscriptionForm } from './subscription-form';
@@ -136,15 +137,12 @@ export function SubscriptionList() {
     [handleEdit, handleDelete, columnLabels],
   );
 
-  const monthlyTotal = subscriptions
-    .filter((s) => s.isActive)
-    .reduce((sum, s) => {
-      let monthlyPrice = s.price;
-      if (s.billingCycle === 'yearly') monthlyPrice = s.price / 12;
-      if (s.billingCycle === 'weekly') monthlyPrice = s.price * 4;
-      if (s.billingCycle === 'quarterly') monthlyPrice = s.price / 3;
-      return sum + monthlyPrice;
-    }, 0);
+  const userCurrency = user?.currency || 'KRW';
+
+  const { total: monthlyTotal, hasMixedCurrencies } = useMemo(
+    () => calculateMonthlyTotal(subscriptions, userCurrency),
+    [subscriptions, userCurrency],
+  );
 
   const yearlyTotal = monthlyTotal * 12;
   const activeCount = subscriptions.filter((s) => s.isActive).length;
@@ -184,8 +182,14 @@ export function SubscriptionList() {
           <div className="flex items-center gap-4">
             <div>
               <p className="text-xs text-muted-foreground">{t('thisMonth')}</p>
-              <p className="text-base font-bold">
-                ₩{Math.round(monthlyTotal).toLocaleString()}
+              <p className="flex items-center gap-1 text-base font-bold">
+                {CURRENCY_SYMBOLS[userCurrency]}
+                {Math.round(monthlyTotal).toLocaleString()}
+                {hasMixedCurrencies && (
+                  <span title={t('mixedCurrencyNote')}>
+                    <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                  </span>
+                )}
               </p>
             </div>
             <div className="border-l pl-4">
@@ -206,8 +210,14 @@ export function SubscriptionList() {
         {statsExpanded && (
           <div className="mt-2 rounded-lg border bg-card p-3">
             <p className="text-xs text-muted-foreground">{t('yearly')}</p>
-            <p className="text-base font-bold">
-              ₩{Math.round(yearlyTotal).toLocaleString()}
+            <p className="flex items-center gap-1 text-base font-bold">
+              {CURRENCY_SYMBOLS[userCurrency]}
+              {Math.round(yearlyTotal).toLocaleString()}
+              {hasMixedCurrencies && (
+                <span title={t('mixedCurrencyNote')}>
+                  <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                </span>
+              )}
             </p>
           </div>
         )}
@@ -217,8 +227,14 @@ export function SubscriptionList() {
       <div className="mb-8 hidden gap-4 md:grid md:grid-cols-3">
         <div className="rounded-lg border bg-card p-6">
           <p className="text-sm text-muted-foreground">{t('thisMonth')}</p>
-          <p className="text-2xl font-bold">
-            ₩{Math.round(monthlyTotal).toLocaleString()}
+          <p className="flex items-center gap-1 text-2xl font-bold">
+            {CURRENCY_SYMBOLS[userCurrency]}
+            {Math.round(monthlyTotal).toLocaleString()}
+            {hasMixedCurrencies && (
+              <span title={t('mixedCurrencyNote')}>
+                <Info className="h-4 w-4 text-muted-foreground" />
+              </span>
+            )}
           </p>
         </div>
         <div className="rounded-lg border bg-card p-6">
@@ -229,8 +245,14 @@ export function SubscriptionList() {
         </div>
         <div className="rounded-lg border bg-card p-6">
           <p className="text-sm text-muted-foreground">{t('yearly')}</p>
-          <p className="text-2xl font-bold">
-            ₩{Math.round(yearlyTotal).toLocaleString()}
+          <p className="flex items-center gap-1 text-2xl font-bold">
+            {CURRENCY_SYMBOLS[userCurrency]}
+            {Math.round(yearlyTotal).toLocaleString()}
+            {hasMixedCurrencies && (
+              <span title={t('mixedCurrencyNote')}>
+                <Info className="h-4 w-4 text-muted-foreground" />
+              </span>
+            )}
           </p>
         </div>
       </div>

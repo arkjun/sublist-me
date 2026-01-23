@@ -129,7 +129,8 @@
       "yearly": "年",
       "weekly": "週",
       "quarterly": "四半期"
-    }
+    },
+    "mixedCurrencyNote": "為替換算を含む（概算）"
   },
   "SubscriptionForm": {
     "titleCreate": "サブスク追加",

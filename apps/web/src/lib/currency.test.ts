@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import {
   calculateMonthlyTotal,
   convertCurrency,
-  EXCHANGE_RATES_TO_KRW,
   formatPrice,
   normalizeToMonthly,
   type SubscriptionForCalculation,
@@ -86,7 +85,12 @@ describe('calculateMonthlyTotal', () => {
 
   it('calculates total for single currency subscriptions', () => {
     const subscriptions: SubscriptionForCalculation[] = [
-      { price: 10000, currency: 'KRW', billingCycle: 'monthly', isActive: true },
+      {
+        price: 10000,
+        currency: 'KRW',
+        billingCycle: 'monthly',
+        isActive: true,
+      },
       { price: 5000, currency: 'KRW', billingCycle: 'monthly', isActive: true },
     ];
     const result = calculateMonthlyTotal(subscriptions, 'KRW');
@@ -96,7 +100,12 @@ describe('calculateMonthlyTotal', () => {
 
   it('excludes inactive subscriptions', () => {
     const subscriptions: SubscriptionForCalculation[] = [
-      { price: 10000, currency: 'KRW', billingCycle: 'monthly', isActive: true },
+      {
+        price: 10000,
+        currency: 'KRW',
+        billingCycle: 'monthly',
+        isActive: true,
+      },
       {
         price: 5000,
         currency: 'KRW',
@@ -110,7 +119,12 @@ describe('calculateMonthlyTotal', () => {
 
   it('detects mixed currencies', () => {
     const subscriptions: SubscriptionForCalculation[] = [
-      { price: 10000, currency: 'KRW', billingCycle: 'monthly', isActive: true },
+      {
+        price: 10000,
+        currency: 'KRW',
+        billingCycle: 'monthly',
+        isActive: true,
+      },
       { price: 10, currency: 'USD', billingCycle: 'monthly', isActive: true },
     ];
     const result = calculateMonthlyTotal(subscriptions, 'KRW');
@@ -119,7 +133,12 @@ describe('calculateMonthlyTotal', () => {
 
   it('converts and sums mixed currency subscriptions to KRW', () => {
     const subscriptions: SubscriptionForCalculation[] = [
-      { price: 10000, currency: 'KRW', billingCycle: 'monthly', isActive: true },
+      {
+        price: 10000,
+        currency: 'KRW',
+        billingCycle: 'monthly',
+        isActive: true,
+      },
       { price: 10, currency: 'USD', billingCycle: 'monthly', isActive: true },
     ];
     // ₩10,000 + $10 (= ₩14,000) = ₩24,000
@@ -129,7 +148,12 @@ describe('calculateMonthlyTotal', () => {
 
   it('converts and sums mixed currency subscriptions to USD', () => {
     const subscriptions: SubscriptionForCalculation[] = [
-      { price: 14000, currency: 'KRW', billingCycle: 'monthly', isActive: true },
+      {
+        price: 14000,
+        currency: 'KRW',
+        billingCycle: 'monthly',
+        isActive: true,
+      },
       { price: 10, currency: 'USD', billingCycle: 'monthly', isActive: true },
     ];
     // ₩14,000 (= $10) + $10 = $20
@@ -148,7 +172,12 @@ describe('calculateMonthlyTotal', () => {
 
   it('handles complex scenario with mixed currencies and billing cycles', () => {
     const subscriptions: SubscriptionForCalculation[] = [
-      { price: 10000, currency: 'KRW', billingCycle: 'monthly', isActive: true },
+      {
+        price: 10000,
+        currency: 'KRW',
+        billingCycle: 'monthly',
+        isActive: true,
+      },
       { price: 120, currency: 'USD', billingCycle: 'yearly', isActive: true },
       { price: 30, currency: 'EUR', billingCycle: 'quarterly', isActive: true },
       { price: 500, currency: 'JPY', billingCycle: 'weekly', isActive: false },

@@ -8,7 +8,7 @@ import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { useRouter } from '@/i18n/navigation';
-import { calculateMonthlyTotal, CURRENCY_SYMBOLS } from '@/lib/currency';
+import { CURRENCY_SYMBOLS, calculateMonthlyTotal } from '@/lib/currency';
 import { getColumns } from './columns';
 import { SubscriptionCard } from './subscription-card';
 import { SubscriptionForm } from './subscription-form';

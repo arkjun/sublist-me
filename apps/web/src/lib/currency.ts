@@ -38,7 +38,6 @@ export function normalizeToMonthly(price: number, cycle: BillingCycle): number {
       return price * 4;
     case 'quarterly':
       return price / 3;
-    case 'monthly':
     default:
       return price;
   }

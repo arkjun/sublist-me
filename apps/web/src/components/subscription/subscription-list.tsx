@@ -8,7 +8,11 @@ import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { useRouter } from '@/i18n/navigation';
-import { CURRENCY_SYMBOLS, calculateMonthlyTotal } from '@/lib/currency';
+import {
+  CURRENCY_SYMBOLS,
+  calculateMonthlyTotal,
+  calculateYearlyTotal,
+} from '@/lib/currency';
 import { getColumns } from './columns';
 import { SubscriptionCard } from './subscription-card';
 import { SubscriptionForm } from './subscription-form';
@@ -144,7 +148,10 @@ export function SubscriptionList() {
     [subscriptions, userCurrency],
   );
 
-  const yearlyTotal = monthlyTotal * 12;
+  const { total: yearlyTotal } = useMemo(
+    () => calculateYearlyTotal(subscriptions, userCurrency),
+    [subscriptions, userCurrency],
+  );
   const activeCount = subscriptions.filter((s) => s.isActive).length;
 
   if (authLoading || loading) {

@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   calculateMonthlyTotal,
+  calculateYearlyTotal,
   convertCurrency,
   formatPrice,
   normalizeToMonthly,
+  normalizeToYearly,
   type SubscriptionForCalculation,
 } from './currency';
 
@@ -44,8 +46,9 @@ describe('normalizeToMonthly', () => {
     expect(normalizeToMonthly(12000, 'yearly')).toBe(1000);
   });
 
-  it('multiplies weekly price by 4', () => {
-    expect(normalizeToMonthly(2500, 'weekly')).toBe(10000);
+  it('multiplies weekly price by 52/12 for accurate monthly estimate', () => {
+    // 2500 * (52/12) ≈ 10833.33
+    expect(normalizeToMonthly(2500, 'weekly')).toBeCloseTo(10833.33, 1);
   });
 
   it('divides quarterly price by 3', () => {
@@ -189,6 +192,104 @@ describe('calculateMonthlyTotal', () => {
     // Total: ₩39,000
     const result = calculateMonthlyTotal(subscriptions, 'KRW');
     expect(result.total).toBe(39000);
+    expect(result.hasMixedCurrencies).toBe(true);
+  });
+});
+
+describe('normalizeToYearly', () => {
+  it('returns same price for yearly billing', () => {
+    expect(normalizeToYearly(120000, 'yearly')).toBe(120000);
+  });
+
+  it('multiplies monthly price by 12', () => {
+    expect(normalizeToYearly(10000, 'monthly')).toBe(120000);
+  });
+
+  it('multiplies weekly price by 52', () => {
+    expect(normalizeToYearly(1000, 'weekly')).toBe(52000);
+  });
+
+  it('multiplies quarterly price by 4', () => {
+    expect(normalizeToYearly(30000, 'quarterly')).toBe(120000);
+  });
+});
+
+describe('calculateYearlyTotal', () => {
+  it('returns 0 for empty subscriptions', () => {
+    const result = calculateYearlyTotal([], 'KRW');
+    expect(result.total).toBe(0);
+    expect(result.hasMixedCurrencies).toBe(false);
+  });
+
+  it('calculates yearly total for monthly subscription', () => {
+    const subscriptions: SubscriptionForCalculation[] = [
+      {
+        price: 10000,
+        currency: 'KRW',
+        billingCycle: 'monthly',
+        isActive: true,
+      },
+    ];
+    // ₩10,000/month * 12 = ₩120,000/year
+    const result = calculateYearlyTotal(subscriptions, 'KRW');
+    expect(result.total).toBe(120000);
+  });
+
+  it('calculates yearly total for weekly subscription (52 weeks)', () => {
+    const subscriptions: SubscriptionForCalculation[] = [
+      { price: 1000, currency: 'KRW', billingCycle: 'weekly', isActive: true },
+    ];
+    // ₩1,000/week * 52 = ₩52,000/year
+    const result = calculateYearlyTotal(subscriptions, 'KRW');
+    expect(result.total).toBe(52000);
+  });
+
+  it('returns same amount for yearly subscription', () => {
+    const subscriptions: SubscriptionForCalculation[] = [
+      {
+        price: 120000,
+        currency: 'KRW',
+        billingCycle: 'yearly',
+        isActive: true,
+      },
+    ];
+    const result = calculateYearlyTotal(subscriptions, 'KRW');
+    expect(result.total).toBe(120000);
+  });
+
+  it('calculates yearly total for quarterly subscription', () => {
+    const subscriptions: SubscriptionForCalculation[] = [
+      {
+        price: 30000,
+        currency: 'KRW',
+        billingCycle: 'quarterly',
+        isActive: true,
+      },
+    ];
+    // ₩30,000/quarter * 4 = ₩120,000/year
+    const result = calculateYearlyTotal(subscriptions, 'KRW');
+    expect(result.total).toBe(120000);
+  });
+
+  it('handles complex scenario with mixed currencies and billing cycles', () => {
+    const subscriptions: SubscriptionForCalculation[] = [
+      {
+        price: 10000,
+        currency: 'KRW',
+        billingCycle: 'monthly',
+        isActive: true,
+      },
+      { price: 120, currency: 'USD', billingCycle: 'yearly', isActive: true },
+      { price: 30, currency: 'EUR', billingCycle: 'quarterly', isActive: true },
+      { price: 500, currency: 'JPY', billingCycle: 'weekly', isActive: false },
+    ];
+    // KRW: ₩10,000/month * 12 = ₩120,000/year
+    // USD: $120/year = ₩168,000/year
+    // EUR: €30/quarter * 4 = €120/year = ₩180,000/year
+    // JPY: inactive, ignored
+    // Total: ₩468,000
+    const result = calculateYearlyTotal(subscriptions, 'KRW');
+    expect(result.total).toBe(468000);
     expect(result.hasMixedCurrencies).toBe(true);
   });
 });

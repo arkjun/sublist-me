@@ -35,11 +35,24 @@ export function normalizeToMonthly(price: number, cycle: BillingCycle): number {
     case 'yearly':
       return price / 12;
     case 'weekly':
-      return price * 4;
+      return price * (52 / 12); // 연간 52주 기준 월간 환산 (~4.33주/월)
     case 'quarterly':
       return price / 3;
     default:
       return price;
+  }
+}
+
+export function normalizeToYearly(price: number, cycle: BillingCycle): number {
+  switch (cycle) {
+    case 'monthly':
+      return price * 12;
+    case 'weekly':
+      return price * 52;
+    case 'quarterly':
+      return price * 4;
+    default:
+      return price; // yearly
   }
 }
 
@@ -61,6 +74,23 @@ export function calculateMonthlyTotal(
   const total = activeSubscriptions.reduce((sum, s) => {
     const monthlyPrice = normalizeToMonthly(s.price, s.billingCycle);
     const converted = convertCurrency(monthlyPrice, s.currency, targetCurrency);
+    return sum + converted;
+  }, 0);
+
+  return { total, hasMixedCurrencies };
+}
+
+export function calculateYearlyTotal(
+  subscriptions: SubscriptionForCalculation[],
+  targetCurrency: Currency,
+): { total: number; hasMixedCurrencies: boolean } {
+  const activeSubscriptions = subscriptions.filter((s) => s.isActive);
+  const currencies = new Set(activeSubscriptions.map((s) => s.currency));
+  const hasMixedCurrencies = currencies.size > 1;
+
+  const total = activeSubscriptions.reduce((sum, s) => {
+    const yearlyPrice = normalizeToYearly(s.price, s.billingCycle);
+    const converted = convertCurrency(yearlyPrice, s.currency, targetCurrency);
     return sum + converted;
   }, 0);
 

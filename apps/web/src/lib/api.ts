@@ -4,7 +4,14 @@ import { hc } from 'hono/client';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 
-export const api = hc<AppType>(API_URL);
+export const api = hc<AppType>(API_URL, {
+  fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+    return fetch(input, {
+      ...init,
+      credentials: 'include',
+    });
+  },
+});
 
 export type UserPreferences = {
   locale: Locale;

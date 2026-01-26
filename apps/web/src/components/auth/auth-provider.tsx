@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+import { api } from '@/lib/api';
 
 type User = {
   id: string;
@@ -44,10 +44,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchUser = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/auth/me`, {
-        credentials: 'include',
-      });
-      const data: { user: User | null } = await res.json();
+      const res = await api.auth.me.$get();
+      const data = await res.json();
       setUser(data.user);
     } catch (error) {
       console.error('Failed to fetch user:', error);
@@ -63,19 +61,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   /* Existing logic */
   const login = () => {
-    window.location.href = `${API_URL}/auth/login/google`;
+    window.location.href = api.auth.login.google.$url().toString();
   };
 
+
   const loginWithEmail = async (email: string, password: string) => {
-    const res = await fetch(`${API_URL}/auth/login/email`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-      credentials: 'include',
+    const res = await api.auth.login.email.$post({
+      json: { email, password },
     });
 
     if (!res.ok) {
-      const error = (await res.json()) as { error?: string };
+      const error = await res.json();
       throw new Error(error.error || 'Login failed');
     }
     await fetchUser();
@@ -86,15 +82,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     name: string,
   ) => {
-    const res = await fetch(`${API_URL}/auth/signup/email`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, name }),
-      credentials: 'include',
+    const res = await api.auth.signup.email.$post({
+      json: { email, password, name },
     });
 
     if (!res.ok) {
-      const error = (await res.json()) as { error?: string };
+      const error = await res.json();
       throw new Error(error.error || 'Signup failed');
     }
     await fetchUser();
@@ -102,10 +95,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await fetch(`${API_URL}/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
-      });
+      await api.auth.logout.$post();
+
       setUser(null);
     } catch (error) {
       console.error('Failed to logout:', error);

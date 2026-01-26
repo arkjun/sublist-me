@@ -6,6 +6,8 @@ import { auth } from './routes/auth';
 import { subscriptions } from './routes/subscriptions';
 import { users } from './routes/users';
 
+import { dbMiddleware, type DbVariables } from './middleware/db';
+
 export type Env = {
   DB: D1Database;
   GOOGLE_CLIENT_ID: string;
@@ -17,7 +19,7 @@ export type Env = {
 type Variables = {
   user: User | null;
   session: Session | null;
-};
+} & DbVariables;
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -34,6 +36,7 @@ app.use(
   }),
 );
 app.use('/*', sessionMiddleware);
+app.use('/*', dbMiddleware);
 
 // Routes
 app.route('/auth', auth);

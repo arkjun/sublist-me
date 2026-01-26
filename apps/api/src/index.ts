@@ -20,30 +20,24 @@ type Variables = {
   session: Session | null;
 } & DbVariables;
 
-const app = new Hono<{ Bindings: Env; Variables: Variables }>();
-
-// Middleware
-app.use(
-  '/*',
-  cors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'https://app.sublistme.com',
-    ],
-    credentials: true,
-  }),
-);
-app.use('/*', sessionMiddleware);
-app.use('/*', dbMiddleware);
-
-// Routes
-app.route('/auth', auth);
-app.route('/users', users);
-app.route('/subscriptions', subscriptions);
-
-// Health check
-app.get('/', (c) => c.json({ message: 'SubList Me API', status: 'ok' }));
+const app = new Hono<{ Bindings: Env; Variables: Variables }>()
+  .use(
+    '/*',
+    cors({
+      origin: [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'https://app.sublistme.com',
+      ],
+      credentials: true,
+    }),
+  )
+  .use('/*', sessionMiddleware)
+  .use('/*', dbMiddleware)
+  .route('/auth', auth)
+  .route('/users', users)
+  .route('/subscriptions', subscriptions)
+  .get('/', (c) => c.json({ message: 'SubList Me API', status: 'ok' }));
 
 export default app;
 

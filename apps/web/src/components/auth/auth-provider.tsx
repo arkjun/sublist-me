@@ -13,7 +13,7 @@ import { api } from '@/lib/api';
 
 type User = {
   id: string;
-  googleId: string;
+  googleId: string | null;
   email: string;
   username: string;
   name: string | null;
@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const res = await api.auth.me.$get();
       const data = await res.json();
-      setUser(data.user);
+      setUser(data.user as User | null);
     } catch (error) {
       console.error('Failed to fetch user:', error);
       setUser(null);
@@ -70,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (!res.ok) {
-      const error = await res.json();
+      const error = (await res.json()) as { error?: string };
       throw new Error(error.error || 'Login failed');
     }
     await fetchUser();
@@ -86,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (!res.ok) {
-      const error = await res.json();
+      const error = (await res.json()) as { error?: string };
       throw new Error(error.error || 'Signup failed');
     }
     await fetchUser();

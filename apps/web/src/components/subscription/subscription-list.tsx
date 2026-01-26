@@ -10,6 +10,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { useRouter } from '@/i18n/navigation';
 import {
   CURRENCY_SYMBOLS,
+  type Currency,
   calculateMonthlyTotal,
   calculateYearlyTotal,
 } from '@/lib/currency';
@@ -141,7 +142,7 @@ export function SubscriptionList() {
     [handleEdit, handleDelete, columnLabels],
   );
 
-  const userCurrency = user?.currency || 'KRW';
+  const userCurrency = (user?.currency || 'KRW') as Currency;
 
   const { total: monthlyTotal, hasMixedCurrencies } = useMemo(
     () => calculateMonthlyTotal(subscriptions, userCurrency),

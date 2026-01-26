@@ -64,7 +64,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.location.href = api.auth.login.google.$url().toString();
   };
 
-
   const loginWithEmail = async (email: string, password: string) => {
     const res = await api.auth.login.email.$post({
       json: { email, password },

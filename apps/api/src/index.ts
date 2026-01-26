@@ -2,11 +2,10 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import type { Session, User } from 'lucia';
 import { sessionMiddleware } from './middleware/auth';
+import { type DbVariables, dbMiddleware } from './middleware/db';
 import { auth } from './routes/auth';
 import { subscriptions } from './routes/subscriptions';
 import { users } from './routes/users';
-
-import { dbMiddleware, type DbVariables } from './middleware/db';
 
 export type Env = {
   DB: D1Database;

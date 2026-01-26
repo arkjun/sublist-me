@@ -19,11 +19,29 @@ const subscriptionSchema = z.object({
   price: z.number().nonnegative(),
   originalPrice: z.number().nonnegative().optional(),
   currency: z.enum(['KRW', 'USD', 'JPY', 'EUR']).default('KRW'),
-  billingCycle: z.enum(['monthly', 'yearly', 'weekly', 'quarterly']).default('monthly'),
+  billingCycle: z
+    .enum(['monthly', 'yearly', 'weekly', 'quarterly'])
+    .default('monthly'),
   nextBillingDate: z.string().optional(),
   startDate: z.string().optional(),
   country: z.string().default('KR'),
-  category: z.enum(['ott', 'music', 'gaming', 'shopping', 'productivity', 'cloud', 'news', 'fitness', 'education', 'finance', 'food', 'security', 'other']).optional(),
+  category: z
+    .enum([
+      'ott',
+      'music',
+      'gaming',
+      'shopping',
+      'productivity',
+      'cloud',
+      'news',
+      'fitness',
+      'education',
+      'finance',
+      'food',
+      'security',
+      'other',
+    ])
+    .optional(),
   url: z.string().optional(),
   logoUrl: z.string().optional(),
   memo: z.string().optional(),

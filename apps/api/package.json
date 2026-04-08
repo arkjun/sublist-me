@@ -23,7 +23,7 @@
     "@lucia-auth/adapter-sqlite": "^3.0.2",
     "@sublistme/db": "workspace:*",
     "arctic": "^3.7.0",
-    "drizzle-orm": "^0.38.3",
+    "drizzle-orm": "^0.45.2",
     "hono": "^4.11.7",
     "lucia": "^3.2.2",
     "oslo": "^1.2.1",
